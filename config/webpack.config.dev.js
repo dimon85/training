@@ -6,13 +6,12 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 module.exports = {
   devtool: 'source-map',
   entry: [
-    'babel-polyfill',
-    require.resolve('react-dev-utils/webpackHotDevClient'),
-    './src/index',
+    'react-hot-loader/patch',
+    './src/index.js',
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/dist',
+    publicPath: '/',
     filename: 'bundle.js',
   },
   module: {
@@ -70,20 +69,12 @@ module.exports = {
     modules: [
       'src',
       'node_modules',
-      'theme',
-      'theme/fonts',
     ],
-    alias: {
-      theme: path.resolve(__dirname, 'src', 'theme'),
-    },
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        CUSTOM_HOST: JSON.stringify(process.env.CUSTOM_HOST),
-        HTTPS: JSON.stringify(process.env.HTTPS),
-        RUBY_BACKEND: JSON.stringify(process.env.RUBY_BACKEND),
       }
     }),
     new webpack.HotModuleReplacementPlugin(),

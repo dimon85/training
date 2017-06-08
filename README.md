@@ -59,5 +59,8 @@ $ npm i -D babel-plugin-transform-regenerator babel-preset-latest
 $ npm i -D babel-preset-react-app babel-plugin-transform-runtime
 $ npm i -S babel-runtime
 ```
-
-     
+Create .babelrc
+Install material library
+```
+$ npm i -S material-ui  
+```
