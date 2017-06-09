@@ -1,8 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
 
-const HomePage = () => (
-  <RaisedButton label="Default" />
-);
+export default class HomePage extends Component {
+  static propTypes = {
+  };
 
-export default HomePage;
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      toggle: false,
+    };
+  }
+
+  render() {
+    const { toggle } = this.state;
+
+    return (
+      <div>
+        <div>Header</div>
+        <RaisedButton label="Default" />
+      </div>
+    )
+  }
+}

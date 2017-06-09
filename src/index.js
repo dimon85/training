@@ -8,14 +8,20 @@ injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');
 
-const render = Component =>
+const render = () =>
   ReactDOM.render(
     <AppContainer>
-      <Component />
+      <App />
     </AppContainer>,
     rootEl
   );
 
-render(App);
 
-if (module.hot) module.hot.accept('./components/App', () => render(App));
+if (module.hot) {
+  const renderApp = render;
+
+  module.hot.accept('./components/App', () => {
+    renderApp();
+  });
+}
+render();

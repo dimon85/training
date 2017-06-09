@@ -1,6 +1,11 @@
 {
-  "presets": ["latest",  "react"],
+  "presets": [
+    "latest",
+    "stage-2",
+    "react"
+  ],
   "plugins": [
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    "transform-decorators-legacy"
   ]
 }
