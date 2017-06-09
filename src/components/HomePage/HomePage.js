@@ -8,7 +8,7 @@ export default class HomePage extends Component {
 
   constructor(props) {
     super(props);
-
+    console.log('HomePage render12');
     this.state = {
       toggle: false,
     };
@@ -16,10 +16,10 @@ export default class HomePage extends Component {
 
   render() {
     const { toggle } = this.state;
-
+    console.log('HomePage render12');
     return (
       <div>
-        <div>Header</div>
+        <div>Header homepage</div>
         <RaisedButton label="Default" />
       </div>
     )

@@ -6,12 +6,12 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 module.exports = {
   devtool: 'source-map',
   entry: [
-    'react-hot-loader/patch',
+    require.resolve('react-dev-utils/webpackHotDevClient'),
     './src/index.js',
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: '/dist/',
     filename: 'bundle.js',
   },
   module: {
@@ -55,7 +55,7 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               sourceMap: true,
-            },
+            }
           },
         ],
       },

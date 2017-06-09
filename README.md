@@ -51,8 +51,8 @@ Install webpack 2, and dependencies
 ```
 $ npm i -D webpack
 $ npm i -D autoprefixer postcss-cssnext postcss-import progress-bar-webpack-plugin
-$ npm i -D webpack-hot-middleware webpack-dev-middleware
-$ npm i -D react-hot-loader@next
+$ npm i -D webpack-dev-server
+$ npm i -D react-dev-utils
 ```
 
 Install compiler
@@ -71,5 +71,5 @@ $ npm i -S material-ui
 
 Install extensions for server
 ```
-$ npm i -S express open path 
+$ npm i -S express chalk path connect-history-api-fallback
 ```
