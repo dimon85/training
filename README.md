@@ -8,9 +8,11 @@
 
 ## Features
 
-- [x] Hot Module Replacement
 - [x] ES6 Source debugging in Chrome with sourcemaps
-- [x] React Router
+- [x] React Router v4
+- [x] Redux
+- [x] Hot Module Replacement
+- [x] Using Redux DevTools Chrome extension
 
 ##System Requirements
 Before installing the dependencies, make sure your system has the correct Node and Npm versions, otherwise you will get errors.
@@ -24,7 +26,7 @@ Before installing the dependencies, make sure your system has the correct Node a
 $ npm install
 ```
 
-## Running
+## Running in dev mode
 
 ```
 $ npm start
@@ -51,7 +53,7 @@ Install webpack 2, and dependencies
 ```
 $ npm i -D webpack
 $ npm i -D autoprefixer postcss-cssnext postcss-import progress-bar-webpack-plugin
-$ npm i -D webpack-dev-server
+$ npm i -D webpack-dev-middleware webpack-hot-middleware
 $ npm i -D react-dev-utils
 ```
 
@@ -66,10 +68,20 @@ Create сonfig for bab.babelrc,
 
 Install material library
 ```
-$ npm i -S material-ui  
+$ npm i -S material-ui react-tap-event-plugi
 ```
 
 Install extensions for server
 ```
-$ npm i -S express chalk path connect-history-api-fallback
+$ npm i -S express chalk path open
+```
+
+Install redux
+```
+$ npm i -S redux react-redux redux-thunk redux-immutable-state-invariant 
+```
+
+Install react-router
+```
+$ npm i -S react-router-dom react-router-redux
 ```

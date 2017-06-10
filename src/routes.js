@@ -13,7 +13,7 @@ export default (store) => {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/trainer" component={TrainerPage} />
-        <Route render={() => (<div>{this.props}Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
+        <Route render={() => (<div>Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
       </Switch>
     </App>
   );
