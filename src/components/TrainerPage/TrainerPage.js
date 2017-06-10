@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import RaisedButton from 'material-ui/RaisedButton';
 
-export default class HomePage extends Component {
+export default class TrainerPage extends Component {
   static propTypes = {
   };
 
@@ -16,13 +16,11 @@ export default class HomePage extends Component {
 
   render() {
     const { toggle } = this.state;
-    console.log('HomePage render12');
+    console.log('TrainerPage render12');
     return (
       <div>
-        <div>Home page</div>
-        <Link to="/trainer">Link</Link> -
-        <Link to="/miss">miss</Link>
-        <RaisedButton label="Default" />
+        <div>Trainer page</div>
+        <Link to="/">Home</Link> -
       </div>
     )
   }

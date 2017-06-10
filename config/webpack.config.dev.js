@@ -4,14 +4,14 @@ const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'cheap-module-inline-source-map',
   entry: [
-    require.resolve('react-dev-utils/webpackHotDevClient'),
+    'react-hot-loader/patch',
     './src/index.js',
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/dist/',
+    publicPath: '/',
     filename: 'bundle.js',
   },
   module: {
@@ -74,7 +74,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        NODE_ENV: JSON.stringify('dev'),
       }
     }),
     new webpack.HotModuleReplacementPlugin(),

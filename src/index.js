@@ -1,37 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import configureStore from './store/configureStore';
 import { Provider } from 'react-redux'
-import App from './components/App';
-
+import { ConnectedRouter } from 'react-router-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { AppContainer } from 'react-hot-loader';
+import createHistory from 'history/createBrowserHistory';
+import configureStore from './store/configureStore';
+
 injectTapEventPlugin();
 
-const reduxState = {};
 const rootEl = document.getElementById('root');
-let store = configureStore(reduxState);
+const history = createHistory();
+const store = configureStore(history);
 
 const render = () => {
-  const key = module.hot ? Math.random() : undefined;
-  console.log('hot render1', key);
+  const getRoutes = require('./routes').default;
+  const routes = getRoutes(store);
+
   ReactDOM.render(
-    <Provider store={store}>
-      <div> { /* your usual react-router v4 routing */ }
-        <Switch>
-          <Route exact path="/" render={App} />
-          <Route render={() => (<div>Miss</div>)} />
-        </Switch>
-      </div>
-    </Provider>,
+    <AppContainer>
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          {routes}
+        </ConnectedRouter>
+      </Provider>
+    </AppContainer>,
     rootEl
   );
 };
 
 if (module.hot) {
-  const renderApp = render;
-
-  module.hot.accept('./components/App', () => {
-    renderApp();
+  module.hot.accept('./routes', () => {
+    render();
   });
 }
 

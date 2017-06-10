@@ -1,7 +1,7 @@
 import express from 'express';
 import webpack from 'webpack';
-import WebpackDevServer from 'webpack-dev-server';
-import historyApiFallback from 'connect-history-api-fallback';
+import path from 'path';
+import open from 'open';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
@@ -10,6 +10,19 @@ import config  from '../config/webpack.config.dev';
 const custom_port = 3113;
 const app      = express();
 const compiler = webpack(config);
+
+
+app.use(require('webpack-dev-middleware')(compiler, {
+  noInfo: true,
+  publicPath: config.output.publicPath
+}));
+
+app.use(require('webpack-hot-middleware')(compiler));
+
+app.get('*', function(req, res) {
+  res.sendFile(path.join( __dirname, '../src/index.html'));
+});
+
 
 const msToTime = (s) => {
   const ms = s % 1000;
@@ -62,32 +75,8 @@ const setupCompiler = (host, port, protocol) => {
   });
 };
 
-const addMiddleware = (devServer) => {
-  devServer.use(historyApiFallback({
-    disableDotRule: true,
-    htmlAcceptHeaders: ['text/html', '*/*'],
-  }));
-  devServer.use(devServer.middleware);
-};
-
 const runDevServer = (host, port, protocol) => {
-  const devServer = new WebpackDevServer(compiler, {
-    clientLogLevel: 'none',
-    hot: true,
-    publicPath: config.output.publicPath,
-    quiet: true,
-    historyApiFallback: true,
-    watchOptions: {
-      ignored: /node_modules/
-    },
-    https: protocol === 'https',
-    host
-  });
-
-  addMiddleware(devServer);
-
-  console.log('*****************', host, port, protocol);
-  devServer.listen(port, (err) => {
+  app.listen(port, function(err) {
     if (err) {
       return console.log(err);
     }
@@ -95,6 +84,7 @@ const runDevServer = (host, port, protocol) => {
     clearConsole();
     console.log(chalk.cyan('Starting the development server...'));
     console.log();
+    open(`${protocol}://localhost:${port}`);
   });
 };
 

@@ -1,19 +1,25 @@
-import { applyMiddleware, compose, createStore as _createStore } from 'redux';
 import thunk from 'redux-thunk';
-import rootReducer from '../redux';
+import { applyMiddleware, compose, createStore } from 'redux';
+import { routerMiddleware } from 'react-router-redux'
+import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
+import rootReducer from '../reducers'
 
-export default function createStore(data) {
+export default function configureStore(history, data = {}) {
   // Sync dispatched route actions to the history
+  const reduxRouterMiddleware = routerMiddleware(history);
 
   function listMiddleware() {
     if (process.env.NODE_ENV === 'dev') {
       return [
         thunk,
+        reduxRouterMiddleware,
+        reduxImmutableStateInvariant()
       ];
     }
 
     return [
-      thunk
+      thunk,
+      reduxRouterMiddleware,
     ];
   }
 
@@ -25,17 +31,16 @@ export default function createStore(data) {
     finalCreateStore = compose(
       applyMiddleware(...middleware),
       window.devToolsExtension ? window.devToolsExtension() : f => f
-    )(_createStore);
+    )(createStore);
   } else {
-    finalCreateStore = compose(applyMiddleware(...middleware))(_createStore);
+    finalCreateStore = compose(applyMiddleware(...middleware))(createStore);
   }
 
   const store = finalCreateStore(rootReducer, data);
 
-
   if (process.env.NODE_ENV === 'dev' && module.hot) {
-    module.hot.accept('../redux', () => {
-      store.replaceReducer(require('../redux')); // eslint-disable-line global-require
+    module.hot.accept('../reducers', () => {
+      store.replaceReducer(require('../reducers')); // eslint-disable-line global-require
     });
   }
 
