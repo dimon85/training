@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import TrainerType from './TrainerType';
@@ -8,10 +9,11 @@ export default class TrainerPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      start: false,
+      start: true,
     };
   }
 
+  @autobind
   handleClickStart() {
     this.setState({ start: true });
   }

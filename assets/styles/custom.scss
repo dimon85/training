@@ -16,7 +16,32 @@
       padding-top: 20px;
     }
     .paper__body {
-      padding: 50px;
+      padding: 30px 50px 50px;
+      .paper__type {
+        overflow: hidden;
+        border: 1px solid red;
+        font-size: 20px;
+        .paper__left {
+          float: left;
+          width: 50%;
+          background: #888;
+          text-align: right;
+          padding: 5px 0;
+          white-space: pre;
+          overflow-x: hidden;
+        }
+        .paper__right {
+          overflow: hidden;
+          background: #ccc;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          padding: 5px 0;
+          .paper__symbol {
+            border: 1px solid green;
+            white-space: pre;
+          }
+        }
+      }
     }
   }
 }
