@@ -13,6 +13,7 @@ export default (store) => {
       <Switch>
         <Route exact path="/" component={HomePage} />
         <Route path="/trainer" component={TrainerPage} />
+        <Route path="/help" component={TrainerPage} />
         <Route render={() => (<div>Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
       </Switch>
     </App>

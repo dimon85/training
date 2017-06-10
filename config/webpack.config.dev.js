@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports = {
-  devtool: 'cheap-module-inline-source-map',
+  devtool: 'source-map',
   entry: [
     'react-hot-loader/patch',
     './src/index.js',
@@ -29,20 +29,12 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(png|ico|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        test: /\.(png|ico|ttf|eot|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: ['url-loader'],
       },
       {
         test: /\.scss$/,
-        use: [{
-          loader: 'style-loader',
-        },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: true,
-            },
-          },
+        use: ['style-loader', 'css-loader',
           {
             loader: 'postcss-loader',
             options: {
@@ -51,12 +43,7 @@ module.exports = {
               }
             }
           },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: true,
-            }
-          },
+          'sass-loader'
         ],
       },
       {

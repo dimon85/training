@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import RaisedButton from 'material-ui/RaisedButton';
 
-export default class HomePage extends Component {
+export default class HelpPage extends Component {
   static propTypes = {
   };
 
@@ -16,10 +14,11 @@ export default class HomePage extends Component {
 
   render() {
     const { toggle } = this.state;
+
     return (
-      <div className="container">
-        <h1>Home page</h1>
-        <div>Some text</div>
+      <div>
+        <div>Help page</div>
+        <Link to="/">Home</Link> -
       </div>
     )
   }

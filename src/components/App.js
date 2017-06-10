@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import AppLayout from './AppLayout';
 
 const mapStateToProps = state => {
   return state;
@@ -10,21 +11,26 @@ const mapStateToProps = state => {
 export class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
+    router: PropTypes.object.isRequired,
   };
 
   constructor(props) {
-    super(props);
-
+  super(props);
     this.state = {
-      loading: false,
-    };
+    loading: false,
+  };
   }
+
   render() {
-    const { children } = this.props;
+    const { children, router } = this.props;
 
     return (
       <MuiThemeProvider>
-        {children}
+        <AppLayout
+          pathname={router.location.pathname}
+        >
+          {children}
+        </AppLayout>
       </MuiThemeProvider>
     );
   }

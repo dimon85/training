@@ -55,6 +55,7 @@ $ npm i -D webpack
 $ npm i -D autoprefixer postcss-cssnext postcss-import progress-bar-webpack-plugin
 $ npm i -D webpack-dev-middleware webpack-hot-middleware
 $ npm i -D react-dev-utils
+$ npm i -D style-loader css-loader postcss-loader node-sass sass-loader url-loader
 ```
 
 Install compiler

@@ -7,6 +7,9 @@ import { AppContainer } from 'react-hot-loader';
 import createHistory from 'history/createBrowserHistory';
 import configureStore from './store/configureStore';
 
+// Import your global styles here
+import '../assets/styles/styles.scss';
+
 injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');

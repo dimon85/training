@@ -1,26 +1,45 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
+import TrainerType from './TrainerType';
 
 export default class TrainerPage extends Component {
-  static propTypes = {
-  };
-
   constructor(props) {
     super(props);
     this.state = {
-      toggle: false,
+      start: false,
     };
   }
 
+  handleClickStart() {
+    this.setState({ start: true });
+  }
+
   render() {
-    const { toggle } = this.state;
-    console.log('TrainerPage render12');
+    const { start } = this.state;
+
     return (
-      <div>
-        <div>Trainer page</div>
-        <Link to="/">Home</Link> -
+      <div className="container">
+        <h1>Trainer page</h1>
+        <Paper zDepth={2}>
+          {!start &&
+            <div className="paper__area">
+              <div className="paper__header">
+                <h3>Press button to start</h3>
+              </div>
+              <div className="paper__body">
+                <RaisedButton
+                  label="Start"
+                  primary={true}
+                  fullWidth={true}
+                  onTouchTap={this.handleClickStart}
+                />
+              </div>
+            </div>
+          }
+          {start && <TrainerType />}
+        </Paper>
       </div>
     )
   }

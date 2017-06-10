@@ -1,0 +1,22 @@
+.logo {
+  a {
+    color: $white;
+    &:visited {
+      color: $white;
+    }
+  }
+}
+
+.container {
+  margin: 30px;
+  .paper__area {
+    width: 100%;
+    text-align: center;
+    .paper__header {
+      padding-top: 20px;
+    }
+    .paper__body {
+      padding: 50px;
+    }
+  }
+}
