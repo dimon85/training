@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
 
-const text = 'Vivamus magna justo, lacinia eget consectetur sed, ' +
-    'convallis at tellus. Mauris blandit aliquet elit, eget tincidunt ' +
-    'nibh pulvinar a. Curabitur aliquet quam id dui posuere blandit.' +
-    ' Curabitur aliquet quam id dui posuere blandit. Curabitur aliquet ' +
-    'quam id dui posuere blandit. Nulla quis lorem ut libero malesuada feugiat.';
+const text = 'Vivamus magna justo,';
+
 
 export default class TrainerType extends Component {
   constructor(props) {
@@ -46,7 +43,9 @@ export default class TrainerType extends Component {
         <div className="paper__body">
           <div className="paper__type">
             <div className="paper__left">
-              {typedText ? typedText:  'Curabitur Curabitur aliquet quam id dui '}
+              <div className="paper_left_inner">
+                {typedText ? typedText:  'begin type '}
+              </div>
             </div>
             <div className="paper__right">
               <span className="paper__symbol">{currentChar}</span>

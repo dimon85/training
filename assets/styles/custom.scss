@@ -20,22 +20,26 @@
       .paper__type {
         overflow: hidden;
         border: 1px solid red;
-        font-size: 20px;
+        font-size: 40px;
+        font-family: Lucida Console, monospace;
         .paper__left {
+          text-align: right;
           float: left;
           width: 50%;
           background: #888;
-          text-align: right;
-          padding: 5px 0;
+          padding: 15px 0;
           white-space: pre;
           overflow-x: hidden;
+          .paper_left_inner {
+            float: right;
+          }
         }
         .paper__right {
+          text-align: left;
           overflow: hidden;
           background: #ccc;
           white-space: nowrap;
-          text-overflow: ellipsis;
-          padding: 5px 0;
+          padding: 15px 0;
           .paper__symbol {
             border: 1px solid green;
             white-space: pre;
