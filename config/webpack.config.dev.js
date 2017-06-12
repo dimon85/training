@@ -4,9 +4,10 @@ const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: 'eval',
   entry: [
     'react-hot-loader/patch',
+    'webpack-hot-middleware/client',
     './src/index.js',
   ],
   output: {

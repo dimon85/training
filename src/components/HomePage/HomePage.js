@@ -16,6 +16,7 @@ export default class HomePage extends Component {
 
   render() {
     const { toggle } = this.state;
+
     return (
       <div className="container">
         <h1>Home page</h1>

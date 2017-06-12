@@ -1,13 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux'
-import { ConnectedRouter } from 'react-router-redux'
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import { AppContainer } from 'react-hot-loader';
 import createHistory from 'history/createBrowserHistory';
+import { AppContainer } from 'react-hot-loader';
 import configureStore from './store/configureStore';
-
-// Import your global styles here
+import RootContainer from './containers/RootContainer';
 import '../assets/styles/styles.scss';
 
 injectTapEventPlugin();
@@ -16,26 +13,25 @@ const rootEl = document.getElementById('root');
 const history = createHistory();
 const store = configureStore(history);
 
-const render = () => {
-  const getRoutes = require('./routes').default;
-  const routes = getRoutes(store);
-
+const render = (Component) => {
   ReactDOM.render(
-    <AppContainer>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          {routes}
-        </ConnectedRouter>
-      </Provider>
+    <AppContainer errorReporter={({ error }) => {throw error}}>
+      <Component
+        store={store}
+        history={history}
+      />
     </AppContainer>,
     rootEl
   );
 };
 
+render(RootContainer);
+
 if (module.hot) {
-  module.hot.accept('./routes', () => {
-    render();
+  module.hot.accept('./containers/RootContainer', () => {
+    const Root = require('./containers/RootContainer').default;
+    render(Root);
   });
 }
 
-render();
+
