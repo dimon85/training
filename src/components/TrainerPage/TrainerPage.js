@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -22,8 +23,8 @@ export default class TrainerPage extends Component {
 
     return (
       <div className="container">
-        <h1>Trainer page</h1>
-        <Paper zDepth={2}>
+        <h1>Training your ability</h1>
+        <Paper zDepth={4}>
           {!start &&
             <div className="paper__area">
               <div className="paper__header">
@@ -32,8 +33,8 @@ export default class TrainerPage extends Component {
               <div className="paper__body">
                 <RaisedButton
                   label="Start"
-                  primary
-                  fullWidth
+                  primary={true}
+                  fullWidth={true}
                   onTouchTap={this.handleClickStart}
                 />
               </div>
@@ -42,6 +43,6 @@ export default class TrainerPage extends Component {
           {start && <TrainerType />}
         </Paper>
       </div>
-    );
+    )
   }
 }

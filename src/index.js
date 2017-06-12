@@ -17,6 +17,7 @@ const render = (Component) => {
   ReactDOM.render(
     <AppContainer errorReporter={({ error }) => { throw error; }}>
       <Component
+        key={Math.random()}
         store={store}
         history={history}
       />
@@ -29,7 +30,7 @@ render(RootContainer);
 
 if (module.hot) {
   module.hot.accept('./containers/RootContainer', () => {
-    const Root = RootContainer.default;
+    const Root = RootContainer;
     render(Root);
   });
 }
