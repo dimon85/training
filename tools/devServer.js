@@ -2,7 +2,6 @@
 import express from 'express';
 import webpack from 'webpack';
 import path from 'path';
-import open from 'open';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
@@ -85,7 +84,6 @@ const runDevServer = (host, port, protocol) => {
     clearConsole();
     console.log(chalk.cyan('Starting the development server...'));
     console.log();
-    open(`${protocol}://localhost:${port}`);
   });
 };
 
