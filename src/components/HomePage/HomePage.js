@@ -11,8 +11,8 @@ export default class HomePage extends Component {
   render() {
     return (
       <div className="container">
-        <h1>Home pagef</h1>
-        <div>Some text</div>
+        <h1>Home page</h1>
+        <div>Some textf</div>
       </div>
     );
   }
