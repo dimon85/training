@@ -1,8 +1,8 @@
 import thunk from 'redux-thunk';
 import { applyMiddleware, compose, createStore } from 'redux';
-import { routerMiddleware } from 'react-router-redux'
+import { routerMiddleware } from 'react-router-redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
-import rootReducer from '../reducers'
+import rootReducer from '../reducers';
 
 export default function configureStore(history, data = {}) {
   // Sync dispatched route actions to the history

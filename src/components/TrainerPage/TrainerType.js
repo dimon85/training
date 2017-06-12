@@ -28,7 +28,7 @@ export default class TrainerType extends Component {
       const updatedCurrentChar = initialText[0];
       const updatedInitialText = initialText.slice(1);
       const updatedText = typedText + currentChar;
-      this.setState({ typedText: updatedText, initialText: updatedInitialText, currentChar: updatedCurrentChar })
+      this.setState({ typedText: updatedText, initialText: updatedInitialText, currentChar: updatedCurrentChar });
     }
   }
 
@@ -44,7 +44,7 @@ export default class TrainerType extends Component {
           <div className="paper__type">
             <div className="paper__left">
               <div className="paper_left_inner">
-                {typedText ? typedText:  'begin type '}
+                {typedText || 'begin type '}
               </div>
             </div>
             <div className="paper__right">
@@ -54,6 +54,6 @@ export default class TrainerType extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

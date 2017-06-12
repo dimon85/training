@@ -1,0 +1,8 @@
+config/*
+node_modules/*
+dist/*
+coverage/*
+/bin/
+/.eslintrc
+/assets/
+/.eslintrc

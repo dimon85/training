@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import express from 'express';
 import webpack from 'webpack';
 import path from 'path';
@@ -5,10 +6,10 @@ import open from 'open';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
-import config  from '../config/webpack.config.dev';
+import config from '../config/webpack.config.dev';
 
-const custom_port = 3113;
-const app      = express();
+const customPort = 3113;
+const app = express();
 const compiler = webpack(config);
 
 
@@ -19,8 +20,8 @@ app.use(require('webpack-dev-middleware')(compiler, {
 
 app.use(require('webpack-hot-middleware')(compiler));
 
-app.get('*', function(req, res) {
-  res.sendFile(path.join( __dirname, '../src/index.html'));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../src/index.html'));
 });
 
 
@@ -76,7 +77,7 @@ const setupCompiler = (host, port, protocol) => {
 };
 
 const runDevServer = (host, port, protocol) => {
-  app.listen(port, function(err) {
+  app.listen(port, (err) => {
     if (err) {
       return console.log(err);
     }
@@ -96,4 +97,4 @@ const run = (port) => {
   runDevServer(host, port, protocol);
 };
 
-run(custom_port);
+run(customPort);

@@ -4,9 +4,7 @@ import { connect } from 'react-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import AppLayout from './AppLayout';
 
-const mapStateToProps = state => {
-  return state;
-};
+const mapStateToProps = state => state;
 
 export class App extends Component {
   static propTypes = {
@@ -15,10 +13,10 @@ export class App extends Component {
   };
 
   constructor(props) {
-  super(props);
+    super(props);
     this.state = {
-    loading: false,
-  };
+      loading: false,
+    };
   }
 
   render() {

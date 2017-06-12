@@ -15,7 +15,7 @@ const store = configureStore(history);
 
 const render = (Component) => {
   ReactDOM.render(
-    <AppContainer errorReporter={({ error }) => {throw error}}>
+    <AppContainer errorReporter={({ error }) => { throw error; }}>
       <Component
         store={store}
         history={history}
@@ -29,9 +29,7 @@ render(RootContainer);
 
 if (module.hot) {
   module.hot.accept('./containers/RootContainer', () => {
-    const Root = require('./containers/RootContainer').default;
+    const Root = RootContainer.default;
     render(Root);
   });
 }
-
-

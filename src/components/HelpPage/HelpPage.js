@@ -13,13 +13,11 @@ export default class HelpPage extends Component {
   }
 
   render() {
-    const { toggle } = this.state;
-
     return (
       <div>
         <div>Help page</div>
         <Link to="/">Home</Link> -
       </div>
-    )
+    );
   }
 }

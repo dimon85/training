@@ -7,7 +7,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 
-export class AppLayout extends Component {
+export default class AppLayout extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     pathname: PropTypes.string.isRequired,
@@ -34,13 +34,22 @@ export class AppLayout extends Component {
     }
   }
 
+  handleRequestChange(open, reason) {
+    if (reason === 'iconTap') {
+      this.setState({ open });
+      return;
+    }
+
+    this.setState({ open: false });
+  }
+
   renderIconMenu() {
     return (<IconButton><MoreVertIcon /></IconButton>);
   }
 
   renderIconRight() {
     const { targetOrigin, open } = this.state;
-    return(
+    return (
       <IconMenu
         open={open}
         iconButtonElement={this.renderIconMenu()}
@@ -52,16 +61,7 @@ export class AppLayout extends Component {
         <Link to="/help"><MenuItem primaryText="Help" /></Link>
         <MenuItem disabled primaryText="Login" />
       </IconMenu>
-    )
-  };
-
-  handleRequestChange(open, reason) {
-    if (reason === 'iconTap') {
-      this.setState({ open });
-      return;
-    }
-
-    this.setState({ open: false })
+    );
   }
 
   renderLogo() {
@@ -87,6 +87,3 @@ export class AppLayout extends Component {
     );
   }
 }
-
-
-export default AppLayout;
