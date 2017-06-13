@@ -2,6 +2,7 @@
 import express from 'express';
 import webpack from 'webpack';
 import path from 'path';
+import morgan from 'morgan';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
@@ -12,12 +13,20 @@ const app = express();
 const compiler = webpack(config);
 
 
+//
+// Register Webpack middleware, hot-reload
+// -----------------------------------------------------------------------------
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
   publicPath: config.output.publicPath
 }));
-
 app.use(require('webpack-hot-middleware')(compiler));
+
+//
+// Register Node.js middleware
+// -----------------------------------------------------------------------------
+app.use(morgan('dev'));
+app.use(express.static(path.join(__dirname, '/dist')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../src/index.html'));
@@ -75,7 +84,7 @@ const setupCompiler = (host, port, protocol) => {
   });
 };
 
-const runDevServer = (host, port, protocol) => {
+const runDevServer = (host, port) => {
   app.listen(port, (err) => {
     if (err) {
       return console.log(err);

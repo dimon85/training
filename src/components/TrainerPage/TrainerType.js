@@ -53,7 +53,7 @@ export default class TrainerType extends Component {
       this.setState({ isError: true });
     }
 
-    this.setState({countErrors: countErrors + 1 });
+    this.setState({ countErrors: countErrors + 1 });
   }
 
   render() {
@@ -87,7 +87,7 @@ export default class TrainerType extends Component {
                 </div>
               </div>
               <div className="paper__right">
-                <span className={isError ? "paper__symbol__error" : "paper__symbol"}>
+                <span className={isError ? 'paper__symbol__error' : 'paper__symbol'}>
                   {currentChar}
                 </span>
                 <span>

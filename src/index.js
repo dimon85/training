@@ -13,7 +13,7 @@ const rootEl = document.getElementById('root');
 const history = createHistory();
 const store = configureStore(history);
 
-const render = Component => {
+const render = (Component) => {
   ReactDOM.render(
     <AppContainer errorReporter={({ error }) => { throw error; }}>
       <Component
