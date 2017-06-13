@@ -6,6 +6,7 @@ import { AppContainer } from 'react-hot-loader';
 import configureStore from './store/configureStore';
 import RootContainer from './containers/RootContainer';
 import '../assets/styles/styles.scss';
+import '../assets/images/favicon.ico';
 
 injectTapEventPlugin();
 

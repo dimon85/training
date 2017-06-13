@@ -30,7 +30,7 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(png|ico|ttf|eot|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        test: /\.(png|ttf|eot|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: ['url-loader'],
       },
       {
@@ -48,7 +48,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(jpe?g)(\?.*)?$/,
+        test: /\.(jpe?g|ico)(\?.*)?$/,
         use: ['file-loader'],
       },
     ],
@@ -79,6 +79,6 @@ module.exports = {
           require('postcss-cssnext'),
         ],
       },
-    }),
+    })
   ],
 };
