@@ -8,7 +8,7 @@ export default class TrainerPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      start: false,
+      start: true,
     };
   }
 

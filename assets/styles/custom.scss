@@ -22,6 +22,7 @@
         font-size: 40px;
         font-family: Lucida Console, monospace;
         .paper__left {
+          height: 26px;
           text-align: right;
           float: left;
           width: 50%;
@@ -41,12 +42,12 @@
           .paper__symbol {
             border: 2px solid #8BC34A;
             white-space: pre;
-            padding: 6px 3px;
+            padding: 3px;
           }
           .paper__symbol__error {
             border: 2px solid #F44336;
             white-space: pre;
-            padding: 6px 3px;
+            padding: 3px;
           }
         }
       }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import autobind from 'autobind-decorator';
-import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
+import Timer from './Timer';
 
 const text = 'Vivamus magna justo,';
 
@@ -11,10 +11,12 @@ export default class TrainerType extends Component {
     super(props);
     this.state = {
       initialText: text.slice(1),
-      typedText: ' ',
+      typedText: '',
       currentChar: text[0],
       countErrors: 0,
       isError: false,
+      startTime: 3*60*1000,
+      currentTime: 0,
     };
   }
   componentDidMount() {
@@ -27,16 +29,24 @@ export default class TrainerType extends Component {
 
   @autobind
   handleKeyUp(event) {
-    const { initialText, currentChar, typedText, isError, countErrors } = this.state;
+    const { initialText, currentChar, typedText, isError, countErrors, currentTime } = this.state;
 
     if (event.key === 'Tab' || event.key === 'Shift' || event.key === 'Alt' || event.key === 'Control') {
       return;
     }
 
     if (currentChar === event.key) {
+      if (typedText.length < 1) {
+        // setInterval(function() {
+        //   let timer = 0;
+        //  this.setState({ currentTime: currentTime + 1000 });
+        // }.bind(this), 1000);
+      }
+
       if (isError) {
         this.setState({ isError: false });
       }
+
       if (initialText.length < 1) {
         console.log('Finish', 'Errors:', countErrors, 'Symbols:', text.length);
         return;
@@ -57,26 +67,17 @@ export default class TrainerType extends Component {
   }
 
   render() {
-    const { initialText, typedText, currentChar, isError } = this.state;
+    const { initialText, typedText, currentChar, isError, startTime, currentTime } = this.state;
 
 
     return (
       <div className="paper__area">
         <div className="paper__header">
           <h3>Type text</h3>
-          <div className="timer">
-            <div className="timer__hours">
-              <h3>{'22:10'}</h3>
-            </div>
-            <div className="timer__circular">
-              <CircularProgress
-                mode="determinate"
-                value={80}
-                size={100}
-                thickness={9}
-              />
-            </div>
-          </div>
+          <Timer
+            startTime={startTime}
+            currentTime={currentTime}
+          />
         </div>
         <div className="paper__body">
           <Paper zDepth={2}>
