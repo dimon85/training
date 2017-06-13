@@ -15,7 +15,8 @@ export default class TrainerType extends Component {
       currentChar: text[0],
       countErrors: 0,
       isError: false,
-      startTime: 3*60*1000,
+      isTimerPlay: false,
+      startTime: 1.5*60*1000,
       currentTime: 0,
     };
   }
@@ -24,23 +25,62 @@ export default class TrainerType extends Component {
   }
 
   componentWillUnmount() {
+    clearInterval(this.timer);
     window.removeEventListener('keyup', this.handleKeyUp);
   }
 
   @autobind
-  handleKeyUp(event) {
-    const { initialText, currentChar, typedText, isError, countErrors, currentTime } = this.state;
+  startTimer() {
+    const { currentTime, startTime } = this.state;
+    if (currentTime >= startTime) {
+      clearInterval(this.timer);
+      return;
+    }
+    const updatedTime = currentTime + 1000;
+    this.setState({ currentTime: updatedTime });
+  }
 
-    if (event.key === 'Tab' || event.key === 'Shift' || event.key === 'Alt' || event.key === 'Control') {
+  @autobind
+  handleKeyUp(event) {
+    const {
+      isTimerPlay,
+      initialText,
+      currentChar,
+      typedText,
+      isError,
+      countErrors,
+    } = this.state;
+
+    console.log(event.key);
+    if (event.key === 'Escape') {
+      if (!isTimerPlay) {
+        console.log('Click Escape, timer stop');
+        return;
+      }
+
+      console.log('Click Escape, timer play, need stop');
+      this.setState({ isTimerPlay: false});
+      clearInterval(this.timer);
+      return;
+    }
+
+    if (event.key === 'Enter') {
+
+    }
+
+    if (event.key.length !== 1) {
       return;
     }
 
     if (currentChar === event.key) {
       if (typedText.length < 1) {
-        // setInterval(function() {
-        //   let timer = 0;
-        //  this.setState({ currentTime: currentTime + 1000 });
-        // }.bind(this), 1000);
+        if (isTimerPlay) {
+          return;
+        }
+        this.setState({ isTimerPlay: true });
+        this.timer = setInterval(() => {
+        this.startTimer();
+        }, 1000);
       }
 
       if (isError) {
@@ -73,7 +113,7 @@ export default class TrainerType extends Component {
     return (
       <div className="paper__area">
         <div className="paper__header">
-          <h3>Type text</h3>
+          <h3>Type text 1</h3>
           <Timer
             startTime={startTime}
             currentTime={currentTime}
