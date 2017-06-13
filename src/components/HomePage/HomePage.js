@@ -12,7 +12,7 @@ export default class HomePage extends Component {
     return (
       <div className="container">
         <h1>Home page</h1>
-        <div>Some textf</div>
+        <div>Some text</div>
       </div>
     );
   }

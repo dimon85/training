@@ -13,11 +13,10 @@ const rootEl = document.getElementById('root');
 const history = createHistory();
 const store = configureStore(history);
 
-const render = (Component) => {
+const render = Component => {
   ReactDOM.render(
     <AppContainer errorReporter={({ error }) => { throw error; }}>
       <Component
-        key={Math.random()}
         store={store}
         history={history}
       />
@@ -30,7 +29,7 @@ render(RootContainer);
 
 if (module.hot) {
   module.hot.accept('./containers/RootContainer', () => {
-    const Root = RootContainer;
+    const Root = require('./containers/RootContainer').default;
     render(Root);
   });
 }
