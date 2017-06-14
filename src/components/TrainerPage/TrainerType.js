@@ -31,6 +31,15 @@ export default class TrainerType extends Component {
 
   @autobind
   startTimer() {
+    this.setState({ isTimerPlay: true });
+    console.log('Start timer');
+    this.timer = setInterval(() => {
+      this.cbTimer();
+    }, 1000);
+  }
+
+  @autobind
+  cbTimer() {
     const { currentTime, startTime } = this.state;
     if (currentTime >= startTime) {
       clearInterval(this.timer);
@@ -51,7 +60,6 @@ export default class TrainerType extends Component {
       countErrors,
     } = this.state;
 
-    console.log(event.key);
     if (event.key === 'Escape') {
       if (!isTimerPlay) {
         console.log('Click Escape, timer stop');
@@ -65,7 +73,8 @@ export default class TrainerType extends Component {
     }
 
     if (event.key === 'Enter') {
-
+      this.startTimer();
+      return;
     }
 
     if (event.key.length !== 1) {
@@ -77,10 +86,8 @@ export default class TrainerType extends Component {
         if (isTimerPlay) {
           return;
         }
-        this.setState({ isTimerPlay: true });
-        this.timer = setInterval(() => {
-        this.startTimer();
-        }, 1000);
+
+         this.startTimer();
       }
 
       if (isError) {
@@ -107,8 +114,17 @@ export default class TrainerType extends Component {
   }
 
   render() {
-    const { initialText, typedText, currentChar, isError, startTime, currentTime } = this.state;
-
+    const {
+      initialText,
+      typedText,
+      currentChar,
+      isError,
+      startTime,
+      currentTime,
+      isTimerPlay,
+    } = this.state;
+    const isPaused = !!typedText && !isTimerPlay;
+    console.log(isPaused);
 
     return (
       <div className="paper__area">
@@ -117,6 +133,8 @@ export default class TrainerType extends Component {
           <Timer
             startTime={startTime}
             currentTime={currentTime}
+            isPaused={isPaused}
+            onPlay={this.startTimer}
           />
         </div>
         <div className="paper__body">
