@@ -3,12 +3,15 @@ import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import TrainerType from './TrainerType';
+import TrainerModal from './TrainerModal';
 
 export default class TrainerPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       start: true,
+      openModal: false,
+      data: {}
     };
   }
 
@@ -17,8 +20,18 @@ export default class TrainerPage extends Component {
     this.setState({ start: true });
   }
 
+  @autobind
+  handleOpenModal(data) {
+    this.setState({ openModal: true, data });
+  }
+
+  @autobind
+  handleCloseModal() {
+    this.setState({ openModal: false, start: false});
+  }
+
   render() {
-    const { start } = this.state;
+    const { start, data, openModal } = this.state;
 
     return (
       <div className="container">
@@ -39,8 +52,17 @@ export default class TrainerPage extends Component {
               </div>
             </div>
           }
-          {start && <TrainerType />}
+          {start &&
+            <TrainerType
+              onOpenModal={this.handleOpenModal}
+            />
+          }
         </Paper>
+        <TrainerModal
+          open={openModal}
+          data={data}
+          onCloseModal={this.handleCloseModal}
+        />
       </div>
     );
   }

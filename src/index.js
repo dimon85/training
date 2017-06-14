@@ -4,7 +4,7 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import createHistory from 'history/createBrowserHistory';
 import { AppContainer } from 'react-hot-loader';
 import configureStore from './store/configureStore';
-import RootContainer from './containers/RootContainer';
+import RootContainer from './conteiners/RootContainer';
 import '../assets/styles/styles.scss';
 import '../assets/images/favicon.ico';
 
@@ -29,8 +29,8 @@ const render = (Component) => {
 render(RootContainer);
 
 if (module.hot) {
-  module.hot.accept('./containers/RootContainer', () => {
-    const Root = require('./containers/RootContainer').default;
+  module.hot.accept('./conteiners/RootContainer', () => {
+    const Root = require('./conteiners/RootContainer').default;
     render(Root);
   });
 }

@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import Timer from './Timer';
 
-const text = 'Vivamus magna justo,';
+const text = 'vivamus magna justo,';
 
 
 export default class TrainerType extends Component {
+  static propTypes = {
+    onOpenModal: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -107,7 +112,13 @@ export default class TrainerType extends Component {
         this.setState({ isTimerPlay: false });
         clearInterval(this.timer);
 
-        console.log('Finish', 'Errors:', countErrors, 'Symbols:', text.length, 'Speed:', 60*(text.length/((currentTime)/1000)),  'symb/min');
+        const data = {
+          countErrors,
+          typedText,
+          currentTime,
+        };
+
+        this.props.onOpenModal(data);
         return;
       }
 
