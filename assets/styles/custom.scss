@@ -52,6 +52,12 @@
         }
       }
     }
+    .paper__bottom {
+      padding: 0 0 30px 40px;
+      text-align: left;
+      font-size: $font-size-bigger;
+      line-height: $line_height_h3;
+    }
     .timer {
       font-size: 1.5em;
       .timer__hours {

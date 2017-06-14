@@ -58,11 +58,11 @@ export default class TrainerType extends Component {
       typedText,
       isError,
       countErrors,
+      currentTime,
     } = this.state;
 
     if (event.key === 'Escape') {
       if (!isTimerPlay) {
-        console.log('Click Escape, timer stop');
         return;
       }
 
@@ -73,11 +73,19 @@ export default class TrainerType extends Component {
     }
 
     if (event.key === 'Enter') {
+      if (isTimerPlay || !typedText) {
+        return;
+      }
+
       this.startTimer();
       return;
     }
 
     if (event.key.length !== 1) {
+      return;
+    }
+
+    if (!isTimerPlay && !!typedText) {
       return;
     }
 
@@ -95,7 +103,11 @@ export default class TrainerType extends Component {
       }
 
       if (initialText.length < 1) {
-        console.log('Finish', 'Errors:', countErrors, 'Symbols:', text.length);
+
+        this.setState({ isTimerPlay: false });
+        clearInterval(this.timer);
+
+        console.log('Finish', 'Errors:', countErrors, 'Symbols:', text.length, 'Speed:', 60*(text.length/((currentTime)/1000)),  'symb/min');
         return;
       }
 
@@ -124,12 +136,11 @@ export default class TrainerType extends Component {
       isTimerPlay,
     } = this.state;
     const isPaused = !!typedText && !isTimerPlay;
-    console.log(isPaused);
 
     return (
       <div className="paper__area">
         <div className="paper__header">
-          <h3>Type text 1</h3>
+          <h3>Type text level - {'"easy"'}</h3>
           <Timer
             startTime={startTime}
             currentTime={currentTime}
@@ -155,6 +166,10 @@ export default class TrainerType extends Component {
               </div>
             </div>
           </Paper>
+        </div>
+        <div className="paper__bottom">
+          <div>Press {'"ESC"'} - to pause.</div>
+          <div>Press {'"Enter"'} - to continue.</div>
         </div>
       </div>
     );
