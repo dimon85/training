@@ -27,7 +27,7 @@ export default function Timer(props) {
   } = props;
 
   const formattedTime = getDateFormattedUtc(currentTime, 'mm:ss');
-  const percentTime = 100 - ((startTime - currentTime) / startTime * 100);
+  const percentTime = 100 - (((startTime - currentTime) / startTime) * 100);
 
   return (
     <div className="timer">
@@ -37,8 +37,9 @@ export default function Timer(props) {
           <IconButton
             style={styles.medium}
             iconStyle={styles.mediumIcon}
-            onTouchTap={onPlay}>
-            <PauseIcon/>
+            onTouchTap={onPlay}
+          >
+            <PauseIcon />
           </IconButton>
         }
       </div>

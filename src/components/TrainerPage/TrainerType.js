@@ -16,7 +16,7 @@ export default class TrainerType extends Component {
       countErrors: 0,
       isError: false,
       isTimerPlay: false,
-      startTime: 1.5*60*1000,
+      startTime: 1.5 * 60 * 1000,
       currentTime: 0,
     };
   }
@@ -67,7 +67,7 @@ export default class TrainerType extends Component {
       }
 
       console.log('Click Escape, timer play, need stop');
-      this.setState({ isTimerPlay: false});
+      this.setState({ isTimerPlay: false });
       clearInterval(this.timer);
       return;
     }
@@ -87,7 +87,7 @@ export default class TrainerType extends Component {
           return;
         }
 
-         this.startTimer();
+        this.startTimer();
       }
 
       if (isError) {
