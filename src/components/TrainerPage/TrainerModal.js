@@ -10,26 +10,29 @@ export default function TrainerModal(props) {
     open,
     onCloseModal,
   } = props;
+
   const actions = [
     <FlatButton
       label="Cancel"
-      primary={true}
+      primary
       onTouchTap={onCloseModal}
     />,
     <FlatButton
       label="Submit"
-      primary={true}
+      primary
+      keyboardFocused
       onTouchTap={onCloseModal}
     />,
   ];
 
-  const speed = !isEmpty(data) && 60*(data.typedText.length/((data.currentTime)/1000));
+  const speed = !isEmpty(data) && Math.round(60 * (data.typedText.length / ((data.currentTime) / 1000)));
+
   return (
     <div>
       <Dialog
         title="Dialog With Actions"
         actions={actions}
-        modal={true}
+        modal
         open={open}
       >
         {!isEmpty(data) &&

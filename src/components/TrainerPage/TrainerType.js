@@ -4,24 +4,23 @@ import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import Timer from './Timer';
 
-const text = 'vivamus magna justo,';
-
-
 export default class TrainerType extends Component {
   static propTypes = {
+    text: PropTypes.string.isRequired,
     onOpenModal: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      initialText: text.slice(1),
+
+      initialText: props.text.slice(1),
       typedText: '',
-      currentChar: text[0],
+      currentChar: props.text[0],
       countErrors: 0,
       isError: false,
       isTimerPlay: false,
-      startTime: 1.5 * 60 * 1000,
+      startTime: 0.5 * 60 * 1000,
       currentTime: 0,
     };
   }
@@ -45,8 +44,15 @@ export default class TrainerType extends Component {
 
   @autobind
   cbTimer() {
-    const { currentTime, startTime } = this.state;
+    const { currentTime, startTime, typedText, countErrors } = this.state;
     if (currentTime >= startTime) {
+      const data = {
+        countErrors,
+        typedText,
+        currentTime,
+      };
+
+      this.props.onOpenModal(data);
       clearInterval(this.timer);
       return;
     }
@@ -108,7 +114,6 @@ export default class TrainerType extends Component {
       }
 
       if (initialText.length < 1) {
-
         this.setState({ isTimerPlay: false });
         clearInterval(this.timer);
 
