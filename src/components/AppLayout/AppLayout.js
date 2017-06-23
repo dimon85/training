@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import autobind from 'autobind-decorator';
 import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
 
 export default class AppLayout extends Component {
   static propTypes = {
@@ -19,6 +22,7 @@ export default class AppLayout extends Component {
     this.state = {
       loading: false,
       open: false,
+      openPanel: false,
       targetOrigin: {
         horizontal: 'right',
         vertical: 'top'
@@ -32,6 +36,16 @@ export default class AppLayout extends Component {
     if (this.props.pathname !== nextProps.pathname) {
       this.setState({ open: false });
     }
+  }
+
+  @autobind
+  handleClose() {
+    this.setState({ openPanel: false });
+  }
+
+  @autobind
+  handleTogglePanel() {
+    this.setState({ openPanel: !this.state.openPanel });
   }
 
   handleRequestChange(open, reason) {
@@ -74,6 +88,7 @@ export default class AppLayout extends Component {
 
   render() {
     const { children } = this.props;
+    const { openPanel } = this.state;
 
     return (
       <div>
@@ -81,7 +96,23 @@ export default class AppLayout extends Component {
           title={this.renderLogo()}
           className="navbar"
           iconElementRight={this.renderIconRight()}
+          onLeftIconButtonTouchTap={this.handleTogglePanel}
         />
+        <Drawer
+          docked={false}
+          width={200}
+          open={openPanel}
+          onRequestChange={(openPanel) => this.setState({ openPanel })}
+        >
+          <Link to="/trainer">
+            <MenuItem
+              primaryText="Trainer"
+              leftIcon={<Keyboard />}
+              onTouchTap={this.handleClose}
+            />
+          </Link>
+          <MenuItem onTouchTap={this.handleClose}>Menu Item 2</MenuItem>
+        </Drawer>
         {children}
       </div>
     );
