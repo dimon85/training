@@ -18,6 +18,7 @@ export default class TrainerType extends Component {
       typedText: '',
       currentChar: props.text[0],
       countErrors: 0,
+      errorsData: [],
       isError: false,
       isTimerPlay: false,
       startTime: 0.5 * 60 * 1000,

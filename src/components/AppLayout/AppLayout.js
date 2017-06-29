@@ -102,7 +102,7 @@ export default class AppLayout extends Component {
           docked={false}
           width={200}
           open={openPanel}
-          onRequestChange={(openPanel) => this.setState({ openPanel })}
+          onRequestChange={open => this.setState({ openPanel: open })}
         >
           <Link to="/trainer">
             <MenuItem

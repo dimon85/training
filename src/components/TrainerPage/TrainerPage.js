@@ -4,11 +4,12 @@ import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import TrainerType from './TrainerType';
 import TrainerModal from './TrainerModal';
+import TrainerInfo from './TrainerInfo';
 
-const text = 'THIS is a simple paragraph that is meant to be nice and easy to type which is why there will be mommas';
-// ' no periods or any capital letters so i guess this means that it cannot really be considered a paragraph' +
-// ' but just a series of run on sentences this should help you get faster at typing as im trying not to use' +
-// ' too many difficult words in it although i think that i might start making it hard by including' +
+const defText = 'THIS is a simple paragraph that is meant to be nice and easy to type which is why there will ';
+// ' be mommas no periods or any capital letters so i guess this means that it cannot really be considered a ' +
+// ' paragraph but just a series of run on sentences this should help you get faster at typing as im trying not to ' +
+// ' use too many difficult words in it although i think that i might start making it hard by including' +
 // ' some more difficult letters I\'m typing pretty quickly so forgive me for any mistakes i think that' +
 // ' i will not just tell you a story about the time i went to the zoo and found a monkey and a fox playing' +
 // ' together they were so cute and i think that they were not supposed to be in the same cage but they somehow were' +
@@ -21,7 +22,7 @@ export default class TrainerPage extends Component {
       start: false,
       openModal: false,
       data: {},
-      text
+      text: defText,
     };
   }
 
@@ -70,6 +71,11 @@ export default class TrainerPage extends Component {
             />
           }
         </Paper>
+        {start &&
+          <TrainerInfo
+            countErrors={10}
+          />
+        }
         <TrainerModal
           open={openModal}
           data={data}
