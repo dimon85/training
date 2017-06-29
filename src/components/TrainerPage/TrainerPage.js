@@ -6,7 +6,7 @@ import TrainerType from './TrainerType';
 import TrainerModal from './TrainerModal';
 import TrainerInfo from './TrainerInfo';
 
-const defText = 'THIS is a simple paragraph that is meant to be nice and easy to type which is why there will ';
+const defText = 'This is a simple paragraph that is meant to be nice and easy to type which is why there will';
 // ' be mommas no periods or any capital letters so i guess this means that it cannot really be considered a ' +
 // ' paragraph but just a series of run on sentences this should help you get faster at typing as im trying not to ' +
 // ' use too many difficult words in it although i think that i might start making it hard by including' +
@@ -18,12 +18,20 @@ const defText = 'THIS is a simple paragraph that is meant to be nice and easy to
 export default class TrainerPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+
+    this.initState = {
       start: false,
       openModal: false,
-      data: {},
+      currentTime: 0,
+      typedData: [],
+      errorsData: [],
+      typedCount: 0,
+      errorsCount: 0,
       text: defText,
+      textLength: defText.length,
     };
+
+    this.state = this.initState;
   }
 
   @autobind
@@ -32,17 +40,58 @@ export default class TrainerPage extends Component {
   }
 
   @autobind
-  handleOpenModal(data) {
-    this.setState({ openModal: true, start: false, data });
+  handleUpdateTime(time) {
+    this.setState({ currentTime: time });
+  }
+
+  @autobind
+  handleAddChar(item) {
+    const { typedCount, typedData } = this.state;
+    this.setState({
+      typedData: [
+        ...typedData,
+        item
+      ],
+      typedCount: typedCount + 1,
+    });
+  }
+
+  @autobind
+  handleAddError(error) {
+    const { errorsData, errorsCount } = this.state;
+    this.setState({
+      errorsData: [
+        ...errorsData,
+        error
+      ],
+      errorsCount: errorsCount + 1,
+    });
+  }
+
+  @autobind
+  handleOpenModal() {
+    this.setState({
+      openModal: true,
+      start: false,
+    });
   }
 
   @autobind
   handleCloseModal() {
-    this.setState({ openModal: false });
+    this.setState(this.initState);
   }
 
   render() {
-    const { start, data, text, openModal } = this.state;
+    const {
+      start,
+      textLength,
+      typedCount,
+      currentTime,
+      errorsCount,
+      errorsData,
+      text,
+      openModal,
+    } = this.state;
 
     return (
       <div className="container">
@@ -67,18 +116,28 @@ export default class TrainerPage extends Component {
           {start &&
             <TrainerType
               text={text}
+              onUpdateTime={this.handleUpdateTime}
+              onAddChar={this.handleAddChar}
+              onAddError={this.handleAddError}
               onOpenModal={this.handleOpenModal}
             />
           }
         </Paper>
         {start &&
           <TrainerInfo
-            countErrors={10}
+            currentTime={currentTime}
+            textLength={textLength}
+            typedCount={typedCount}
+            errorsCount={errorsCount}
           />
         }
         <TrainerModal
           open={openModal}
-          data={data}
+          textLength={textLength}
+          typedCount={typedCount}
+          currentTime={currentTime}
+          errorsCount={errorsCount}
+          errorsData={errorsData}
           onCloseModal={this.handleCloseModal}
         />
       </div>

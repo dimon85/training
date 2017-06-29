@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import isEmpty from 'lodash/isEmpty';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 export default function TrainerModal(props) {
   const {
-    data,
+    textLength,
+    typedCount,
+    currentTime,
+    errorsCount,
+    errorsData,
     open,
     onCloseModal,
   } = props;
@@ -25,7 +28,8 @@ export default function TrainerModal(props) {
     />,
   ];
 
-  const speed = !isEmpty(data) && Math.round(60 * (data.typedText.length / ((data.currentTime) / 1000)));
+  const speed = Math.round(60 * (typedCount / ((currentTime) / 1000)));
+  const errorsPercent = Math.round((errorsCount*100)/textLength);
 
   return (
     <div>
@@ -35,10 +39,11 @@ export default function TrainerModal(props) {
         modal
         open={open}
       >
-        {!isEmpty(data) &&
+        {open &&
           <ul>
-            <li>Errors: {data.countErrors}</li>
-            <li>Typed symbols: {data.typedText.length}</li>
+            <li>Typed symbols: {typedCount}/{textLength} symb</li>
+            <li>Typed errors: {errorsCount} symb</li>
+            <li>Errors: {errorsPercent} %</li>
             <li>Speed: {speed} symb/min</li>
           </ul>
         }
@@ -48,7 +53,14 @@ export default function TrainerModal(props) {
 }
 
 TrainerModal.propTypes = {
-  data: PropTypes.object.isRequired,
+  textLength: PropTypes.number.isRequired,
+  typedCount: PropTypes.number.isRequired,
+  currentTime: PropTypes.oneOfType([
+    PropTypes.string.isRequired,
+    PropTypes.number.isRequired,
+    ]).isRequired,
+  errorsCount: PropTypes.number.isRequired,
+  errorsData: PropTypes.array.isRequired,
   open: PropTypes.bool.isRequired,
   onCloseModal: PropTypes.func.isRequired,
 };

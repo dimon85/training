@@ -8,17 +8,17 @@ export default class TrainerType extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
     onOpenModal: PropTypes.func.isRequired,
+    onUpdateTime: PropTypes.func.isRequired,
+    onAddChar: PropTypes.func.isRequired,
+    onAddError: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-
       initialText: props.text.slice(1),
       typedText: '',
       currentChar: props.text[0],
-      countErrors: 0,
-      errorsData: [],
       isError: false,
       isTimerPlay: false,
       startTime: 0.5 * 60 * 1000,
@@ -45,19 +45,15 @@ export default class TrainerType extends Component {
 
   @autobind
   cbTimer() {
-    const { currentTime, startTime, typedText, countErrors } = this.state;
+    const { currentTime, startTime } = this.state;
     if (currentTime >= startTime) {
-      const data = {
-        countErrors,
-        typedText,
-        currentTime,
-      };
-
-      this.props.onOpenModal(data);
       clearInterval(this.timer);
+      this.props.onOpenModal();
       return;
     }
+
     const updatedTime = currentTime + 1000;
+    this.props.onUpdateTime(updatedTime);
     this.setState({ currentTime: updatedTime });
   }
 
@@ -69,7 +65,6 @@ export default class TrainerType extends Component {
       currentChar,
       typedText,
       isError,
-      countErrors,
       currentTime,
     } = this.state;
 
@@ -114,24 +109,31 @@ export default class TrainerType extends Component {
         this.setState({ isError: false });
       }
 
+      this.props.onAddChar({
+        typedChar: currentChar,
+        currentTime
+      });
+
       if (initialText.length < 1) {
         this.setState({ isTimerPlay: false });
+        this.props.onOpenModal();
         clearInterval(this.timer);
-
-        const data = {
-          countErrors,
-          typedText,
-          currentTime,
-        };
-
-        this.props.onOpenModal(data);
         return;
       }
 
       const updatedCurrentChar = initialText[0];
       const updatedInitialText = initialText.slice(1);
       const updatedText = typedText + currentChar;
-      this.setState({ typedText: updatedText, initialText: updatedInitialText, currentChar: updatedCurrentChar });
+
+      this.setState({
+        typedText: updatedText,
+        initialText: updatedInitialText,
+        currentChar: updatedCurrentChar,
+      });
+      return;
+    }
+
+    if (!isTimerPlay) {
       return;
     }
 
@@ -139,7 +141,10 @@ export default class TrainerType extends Component {
       this.setState({ isError: true });
     }
 
-    this.setState({ countErrors: countErrors + 1 });
+    this.props.onAddError({
+      typedChar: event.key,
+      needChar: currentChar,
+    });
   }
 
   render() {
