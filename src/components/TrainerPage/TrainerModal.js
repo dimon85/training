@@ -29,8 +29,9 @@ export default function TrainerModal(props) {
   ];
 
   const speed = Math.round(60 * (typedCount / ((currentTime) / 1000)));
-  const errorsPercent = Math.round((errorsCount*100)/textLength);
+  const errorsPercent = Math.round((errorsCount * 100) / textLength);
 
+  console.log('errors data: ', errorsData);
   return (
     <div>
       <Dialog
@@ -58,7 +59,7 @@ TrainerModal.propTypes = {
   currentTime: PropTypes.oneOfType([
     PropTypes.string.isRequired,
     PropTypes.number.isRequired,
-    ]).isRequired,
+  ]).isRequired,
   errorsCount: PropTypes.number.isRequired,
   errorsData: PropTypes.array.isRequired,
   open: PropTypes.bool.isRequired,

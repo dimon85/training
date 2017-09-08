@@ -6,16 +6,16 @@ import TrainerPage from './components/TrainerPage';
 import HelpPage from './components/HelpPage';
 
 export default () =>
-    /**
+/**
    * Please keep routes in alphabetical order
    */
-   (
-     <App>
-       <Switch>
-         <Route exact path="/" component={HomePage} />
-         <Route path="/trainer" component={TrainerPage} />
-         <Route path="/help" component={HelpPage} />
-         <Route render={() => (<div>Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
-       </Switch>
-     </App>
+  (
+    <App>
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route path="/trainer" component={TrainerPage} />
+        <Route path="/help" component={HelpPage} />
+        <Route render={() => (<div>Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
+      </Switch>
+    </App>
   );

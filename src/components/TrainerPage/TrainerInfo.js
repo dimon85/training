@@ -11,7 +11,7 @@ function TrainerInfo(props) {
   } = props;
 
   const speed = !!currentTime && Math.round(60 * (typedCount / ((currentTime) / 1000)));
-  const errorsPercent = ((errorsCount*100)/textLength).toFixed(2);
+  const errorsPercent = ((errorsCount * 100) / textLength).toFixed(2);
 
   return (
     <Paper zDepth={4} className="info">
@@ -29,6 +29,7 @@ function TrainerInfo(props) {
 
 TrainerInfo.propTypes = {
   textLength: PropTypes.number.isRequired,
+  currentTime: PropTypes.number.isRequired,
   typedCount: PropTypes.number.isRequired,
   errorsCount: PropTypes.number.isRequired,
 };
