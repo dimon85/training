@@ -107,7 +107,6 @@ export default class TrainerPage extends Component {
                   label="Start"
                   primary={Boolean(true)}
                   fullWidth={Boolean(true)}
-                  keyboardFocused
                   onTouchTap={this.handleClickStart}
                 />
               </div>
