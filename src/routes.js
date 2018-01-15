@@ -4,6 +4,7 @@ import App from './components/App';
 import HomePage from './components/HomePage';
 import TrainerPage from './components/TrainerPage';
 import HelpPage from './components/HelpPage';
+import LoginPage from './conteiners/LoginPage';
 
 export default () =>
 /**
@@ -15,6 +16,7 @@ export default () =>
         <Route exact path="/" component={HomePage} />
         <Route path="/trainer" component={TrainerPage} />
         <Route path="/help" component={HelpPage} />
+        <Route path="/login" component={LoginPage} />
         <Route render={() => (<div>Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
       </Switch>
     </App>

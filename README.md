@@ -32,10 +32,12 @@ $ npm install
 $ npm start
 ```
 
-## Build
+## Build and run product mode
 
 ```
 $ npm run build
+$ npm run server:build
+$ npm run server:run
 ```
 Create project:
 

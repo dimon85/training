@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import autobind from 'autobind-decorator';
 import AppBar from 'material-ui/AppBar';
@@ -9,11 +10,21 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
+import { isGuest } from '../../selectors';
 
-export default class AppLayout extends Component {
+
+const mapStateToProps = state => ({
+  isGuest: isGuest(state),
+});
+
+const dispatchToProps = dispatch => ({
+});
+
+export class AppLayout extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     pathname: PropTypes.string.isRequired,
+    isGuest: PropTypes.bool.isRequired,
   };
 
   constructor(props) {
@@ -28,8 +39,6 @@ export default class AppLayout extends Component {
         vertical: 'top'
       }
     };
-
-    this.handleRequestChange = this.handleRequestChange.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -48,6 +57,7 @@ export default class AppLayout extends Component {
     this.setState({ openPanel: !this.state.openPanel });
   }
 
+  @autobind
   handleRequestChange(open, reason) {
     if (reason === 'iconTap') {
       this.setState({ open });
@@ -62,6 +72,7 @@ export default class AppLayout extends Component {
   }
 
   renderIconRight() {
+    const { isGuest } = this.props;
     const { targetOrigin, open } = this.state;
     return (
       <IconMenu
@@ -71,9 +82,8 @@ export default class AppLayout extends Component {
         anchorOrigin={targetOrigin}
         onRequestChange={this.handleRequestChange}
       >
-        <Link to="/trainer"><MenuItem primaryText="Trainer" /></Link>
-        <Link to="/help"><MenuItem primaryText="Help" /></Link>
-        <MenuItem disabled primaryText="Login" />
+        <Link to="/login"><MenuItem primaryText="Login" /></Link>
+        <Link to="/help"><MenuItem primaryText="Signup" /></Link>
       </IconMenu>
     );
   }
@@ -87,15 +97,16 @@ export default class AppLayout extends Component {
   }
 
   render() {
-    const { children } = this.props;
+    const { children, isGuest } = this.props;
     const { openPanel } = this.state;
+    console.log('**', isGuest);
 
     return (
       <div>
         <AppBar
           title={this.renderLogo()}
           className="navbar"
-          iconElementRight={this.renderIconRight()}
+          iconElementRight={isGuest ? this.renderIconRight() : null}
           onLeftIconButtonClick={this.handleTogglePanel}
         />
         <Drawer
@@ -118,3 +129,5 @@ export default class AppLayout extends Component {
     );
   }
 }
+
+export default connect(mapStateToProps, dispatchToProps)(AppLayout);

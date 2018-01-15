@@ -8,6 +8,10 @@ import RootContainer from './conteiners/RootContainer';
 import '../assets/styles/styles.scss';
 import '../assets/images/favicon.ico';
 
+if (process.env.NODE_ENV === 'production') {
+  require('offline-plugin/runtime').install();
+}
+
 injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');

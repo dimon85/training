@@ -26,7 +26,7 @@ app.use(require('webpack-hot-middleware')(compiler));
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 app.use(morgan('dev'));
-app.use(express.static(path.join(__dirname, '/dist')));
+app.use(express.static(path.join(__dirname, '/assets/images/')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../src/index.html'));

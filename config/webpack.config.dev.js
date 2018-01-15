@@ -31,7 +31,7 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(png|ttf|eot|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        test: /\.(png|ico|ttf|eot|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         use: ['url-loader'],
       },
       {
@@ -49,7 +49,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(jpe?g|ico)(\?.*)?$/,
+        test: /\.(jpe?g)(\?.*)?$/,
         use: ['file-loader'],
       },
     ],
