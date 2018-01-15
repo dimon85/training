@@ -28,6 +28,7 @@ const render = (Component) => {
 
 render(RootContainer);
 
+// Webpack Hot Module Replacement API
 if (module.hot) {
   module.hot.accept('./conteiners/RootContainer', () => {
     const Root = require('./conteiners/RootContainer').default;

@@ -2,8 +2,8 @@
 
 ## Contains
 
-- [x] [Webpack 2.2](https://webpack.github.io)
-- [x] [React 15.x](https://facebook.github.io/react/)
+- [x] [Webpack 3.x](https://webpack.github.io)
+- [x] [React 16.x](https://facebook.github.io/react/)
 - [x] [Babel 6.x](https://babeljs.io/)
 
 ## Features
@@ -49,7 +49,7 @@ Install core:
 $ npm i -S react react-dom prop-types
 ```
 
-Install webpack 2, and dependencies
+Install webpack 3, and dependencies
 ```
 $ npm i -D webpack
 $ npm i -D autoprefixer postcss-cssnext postcss-import progress-bar-webpack-plugin
@@ -61,7 +61,7 @@ $ npm i -D style-loader css-loader postcss-loader node-sass sass-loader url-load
 Install compiler
 ```
 $ npm i -D babel-core babel-loader babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread
-$ npm i -D babel-plugin-transform-regenerator babel-preset-latest babel-preset-stage-2
+$ npm i -D babel-plugin-transform-regenerator babel-preset-env babel-preset-stage-2
 $ npm i -D babel-preset-react-app babel-plugin-transform-runtime babel-plugin-transform-decorators-legacy
 $ npm i -S babel-runtime
 ```

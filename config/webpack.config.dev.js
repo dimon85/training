@@ -6,6 +6,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 module.exports = {
   devtool: 'eval',
   entry: [
+    'babel-polyfill',
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
     './src/index.js',
@@ -79,6 +80,7 @@ module.exports = {
           require('postcss-cssnext'),
         ],
       },
-    })
+    }),
+    new webpack.NoEmitOnErrorsPlugin(),
   ],
 };

@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import getRoutes from '../routes';
 
-export function RootContainer(props) {
+const RootContainer = (props) => {
   const { store, history } = props;
   const routes = getRoutes(store);
 
@@ -15,7 +15,7 @@ export function RootContainer(props) {
       </ConnectedRouter>
     </Provider>
   );
-}
+};
 
 RootContainer.propTypes = {
   store: PropTypes.object.isRequired,

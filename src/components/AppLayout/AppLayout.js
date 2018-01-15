@@ -96,7 +96,7 @@ export default class AppLayout extends Component {
           title={this.renderLogo()}
           className="navbar"
           iconElementRight={this.renderIconRight()}
-          onLeftIconButtonTouchTap={this.handleTogglePanel}
+          onLeftIconButtonClick={this.handleTogglePanel}
         />
         <Drawer
           docked={false}
