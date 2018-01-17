@@ -8,10 +8,9 @@ import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
 import config from '../config/webpack.config.dev';
 
-const customPort = 3113;
+const customPort = 3333;
 const app = express();
 const compiler = webpack(config);
-
 
 //
 // Register Webpack middleware, hot-reload
