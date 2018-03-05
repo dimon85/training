@@ -8,10 +8,12 @@ import RootContainer from './conteiners/RootContainer';
 import '../assets/styles/styles.scss';
 import '../assets/images/favicon.ico';
 
+//
+// Register serverWorkers on stg and live
+// -----------------------------------------------------------------------------
 if (process.env.NODE_ENV === 'production') {
-  require('offline-plugin/runtime').install();
+  require('offline-plugin/runtime').install(); // eslint-disable-line global-require
 }
-
 injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');

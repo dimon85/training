@@ -8,10 +8,9 @@ import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
 import config from '../config/webpack.config.dev';
 
-const customPort = 3113;
+const customPort = 3333;
 const app = express();
 const compiler = webpack(config);
-
 
 //
 // Register Webpack middleware, hot-reload
@@ -29,7 +28,7 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '/assets/images/')));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../src/index.html'));
+  res.sendFile(path.join(__dirname, './index.html'));
 });
 
 

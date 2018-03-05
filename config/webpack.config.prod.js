@@ -3,102 +3,115 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const merge = require('webpack-merge');
+const autoprefixer = require('autoprefixer');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-module.exports = {
-  entry: [
-    'babel-polyfill',
-    './src/index',
-  ],
+const common = require('./webpack.common.js');
+
+const ROOT_DIR = path.resolve(__dirname, '../');
+const DIST_DIR = path.resolve(ROOT_DIR, 'dist');
+const MODULES_DIR = path.resolve(ROOT_DIR, 'node_modules');
+
+const prodConfig = {
+  mode: 'production',
+  devtool: 'source-map',
+  target: 'web',
   output: {
-    path: path.join(__dirname, '../dist'),
+    path: DIST_DIR,
     publicPath: '/',
-    filename: 'bundle.[hash].js',
+    filename: '[name].[chunkhash].js',
+    chunkFilename: '[name].[chunkhash].js',
   },
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-        exclude: [
-          path.resolve(__dirname, 'node_modules'),
-        ],
-      },
-      {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        })
-      },
-      {
-        test: /\.(png|gif|svg|ttf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
-        use: ['url-loader'],
-      },
+      // sass
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader!sass-loader',
-        })
-      },
-      {
-        test: /\.(jpe?g|ico)(\?.*)?$/,
-        use: [
-          'file-loader',
-          {
-            loader: 'image-webpack-loader',
-            options: {},
-          },
-        ],
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                plugins: [autoprefixer('last 2 version')],
+                sourceMap: true
+              }
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true
+              }
+            }
+          ]
+        }),
       },
     ],
   },
-  resolve: {
-    modules: [
-      'src',
-      'node_modules',
-      'theme',
-      'theme/fonts',
-    ],
-    alias: {
-      theme: path.resolve(__dirname, 'src', 'theme'),
+  optimization: {
+    runtimeChunk: false,
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          chunks: 'all',
+          test: MODULES_DIR,
+          name: 'vendor'
+        },
+      },
     },
+    minimizer: [
+      new UglifyJsPlugin({
+        cache: true,
+        parallel: true,
+        sourceMap: true
+      })
+    ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-        CUSTOM_HOST: JSON.stringify(process.env.CUSTOM_HOST),
-        HTTPS: JSON.stringify(process.env.HTTPS),
-        RUBY_BACKEND: JSON.stringify(process.env.RUBY_BACKEND),
-      }
+    // clean dist folder
+    new CleanWebpackPlugin(['dist'], { root: ROOT_DIR }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new ExtractTextPlugin({
+      filename: 'styles.[hash].css',
+      allChunks: false,
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false,
-      },
-    }),
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        context: './',
-        postcss: [
-          require('postcss-import'),
-          require('postcss-cssnext'),
-        ],
-      },
-    }),
-    new ExtractTextPlugin('styles.[hash].css'),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
-      favicon: 'assets/images/favicon.ico'
+      favicon: 'assets/images/favicon.ico',
+      inject: true,
+      sourceMap: true,
+      chunksSortMode: 'dependency'
+    }),
+    new CompressionWebpackPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: new RegExp('\\.(js|css)$'),
+      threshold: 10240,
+      minRatio: 0.8
     }),
     new OfflinePlugin({
-      caches: {
-        main: [
-          'styles.*.css',
-          'bundle.*.js',
-        ]
-      }
+      caches: 'all',
+      AppCache: false,
+      ServiceWorker: {
+        minify: false,
+      },
     }),
+    // load `moment/locale/nl.js` and `moment/locale/ru.js`
+    new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /nl|ru/),
   ],
 };
+
+if (process.env.NODE_ANALYZE) {
+  prodConfig.plugins.push(new BundleAnalyzerPlugin());
+}
+
+module.exports = merge(common, prodConfig);

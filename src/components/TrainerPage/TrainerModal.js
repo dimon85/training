@@ -16,11 +16,13 @@ export default function TrainerModal(props) {
 
   const actions = [
     <FlatButton
+      key="button_1"
       label="Cancel"
       primary
       onTouchTap={onCloseModal}
     />,
     <FlatButton
+      key="button_2"
       label="Submit"
       primary
       keyboardFocused
