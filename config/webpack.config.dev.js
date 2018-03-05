@@ -1,86 +1,74 @@
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const webpack = require('webpack');
+const merge = require('webpack-merge');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
+const common = require('./webpack.common.js');
 
-module.exports = {
+const ROOT_DIR = path.resolve(__dirname, '../');
+const DIST_DIR = path.resolve(ROOT_DIR, 'dist');
+
+module.exports = merge(common, {
+  mode: 'development',
   devtool: 'eval',
   entry: [
-    'babel-polyfill',
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
-    './src/index.js',
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    publicPath: '/',
+    path: DIST_DIR,
+    publicPath: '/dist/',
     filename: 'bundle.js',
   },
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        use: 'babel-loader',
-        exclude: [
-          path.resolve(__dirname, 'node_modules'),
-        ],
-      },
-
+      // css
       {
         test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        include: /node_modules/,
+        loader: [
+          'style-loader',
+          'css-loader',
+        ]
       },
-      {
-        test: /\.(png|ico|ttf|eot|gif|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        use: ['url-loader'],
-      },
+      // sass
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader',
+        use: [
+          {
+            loader: 'style-loader'
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              sourceMap: true,
+            },
+          },
           {
             loader: 'postcss-loader',
             options: {
+              sourceMap: true,
               plugins() {
                 return [autoprefixer('last 2 version')];
               }
             }
           },
-          'sass-loader'
-        ],
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: true,
+            },
+          }
+        ]
       },
-      {
-        test: /\.(jpe?g)(\?.*)?$/,
-        use: ['file-loader'],
-      },
-    ],
-  },
-  resolve: {
-    modules: [
-      'src',
-      'node_modules',
-    ],
+    ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('dev'),
-      }
-    }),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
     new ProgressBarPlugin({
-      format: '  Build [:bar] ' + ':percent' + ' (:elapsed seconds)',
+      format: 'Build [:bar] :percent (:elapsed seconds)',
       clear: false,
     }),
-    new webpack.LoaderOptionsPlugin({
-      options: {
-        context: './',
-        postcss: [
-          require('postcss-import'),
-          require('postcss-cssnext'),
-        ],
-      },
-    }),
-    new webpack.NoEmitOnErrorsPlugin(),
-  ],
-};
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+  ]
+});

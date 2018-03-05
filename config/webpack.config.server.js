@@ -1,6 +1,6 @@
-const webpack = require('webpack');
-const path = require('path');
-const fs = require('fs');
+import webpack from 'webpack';
+import path from 'path';
+import fs from 'fs';
 
 const nodeModules = {};
 fs.readdirSync('node_modules')
@@ -9,21 +9,29 @@ fs.readdirSync('node_modules')
     nodeModules[mod] = `commonjs ${mod}`;
   });
 
+const ROOT_DIR = path.resolve(__dirname, '../');
+const DIST_DIR = path.resolve(ROOT_DIR, 'dist');
+const TOOLS_DIR = path.resolve(ROOT_DIR, 'tools');
+
 module.exports = {
-  entry: ['babel-polyfill', './tools/prodServer.js'],
+  mode: 'production',
+  entry: [
+    'babel-polyfill',
+    path.join(TOOLS_DIR, 'prodServer'),
+  ],
   target: 'node',
   node: {
     __filename: true,
     __dirname: true
   },
   output: {
-    path: path.join(__dirname, '../dist'),
+    path: path.join(DIST_DIR, 'server'),
     filename: 'server.js'
   },
   module: {
     rules: [
       {
-        test: /\.(js)$/,
+        test: /\.(js|jsx)$/,
         use: 'babel-loader',
         exclude: /node_modules/
       },
