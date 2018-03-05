@@ -2,8 +2,9 @@
 
 ## Contains
 
-- [x] [Webpack 3.x](https://webpack.github.io)
+- [x] [Webpack 4.x](https://webpack.github.io)
 - [x] [React 16.x](https://facebook.github.io/react/)
+- [x] [React-router 4.x](https://github.com/ReactTraining/react-router)
 - [x] [Babel 6.x](https://babeljs.io/)
 
 ## Features
