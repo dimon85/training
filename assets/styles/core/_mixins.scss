@@ -1,4 +1,13 @@
- //clearfix
+
+// flex
+@mixin flex-container($direction: row, $spacing: flex-start, $alignment: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $spacing;
+  align-items: $alignment;
+}
+
+// clearfix
 @mixin clearfix() {
   &:before,
   &:after {

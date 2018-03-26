@@ -96,7 +96,7 @@ export default class TrainerPage extends Component {
     return (
       <div className="container">
         <h1>Training your ability</h1>
-        <Paper zDepth={4}>
+        <Paper zDepth={4} className="paper">
           {!start &&
             <div className="paper__area">
               <div className="paper__header">

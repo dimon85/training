@@ -8,34 +8,22 @@ body {
   margin: 0;
 }
 
-#root {
-  max-width: 1200px;
-  margin: 0 auto;
+.container {
   position: relative;
-}
-.app_wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-  //min-height: 100vh;
-  //display: flex;
-  //width: 100%;
-  //flex-wrap: wrap;
+  padding: 40px 50px;
+  @extend .min-height-full-space;
 
-  //&>* {
-  //  width: 100%;
-  //}
-
-  .content {
-    position: relative;
-    @extend .min-height-full-space;
+  @include md {
+    padding: 30px;
+  }
+  @include xs; @include sm {
+    padding: 30px 20px;
   }
 }
+
 * {
   transition: background $transition-base, color $transition-base, opacity $transition-base, transform $transition-base;
 }
-
-
 
 a {
   color: $text-color;
@@ -63,7 +51,6 @@ h1 {
   margin: 0 0 0.5em 0;
   @include xs {
     font-size: 1.8em;
-    color: red;
   }
 }
 h2 {
@@ -82,27 +69,6 @@ h4 {
 p {
   margin: 0 0 1em 0;
 }
-
-/**
- Media Queries
- */
-//@media screen and (max-width: 1000px) {
-//  h1 {
-//    font-size: 2.4em;
-//  }
-//  header div.hero {
-//    left: 56%;
-//    h1 {
-//      margin-bottom: 20px;
-//    }
-//  }
-//  section.atmosphere {
-//    article {
-//      padding-left: 400px;
-//      background-size: 375px auto;
-//    }
-//  }
-//}
 
 
 .min-height-full-space {
@@ -142,42 +108,5 @@ p {
 
   @include xs {
     min-height: calc( 100vh - 848px);
-  }
-}
-
-// helpers
-.pl0  {
-   padding-left: 0!important;
-}
-.pt0 {
-  padding-top: 0!important;
-}
-.pr0  {
-  padding-right: 0!important;
-}
-.pb0  {
-  padding-bottom: 0!important;
-}
-.width100 {
-  width: 100%;
-}
-.rotate180 {
-  transform: rotate(180deg);
-}
-.overflow-hidden {
-  overflow: hidden!important;
-  height: 0!important;
-  position: fixed!important;
-}
-.block {
-  display: block!important;
-  width: auto!important;
-}
-.no_border {
-  border: none!important;
-}
-.hide_sm {
-  @include sm {
-    display: none!important;
   }
 }

@@ -1,16 +1,17 @@
+@import '~normalize.css/normalize';
+
 //core
-@import "core/mixins";
-@import "core/variables";
-@import "core/fonts";
+@import "core/_colors",
+        "core/_variables",
+        "core/_mixins",
+        "core/_helpers",
+        "core/_icons",
+        "core/_fonts",
+        "core/_main";
 
+// modules
+@import "modules/_header";
 
-//globally used components
-@import "components/general";
-
-
-//site modules
-@import "modules/homepage";
-
-
-//tricks
-@import "custom";
+// pages
+@import "inner/_page_home";
+@import "inner/_page_training";
