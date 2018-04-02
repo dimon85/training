@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import { loginAction } from '../../reducers/auth';
 import { isGuest } from '../../selectors';
 
 
@@ -13,11 +14,13 @@ const mapStateToProps = state => ({
 });
 
 const dispatchToProps = dispatch => ({
+  login: (params) => dispatch(loginAction(params))
 });
 
 export class LoginPage extends Component {
   static propTypes = {
     isGuest: PropTypes.bool.isRequired,
+    login: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -58,6 +61,11 @@ export class LoginPage extends Component {
   handleLogin() {
     const { email, password } = this.state;
     console.log('Login', email, ':', password);
+    this.props.login({ email, password }).then((data) => {
+      console.log('data', data);
+    }).catch((err) => {
+      console.log('Err', err);
+    });
   }
 
   render() {

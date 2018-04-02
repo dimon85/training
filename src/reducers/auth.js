@@ -1,5 +1,6 @@
 import isFunction from 'lodash/isFunction';
 import flowRight from 'lodash/flowRight';
+import api from '../api';
 
 export const LOAD = 'redux-ducks/auth/LOAD';
 export const LOAD_SUCCESS = 'redux-ducks/auth/LOAD_SUCCESS';
@@ -32,6 +33,23 @@ export function setDefault() {
     type: SET_DEFAULT
   };
 }
+
+async function login(payload) {
+  try {
+    const data = await api.auth.login('auth/login', payload);
+    console.log('Data', data);
+    return data;
+  } catch (error) {
+    console.log('error', error);
+    // await logError(error);
+  }
+}
+
+// ACTIONS
+export const loginAction = payload => (dispatch) => {
+  return dispatch(login(payload));
+};
+
 
 const updateRequestOnLoad = value => state => ({
   ...state,

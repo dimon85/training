@@ -2,11 +2,16 @@
 import express from 'express';
 import webpack from 'webpack';
 import path from 'path';
+import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
 import config from '../config/webpack.config.dev';
+import routes from './routes';
+
+
+require('./database'); // need this line otherwise app won't know about the database module
 
 const customPort = 3333;
 const app = express();
@@ -24,9 +29,16 @@ app.use(require('webpack-hot-middleware')(compiler));
 //
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '/assets/images/')));
 
+//routers
+app.use('/api/v1', [routes]);
+
+// for webpack, other routers
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './index.html'));
 });
