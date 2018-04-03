@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
+import { hot } from 'react-hot-loader'
 import getRoutes from '../routes';
 
 const RootContainer = (props) => {
@@ -22,4 +23,4 @@ RootContainer.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default RootContainer;
+export default hot(module)(RootContainer);

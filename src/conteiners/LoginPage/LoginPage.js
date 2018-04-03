@@ -102,7 +102,7 @@ export class LoginPage extends Component {
         <Paper zDepth={4}>
           <div className="paper__area">
             <div className="paper__header hidden">
-              <h3>Connect with a social networkq</h3>
+              <h3>Connect with a social network**</h3>
               <div>
                 <div>Facebook</div>
                 <div>Google+</div>

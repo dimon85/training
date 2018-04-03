@@ -56,7 +56,7 @@ router.post('/register', function(req, res, next) {
 router.post('/login', function(req, res, next) {
   const { email, password } = req.body;
 
-  console.log('*b64Encoded', req.body);
+  console.log('**b64Encoded*00*11*22*333*444*555', req.body);
 
   if (email && password){
     User.authenticate(email, password)

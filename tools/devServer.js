@@ -7,8 +7,10 @@ import morgan from 'morgan';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
 import chalk from 'chalk';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 import config from '../config/webpack.config.dev';
-import routes from './routes';
+import routes from './server/routes';
 
 
 require('./database'); // need this line otherwise app won't know about the database module
@@ -20,11 +22,11 @@ const compiler = webpack(config);
 //
 // Register Webpack middleware, hot-reload
 // -----------------------------------------------------------------------------
-app.use(require('webpack-dev-middleware')(compiler, {
+app.use(webpackDevMiddleware(compiler, {
   noInfo: true,
   publicPath: config.output.publicPath
 }));
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(webpackHotMiddleware(compiler));
 
 //
 // Register Node.js middleware
