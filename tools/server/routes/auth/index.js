@@ -23,7 +23,7 @@ router.post('/register', function(req, res, next) {
   const { username, password, confirmPassword } = req.body;
 
   if (username && password && confirmPassword) {
-    if(password != confirmPassword) {
+    if (password != confirmPassword) {
       const err = new Error('Passwords didn\'t match');
       err.status = 400;
       return next(err);
@@ -53,28 +53,29 @@ router.post('/register', function(req, res, next) {
 });
 
 // POST /login
-router.post('/login', function(req, res, next) {
+router.post('/login', (req, res, next) => {
   const { email, password } = req.body;
 
-  console.log('**b64Encoded*00*11*22*333*444*555', req.body);
-
-  if (email && password){
-    User.authenticate(email, password)
-      .then(user => {
-        user =  user.publicFormat(); // delete the __v
+  if (email && password) {
+    return User.authenticate(email, password)
+      .then((user) => {
+        user = user.publicFormat(); // delete the __v
         delete user.password;
+        console.log('User', user);
         const token = jwt.sign(
           user, //payload
           secret  // sign the token with my server-stored secret
         );
-        res.status(200)
-          .json({message: 'Authenticated', token: token});
-      }).catch(err => next(err));
-  } else {
-    const err = new Error('Both username and password are mandatory!');
-    err.status = 401; // Unauthorized
-    return next(err);
+        res.status(200).json({ message: 'Authenticated', token: token });
+      })
+      .catch(err => {
+        console.log('****', err);
+        res.status(err.status).send({ errors: err.errors, type: 'internal' }); 
+      });
   }
+
+  res.status(400).send({ errors: { email: 'Email is required', password: 'Password is required' }, type: 'internal' }); 
+
 });
 
 

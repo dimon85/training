@@ -78,11 +78,10 @@ export class LoginPage extends Component {
       this.setState({ loading: false });
       console.log('data', data);
     }).catch((error) => {
+      console.log('Error', error);
       this.setState({
         loading: false,
-        errors: {
-          email: error.statusText,
-        },
+        errors: error.data.errors,
       });
     });
   }
