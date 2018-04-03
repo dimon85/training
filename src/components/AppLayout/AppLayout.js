@@ -10,6 +10,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
+import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
 
 
@@ -125,6 +126,7 @@ export class AppLayout extends Component {
           <MenuItem onTouchTap={this.handleClose}>Menu Item 2</MenuItem>
         </Drawer>
         {children}
+        <ToastContainer />
       </div>
     );
   }

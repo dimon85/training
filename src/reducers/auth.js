@@ -1,10 +1,14 @@
 import isFunction from 'lodash/isFunction';
 import flowRight from 'lodash/flowRight';
 import api from '../api';
+import { showError } from '../helpers/uiHelper';
 
 export const LOAD = 'redux-ducks/auth/LOAD';
 export const LOAD_SUCCESS = 'redux-ducks/auth/LOAD_SUCCESS';
 export const LOAD_FAIL = 'redux-ducks/auth/LOAD_FAIL';
+
+export const LOGIN_SUCESS = 'redux-ducks/auth/LOGIN_SUCCESS';
+
 export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
 export const SET_DEFAULT = 'redux-ducks/auth/SET_DEFAULT';
 
@@ -34,20 +38,28 @@ export function setDefault() {
   };
 }
 
-async function login(payload) {
-  try {
-    const data = await api.auth.login('auth/login', payload);
-    console.log('Data', data);
-    return data;
-  } catch (error) {
-    console.log('error', error);
-    // await logError(error);
+function login(payload) {
+  return {
+    type: LOGIN_SUCESS,
+    data: payload,
   }
 }
 
 // ACTIONS
-export const loginAction = payload => (dispatch) => {
-  return dispatch(login(payload));
+export const loginAction = payload => async (dispatch) => {
+  try {
+    const data = await api.auth.login('auth/login', payload);
+    dispatch(login);
+    console.log('*Data*', data);
+    return data;
+  } catch (error) {
+    const { status, statusText } = error;
+    if (status === 500) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
 };
 
 

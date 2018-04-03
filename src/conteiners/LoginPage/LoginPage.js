@@ -57,14 +57,33 @@ export class LoginPage extends Component {
     });
   }
 
+  /**
+   * Handle key press
+   * @param {object} event
+   */
+  handleKeyPress = (event) => {
+    const { loading } = this.state;
+
+    if (!loading && event.key === 'Enter') {
+      this.handleLogin();
+    }
+  }
+
   @autobind
   handleLogin() {
     const { email, password } = this.state;
+    this.setState({ loading: true });
     console.log('Login', email, ':', password);
     this.props.login({ email, password }).then((data) => {
+      this.setState({ loading: false });
       console.log('data', data);
-    }).catch((err) => {
-      console.log('Err', err);
+    }).catch((error) => {
+      this.setState({
+        loading: false,
+        errors: {
+          email: error.statusText,
+        },
+      });
     });
   }
 
@@ -83,7 +102,7 @@ export class LoginPage extends Component {
         <Paper zDepth={4}>
           <div className="paper__area">
             <div className="paper__header hidden">
-              <h3>Connect with a social network</h3>
+              <h3>Connect with a social networkq</h3>
               <div>
                 <div>Facebook</div>
                 <div>Google+</div>
@@ -107,9 +126,11 @@ export class LoginPage extends Component {
                 floatingLabelText="Password"
                 errorText={errors.password}
                 onChange={this.handleChangeField}
+                onKeyPress={this.handleKeyPress}
               />
               <RaisedButton
                 label="Log in"
+                disabled={loading}
                 primary={Boolean(true)}
                 onTouchTap={this.handleLogin}
               />
@@ -117,6 +138,7 @@ export class LoginPage extends Component {
             </div>
           </div>
         </Paper>
+
       </div>
     );
   }
