@@ -2,7 +2,6 @@ import Base from './Base';
 
 export default class Auth extends Base {
   async login(url, payload) {
-    console.log('URL', url)
     const data = await this.apiClient.post(url, payload);
 
     return data;

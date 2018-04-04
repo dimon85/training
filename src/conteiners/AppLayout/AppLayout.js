@@ -14,11 +14,18 @@ import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
 
 
+const styles = {
+  appBar: {
+    position: "fixed",
+    top: 0,
+  },
+};
+
 const mapStateToProps = state => ({
   isGuest: isGuest(state),
 });
 
-const dispatchToProps = dispatch => ({
+const dispatchToProps = () => ({
 });
 
 export class AppLayout extends Component {
@@ -32,7 +39,6 @@ export class AppLayout extends Component {
     super(props);
 
     this.state = {
-      loading: false,
       open: false,
       openPanel: false,
       targetOrigin: {
@@ -73,7 +79,7 @@ export class AppLayout extends Component {
   }
 
   renderIconRight() {
-    const { isGuest } = this.props;
+    // const { isGuest } = this.props;
     const { targetOrigin, open } = this.state;
     return (
       <IconMenu
@@ -84,7 +90,7 @@ export class AppLayout extends Component {
         onRequestChange={this.handleRequestChange}
       >
         <Link to="/login"><MenuItem primaryText="Login" /></Link>
-        <Link to="/help"><MenuItem primaryText="Signup" /></Link>
+        <Link to="/signup"><MenuItem primaryText="Signup" /></Link>
       </IconMenu>
     );
   }
@@ -109,6 +115,7 @@ export class AppLayout extends Component {
           className="navbar"
           iconElementRight={isGuest ? this.renderIconRight() : null}
           onLeftIconButtonClick={this.handleTogglePanel}
+          style={styles.appBar}
         />
         <Drawer
           docked={false}

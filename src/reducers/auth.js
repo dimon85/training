@@ -2,6 +2,7 @@ import isFunction from 'lodash/isFunction';
 import flowRight from 'lodash/flowRight';
 import api from '../api';
 import { showError } from '../helpers/uiHelper';
+import cookieHelper from '../helpers/cookieHelper';
 
 export const LOAD = 'redux-ducks/auth/LOAD';
 export const LOAD_SUCCESS = 'redux-ducks/auth/LOAD_SUCCESS';
@@ -39,6 +40,7 @@ export function setDefault() {
 }
 
 function login(payload) {
+  console.log('**********', payload);
   return {
     type: LOGIN_SUCESS,
     data: payload,
@@ -49,11 +51,16 @@ function login(payload) {
 export const loginAction = payload => async (dispatch) => {
   try {
     const data = await api.auth.login('auth/login', payload);
-    dispatch(login);
+    await dispatch(login(data));
     console.log('*Data*', data);
     return data;
   } catch (error) {
     const { status, statusText } = error;
+
+    if (!status) {
+      showError('Somethin went wrong. Try later');
+    }
+
     if (status === 500) {
       showError(statusText);
     }
@@ -61,6 +68,38 @@ export const loginAction = payload => async (dispatch) => {
     throw error;
   }
 };
+
+export const signupAction = payload => async (dispatch) => {
+  try {
+    const data = await api.auth.signup('auth/register', payload);
+    dispatch(login());
+    console.log('*Data*', data);
+    return data;
+  } catch (error) {
+    const { data, status, statusText } = error;
+
+    if (!data || !data.errors) {
+      showError('Somethin went wrong. Try later');
+    }
+
+    if (status === 500) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
+};
+
+export const loadAuth = () => {
+  return (dispatch) => {
+    if (cookieHelper.get('token')) {
+      return dispatch(load());
+    }
+
+    dispatch(setDefault());
+    return Promise.resolve();
+  };
+}
 
 
 const updateRequestOnLoad = value => state => ({
@@ -90,15 +129,28 @@ const updateRequestOnLoadFail = (action, value) => state => ({
   error: action.error
 });
 
+const loginRequestSuccess = action => (state) => {
+  console.log('[1] Action', action);
+  console.log('[2] State', state);
+  cookieHelper.save('token', action.data.token);
+
+  return {
+    ...state,
+    
+  }
+}
+
 const setDefaultSuccess = () => initialState;
 
 const actionsLookup = {
+  [LOGIN_SUCESS]: (state, action) => loginRequestSuccess(action)(state),
   [LOAD]: state => updateRequestOnLoad(true)(state),
   [LOAD_SUCCESS]: (state, action) => flowRight(
     updateRequestOnLoadSuccess(false),
     update(action),
   )(state),
   [LOAD_FAIL]: (state, action) => updateRequestOnLoadFail(action, false)(state),
+
   [SET_DEFAULT]: () => setDefaultSuccess(),
 };
 

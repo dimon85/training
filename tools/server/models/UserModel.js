@@ -3,6 +3,11 @@ import { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const UserSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
   email: {
     type: String,
     required: true,
@@ -11,12 +16,9 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    trim: true
   },
-  points: {
-    type: Number,
-    default: 0
-  }
 },
 {
   timestamps: {
@@ -64,7 +66,6 @@ UserSchema.statics = {
 UserSchema.pre('save', function(next) { // !!! this and arrow function
   bcrypt.hash(this.password, 10)
     .then((hash) => {
-      console.log('new hash', hash);
       this.password = hash;
       next();
     }).catch( err => next(err));
