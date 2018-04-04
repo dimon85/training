@@ -6,7 +6,7 @@
   "scripts": {
     "prestart": "node tools/startMessage.js",
     "start": "npm run open:src",
-    "open:src": "NODE_ENV=dev nodemon tools/loader.js",
+    "open:src": "NODE_ENV=dev node tools/loader.js",
     "build": "NODE_ENV=production webpack --config config/webpack.config.prod.js",
     "server:build": "babel-node tools/serverBuild.js",
     "server:run": "node dist/server/server.js",

@@ -2,16 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import autobind from 'autobind-decorator';
+import isEmpty from 'lodash/isEmpty';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
+import RefreshIndicator from 'material-ui/RefreshIndicator';
+import { loginForm } from '../../helpers/validators';
 import { loginAction } from '../../reducers/auth';
-import { isGuest } from '../../selectors';
-
-
-const mapStateToProps = state => ({
-  isGuest: isGuest(state),
-});
 
 const dispatchToProps = dispatch => ({
   login: (params) => dispatch(loginAction(params))
@@ -19,7 +16,6 @@ const dispatchToProps = dispatch => ({
 
 export class LoginPage extends Component {
   static propTypes = {
-    isGuest: PropTypes.bool.isRequired,
     login: PropTypes.func.isRequired,
   };
 
@@ -69,11 +65,24 @@ export class LoginPage extends Component {
     }
   }
 
-  @autobind
-  handleLogin() {
+  /**
+   * Login with email and password
+   */
+  handleLogin = () => {
     const { email, password } = this.state;
+    const params = {
+      email,
+      password,
+    };
+    const errors = loginForm(params);
+
+    if (!isEmpty(errors)) {
+      this.setState({ errors });
+      return;
+    }
+
+
     this.setState({ loading: true });
-    console.log('Login', email, ':', password);
     this.props.login({ email, password }).then((data) => {
       this.setState({ loading: false });
       console.log('data', data);
@@ -87,60 +96,75 @@ export class LoginPage extends Component {
   }
 
   render() {
-    const { isGuest } = this.props;
     const {
       email,
       password,
       loading,
       errors,
     } = this.state;
+    const style = {
+      refresh: {
+        display: 'inline-block',
+        position: 'relative',
+      },
+    };
 
     return (
       <div className="container">
         <h1>Login</h1>
-        <Paper zDepth={4}>
-          <div className="paper__area">
-            <div className="paper__header hidden">
-              <h3>Connect with a social network**</h3>
-              <div>
-                <div>Facebook</div>
-                <div>Google+</div>
+        <div className="loginPage">
+          <Paper zDepth={4}>
+            <div className="paper">
+              <div className="paper__body">
+                <h3>Login with your email address</h3>
+                <TextField
+                  name="email"
+                  value={email}
+                  hintText="Enter your email"
+                  floatingLabelText="Email"
+                  fullWidth
+                  errorText={errors.email}
+                  onChange={this.handleChangeField}
+                />
+                <TextField
+                  type="password"
+                  name="password"
+                  vaule={password}
+                  hintText="Enter your password"
+                  floatingLabelText="Password"
+                  fullWidth
+                  errorText={errors.password}
+                  onChange={this.handleChangeField}
+                  onKeyPress={this.handleKeyPress}
+                />
+              </div>
+
+              <div className="paper__controls">
+                {!loading &&
+                  <RaisedButton
+                    label="Log in"
+                    primary={Boolean(true)}
+                    onTouchTap={this.handleLogin}
+                  />
+                }
+                {loading && 
+                  <RefreshIndicator
+                    size={50}
+                    left={0}
+                    top={0}
+                    loadingColor="#FF9800"
+                    status="loading"
+                    style={style.refresh}
+                  />
+                }
+                <a href="#" className="btn">Forgot password</a>
               </div>
             </div>
-            <div className="paper__body">
-              <h3>Log in with your email address</h3>
-              <TextField
-                name="email"
-                value={email}
-                hintText="Enter your email"
-                floatingLabelText="Email"
-                errorText={errors.email}
-                onChange={this.handleChangeField}
-              />
-              <TextField
-                type="password"
-                name="password"
-                vaule={password}
-                hintText="Enter your password"
-                floatingLabelText="Password"
-                errorText={errors.password}
-                onChange={this.handleChangeField}
-                onKeyPress={this.handleKeyPress}
-              />
-              <RaisedButton
-                label="Log in"
-                disabled={loading}
-                primary={Boolean(true)}
-                onTouchTap={this.handleLogin}
-              />
-              <div>Forgot password</div>
-            </div>
-          </div>
-        </Paper>
-
+          </Paper>
+        </div>
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, dispatchToProps)(LoginPage);
+export default connect(state => state, dispatchToProps)(LoginPage);
