@@ -25,6 +25,12 @@ export default class Auth extends Base {
     return data;
   }
 
+  async profile(url, payload) {
+    const data = await this.apiClient.get(url, payload);
+
+    return data;
+  }
+
   setAuthToken(token) {
     this.apiClient.setAuthToken(token);
   }

@@ -1,17 +1,13 @@
 import isFunction from 'lodash/isFunction';
-import flowRight from 'lodash/flowRight';
 import api from '../api';
 import { showError } from '../helpers/uiHelper';
 import cookieHelper from '../helpers/cookieHelper';
 
-export const LOAD = 'redux-ducks/auth/LOAD';
-export const LOAD_SUCCESS = 'redux-ducks/auth/LOAD_SUCCESS';
-export const LOAD_FAIL = 'redux-ducks/auth/LOAD_FAIL';
-
-export const LOGIN_SUCESS = 'redux-ducks/auth/LOGIN_SUCCESS';
-
-export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
+// TYPE
+export const LOAD_PROFILE_SUCCESS = 'redux-ducks/auth/LOAD_PROFILE_SUCCESS';
+export const LOGIN_SUCCESS = 'redux-ducks/auth/LOGIN_SUCCESS';
 export const SET_DEFAULT = 'redux-ducks/auth/SET_DEFAULT';
+// export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
 
 const initialState = {
   loading: false,
@@ -20,19 +16,10 @@ const initialState = {
   current: {
     type: 'guest',
   },
+  token: false,
 };
 
-export function isLoaded(globalState) {
-  return globalState.info && globalState.info.loaded;
-}
-
-export function load() {
-  return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: client => client.get('/loadInfo')
-  };
-}
-
+// ACTIONS
 export function setDefault() {
   return {
     type: SET_DEFAULT
@@ -40,25 +27,29 @@ export function setDefault() {
 }
 
 function login(payload) {
-  console.log('**********', payload);
   return {
-    type: LOGIN_SUCESS,
-    data: payload,
+    type: LOGIN_SUCCESS,
+    result: payload,
   }
 }
 
-// ACTIONS
+function getProfile(payload) {
+  return {
+    type: LOAD_PROFILE_SUCCESS,
+    result: payload,
+  };
+}
+
 export const loginAction = payload => async (dispatch) => {
   try {
     const data = await api.auth.login('auth/login', payload);
-    await dispatch(login(data));
-    console.log('*Data*', data);
-    return data;
+    
+    return dispatch(login(data));
   } catch (error) {
     const { status, statusText } = error;
 
     if (!status) {
-      showError('Somethin went wrong. Try later');
+      showError('Something went wrong. Try later');
     }
 
     if (status === 500) {
@@ -72,14 +63,13 @@ export const loginAction = payload => async (dispatch) => {
 export const signupAction = payload => async (dispatch) => {
   try {
     const data = await api.auth.signup('auth/register', payload);
-    dispatch(login());
-    console.log('*Data*', data);
-    return data;
+
+    return dispatch(login(data));
   } catch (error) {
     const { data, status, statusText } = error;
 
     if (!data || !data.errors) {
-      showError('Somethin went wrong. Try later');
+      showError('Something went wrong. Try later');
     }
 
     if (status === 500) {
@@ -90,67 +80,61 @@ export const signupAction = payload => async (dispatch) => {
   }
 };
 
-export const loadAuth = () => {
-  return (dispatch) => {
-    if (cookieHelper.get('token')) {
-      return dispatch(load());
+export const loadAuth = () => async (dispatch) => {
+  try {
+    const data = await api.auth.profile('auth/profile');
+
+    return dispatch(getProfile(data));
+  } catch (error) {
+    dispatch(setDefault());
+    const { data, status, statusText } = error;
+
+    if (!data || !data.errors) {
+      showError('Something went wrong. Try later');
     }
 
-    dispatch(setDefault());
-    return Promise.resolve();
-  };
-}
+    if (status === 500) {
+      showError(statusText);
+    }
 
+    throw error;
+  }
+};
 
-const updateRequestOnLoad = value => state => ({
-  ...state,
-  loading: value
-});
-
-const updateRequestOnLoadSuccess = value => state => ({
-  ...state,
-  loading: value,
-  loaded: true,
-  error: null
-});
-
-const update = action => state => ({
-  ...state,
-  current: action.result,
-});
-
-const updateRequestOnLoadFail = (action, value) => state => ({
-  ...state,
-  loading: value,
-  loaded: value,
-  current: {
-    type: 'guest',
-  },
-  error: action.error
-});
 
 const loginRequestSuccess = action => (state) => {
-  console.log('[1] Action', action);
-  console.log('[2] State', state);
-  cookieHelper.save('token', action.data.token);
+  const { token } = action.result;
+  api.auth.setAuthToken(token);
+  cookieHelper.set('token', token);
 
   return {
     ...state,
-    
-  }
+    token: true,
+  };
 }
 
-const setDefaultSuccess = () => initialState;
+const profileRequestSuccess = action => (state) => {
+  const { user } = action.result;
+  return {
+    ...state,
+    current: {
+      type: 'member',
+      ...user,
+    }
+  };
+}
+
+const setDefaultSuccess = () => {
+  cookieHelper.remove('token');
+  return {
+    ...initialState,
+    loaded: true,
+  };
+};
 
 const actionsLookup = {
-  [LOGIN_SUCESS]: (state, action) => loginRequestSuccess(action)(state),
-  [LOAD]: state => updateRequestOnLoad(true)(state),
-  [LOAD_SUCCESS]: (state, action) => flowRight(
-    updateRequestOnLoadSuccess(false),
-    update(action),
-  )(state),
-  [LOAD_FAIL]: (state, action) => updateRequestOnLoadFail(action, false)(state),
-
+  [LOGIN_SUCCESS]: (state, action) => loginRequestSuccess(action)(state),
+  [LOAD_PROFILE_SUCCESS]:  (state, action) => profileRequestSuccess(action)(state),
   [SET_DEFAULT]: () => setDefaultSuccess(),
 };
 

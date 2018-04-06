@@ -1,5 +1,6 @@
 import qs from 'qs';
 import axios from 'axios';
+import cookieHelper from '../helpers/cookieHelper';
 
 export default class ApiClient {
   constructor({ prefix } = {}) {
@@ -33,7 +34,7 @@ export default class ApiClient {
 
   async request({ url, method, query = '', data }) {
     try {
-      const authToken = this.authToken ? this.authToken : localStorage.getItem('token');
+      const authToken = this.authToken ? this.authToken : cookieHelper.get('token');
       const headers = {
         Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',

@@ -15,7 +15,6 @@ router.use((req, res, next) => {
   next();
 });
 
-
 mongoose.set('debug', true);
 
 // POST /register
@@ -32,7 +31,7 @@ router.post('/register', function(req, res, next) {
 
         const token = jwt.sign(
           copyUser, //payload
-          'secret_string', //soper secre string
+          'secret_string', //super secret string
           { expiresIn: '1m' } //expire in 1m
         );
 
@@ -59,7 +58,9 @@ router.post('/register', function(req, res, next) {
   res.status(400).send(errorObj);
 });
 
-// POST /login
+/**
+ * POST /login
+ */
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -72,7 +73,7 @@ router.post('/login', (req, res) => {
 
         const token = jwt.sign(
           copyUser, //payload
-          'secret_string', //soper secre string
+          'secret_string', //super secret string
           { expiresIn: '1m' }  //expire in 1m
         );
 
@@ -94,20 +95,19 @@ router.post('/login', (req, res) => {
   res.status(400).send(errorObj);
 });
 
-
-// GET user details
-router.get('/user-details', function (req, res, next) {
-  if(req.user && req.user){
-    User.findOne({_id: req.user._id})
-      .then((user)=>{
-        console.log('user details', user);
+/**
+ * Get current user details
+ */
+router.get('/profile', (req, res, next) => {
+  if (req.user) {
+    return User.findOne({_id: req.user._id})
+      .then((user) => {
         user = user.publicFormat();
-        res.json(user)})
+        res.json({ user })})
       .catch((err)=> next(err))
-  } else {
-    const err = new Error('Couldn\'t retrieve user id from token');
-    return next(err)
   }
+
+  res.status(403).send({ errors: { token:'Couldn\'t retrieve user id from token' }, type: 'internal' }); 
 });
 
 module.exports = router;

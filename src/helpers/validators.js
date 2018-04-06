@@ -39,7 +39,7 @@ export const signupForm = (values) => {
   }
 
   if (values.password !== values.confirmPassword) {
-    errors.confirmPsw = 'Confirm password is not valid';
+    errors.confirmPassword = 'Confirm password is not valid';
   }
 
   if (values.password.length < 6) {

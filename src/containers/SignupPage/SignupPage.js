@@ -1,46 +1,74 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import autobind from 'autobind-decorator';
 import isEmpty from 'lodash/isEmpty';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { loginForm } from '../../helpers/validators';
-import { loginAction, loadAuth } from '../../reducers/auth';
+import Checkbox from 'material-ui/Checkbox';
+import { signupForm } from '../../helpers/validators';
+import { signupAction } from '../../reducers/auth';
+
+// Styles for checkbox
+const styles = {
+  checkbox: {
+    marginTop: 20,
+  },
+  label: {
+    fontSize: 14,
+  }
+};
 
 const dispatchToProps = dispatch => ({
-  login: (params) => dispatch(loginAction(params)),
-  loadAuth: () => dispatch(loadAuth()),
+  signup: (params) => dispatch(signupAction(params))
 });
 
-export class LoginPage extends Component {
+export class SignupPage extends Component {
   static propTypes = {
-    login: PropTypes.func.isRequired,
-    loadAuth: PropTypes.func.isRequired,
+    signup: PropTypes.func.isRequired,
   };
 
   constructor(props) {
     super(props);
 
     this.state = {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
+      checkedAgree: false,
       loading: false,
       errors: {},
     };
   }
 
-  @autobind
-  handleChangeField(event) {
+  /**
+   * Change state for current field, clean error
+   * @param {SynteticEvent} event
+   */
+  handleChangeField = (event) => {
     const { name, value } = event.target;
+
     this.setState(() => ({ [name]: value }));
     this.handleCleanError(name);
   }
+  
+  /**
+   * Change state for checkbox, clean error
+   * @param {SynteticEvent} event
+   */
+  updateCheckField = (event) => {
+    const { name } = event.target;
+    this.setState((prevState) => ({ [name]: !prevState[name] }));
+    this.handleCleanError(name);
+  }
 
-  @autobind
-  handleCleanError(name) {
+  /**
+   * Clean error for current field
+   * @param {string} name
+   */
+  handleCleanError = (name) => {
     this.setState((prevState) => {
       if (prevState.errors[name]) {
         return ({
@@ -56,47 +84,42 @@ export class LoginPage extends Component {
   }
 
   /**
-   * Handle key press
-   * @param {object} event
-   */
-  handleKeyPress = (event) => {
-    const { loading } = this.state;
-
-    if (!loading && event.key === 'Enter') {
-      this.handleLogin();
-    }
-  }
-
-  /**
    * Login with email and password
    */
-  handleLogin = () => {
-    const { email, password } = this.state;
-    const params = {
+  handleSignup = () => {
+    const {
+      name,
       email,
       password,
+      confirmPassword,
+      checkedAgree,
+    } = this.state;
+    const params = {
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      confirmPassword,
+      checkedAgree,
     };
-    const errors = loginForm(params);
+    const errors = signupForm(params);
 
     if (!isEmpty(errors)) {
       this.setState({ errors });
       return;
     }
 
-
     this.setState({ loading: true });
-    this.props.login({ email, password }).then((data) => {
+    this.props.signup(params).then((data) => {
+      this.setState({ loading: false });
       console.log('data', data);
-      this.props.loadAuth();
     }).catch((error) => {
       this.setState({ loading: false });
-      if (!error.data) {
+      if (!error.data || !error.data.errors) {
         return;
       }
 
       console.log('Error', error);
       this.setState({
-        loading: false,
         errors: error.data.errors,
       });
     });
@@ -104,8 +127,11 @@ export class LoginPage extends Component {
 
   render() {
     const {
+      name,
       email,
       password,
+      confirmPassword,
+      checkedAgree,
       loading,
       errors,
     } = this.state;
@@ -118,13 +144,23 @@ export class LoginPage extends Component {
 
     return (
       <div className="container">
-        <h1>Login</h1>
+        <h1>Signup</h1>
         <div className="loginPage">
           <Paper zDepth={4}>
             <div className="paper">
               <div className="paper__body">
-                <h3>Login with your email address</h3>
+                <h3>Signup with your email address</h3>
                 <TextField
+                  name="name"
+                  value={name}
+                  hintText="Enter your name"
+                  floatingLabelText="Name"
+                  fullWidth
+                  errorText={errors.name}
+                  onChange={this.handleChangeField}
+                />
+                <TextField
+                  type="email"
                   name="email"
                   value={email}
                   hintText="Enter your email"
@@ -142,16 +178,34 @@ export class LoginPage extends Component {
                   fullWidth
                   errorText={errors.password}
                   onChange={this.handleChangeField}
-                  onKeyPress={this.handleKeyPress}
                 />
+                <TextField
+                  type="password"
+                  name="confirmPassword"
+                  vaule={confirmPassword}
+                  hintText="Confirm your password"
+                  floatingLabelText="Password confirm"
+                  fullWidth
+                  errorText={errors.confirmPassword}
+                  onChange={this.handleChangeField}
+                />
+                <Checkbox
+                  name="checkedAgree"
+                  label="I agree with Terms and Conditions and Privacy"
+                  checked={checkedAgree}
+                  onCheck={this.updateCheckField}
+                  style={styles.checkbox}
+                  labelStyle={styles.label}
+                />
+                {errors.checkedAgree && <div className="error">{errors.checkedAgree}</div>}
               </div>
 
               <div className="paper__controls">
                 {!loading &&
                   <RaisedButton
-                    label="Log in"
+                    label="Create account"
                     primary={Boolean(true)}
-                    onTouchTap={this.handleLogin}
+                    onTouchTap={this.handleSignup}
                   />
                 }
                 {loading && 
@@ -164,7 +218,6 @@ export class LoginPage extends Component {
                     style={style.refresh}
                   />
                 }
-                <a href="#" className="btn">Forgot password</a>
               </div>
             </div>
           </Paper>
@@ -174,4 +227,4 @@ export class LoginPage extends Component {
   }
 }
 
-export default connect(state => state, dispatchToProps)(LoginPage);
+export default connect(state => state, dispatchToProps)(SignupPage);

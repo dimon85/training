@@ -3,6 +3,7 @@ import express from 'express';
 import webpack from 'webpack';
 import path from 'path';
 import bodyParser from 'body-parser';
+import expressJWT from 'express-jwt';
 import morgan from 'morgan';
 import clearConsole from 'react-dev-utils/clearConsole';
 import formatWebpackMessages from 'react-dev-utils/formatWebpackMessages';
@@ -33,6 +34,42 @@ app.use(webpackHotMiddleware(compiler));
 // -----------------------------------------------------------------------------
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use((req,res,next) => {
+  res.header('Access-Control-Allow-Origin', "http://localhost:3333"); // can't use * with credentials
+  res.header('Access-Control-Allow-Credentials', true); //need for setting cookies with express
+  res.header('Access-Control-Allow-Headers', "Origin, X-Requested-With, Accept, Content-Type, Cookie, Authorization");
+  if (req.method === "OPTIONS") {
+    res.header({
+      "Access-Control-Allow-Methods": "PUT, POST, DELETE"
+    });
+    return res.status(200).json({});
+  }
+  next();
+});
+
+app.use('/api/v1', expressJWT({
+  secret: 'secret_string',
+  getToken: function fromHeaderOrQuerystring(req) {
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+      return req.headers.authorization.split(' ')[1];
+    } else if (req.query && req.query.token) {
+      return req.query.token;
+    }
+    return null;
+  }
+}).unless({
+  path: [
+    '/api/v1/auth/login',
+    '/api/v1/auth/register',
+  ]
+}));
+
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('invalid token...');
+  }
+});
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '/assets/images/')));

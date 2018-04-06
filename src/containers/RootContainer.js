@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import { hot } from 'react-hot-loader'
-import getRoutes from '../routes';
+import RouterContainer from '../RouterContainer';
 
 const RootContainer = (props) => {
   const { store, history } = props;
-  const routes = getRoutes(store);
 
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        {routes}
+        <RouterContainer history={history} store={store} />
       </ConnectedRouter>
     </Provider>
   );
