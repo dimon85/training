@@ -10,8 +10,10 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
+import FlatButton from 'material-ui/FlatButton';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
+import { logoutAction } from '../../reducers/auth';
 
 
 const styles = {
@@ -25,14 +27,17 @@ const mapStateToProps = state => ({
   isGuest: isGuest(state),
 });
 
-const dispatchToProps = () => ({
+const dispatchToProps = (dispatch) => ({
+  logout: () => dispatch(logoutAction()),
 });
 
 export class AppLayout extends Component {
   static propTypes = {
+    history: PropTypes.object.isRequired,
     children: PropTypes.object.isRequired,
     pathname: PropTypes.string.isRequired,
     isGuest: PropTypes.bool.isRequired,
+    logout: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -74,12 +79,30 @@ export class AppLayout extends Component {
     this.setState({ open: false });
   }
 
+  handleLogout = () => {
+    const { history } = this.props;
+
+    this.props.logout()
+      .then(() => history.push({ pathname: '/' }))
+      .catch((error) => {
+        console.log('handleLogout -> error', error);
+      });
+  }
+
   renderIconMenu() {
     return (<IconButton><MoreVertIcon /></IconButton>);
   }
 
-  renderIconRight() {
-    // const { isGuest } = this.props;
+  renderIconRight(isGuest) {
+    if (!isGuest) {
+      return (
+        <FlatButton
+          label="Logout"
+          onClick={this.handleLogout}
+        />
+      );
+    }
+
     const { targetOrigin, open } = this.state;
     return (
       <IconMenu
@@ -113,7 +136,7 @@ export class AppLayout extends Component {
         <AppBar
           title={this.renderLogo()}
           className="navbar"
-          iconElementRight={isGuest ? this.renderIconRight() : null}
+          iconElementRight={this.renderIconRight(isGuest)}
           onLeftIconButtonClick={this.handleTogglePanel}
           style={styles.appBar}
         />

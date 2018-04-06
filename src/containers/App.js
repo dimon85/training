@@ -6,11 +6,12 @@ import AppLayout from './AppLayout';
 
 const mapStateToProps = state => state;
 
-function App({ children, router }) {
+function App({ children, router, history }) {
   return (
     <MuiThemeProvider>
       <AppLayout
         pathname={router.location.pathname}
+        history={history}
       >
         {children}
       </AppLayout>
@@ -20,6 +21,7 @@ function App({ children, router }) {
 
 App.propTypes = {
   children: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   router: PropTypes.object.isRequired,
 };
 

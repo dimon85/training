@@ -101,6 +101,16 @@ export const loadAuth = () => async (dispatch) => {
   }
 };
 
+export const logoutAction = () => (dispatch) => {
+  cookieHelper.remove('token');
+
+  if (!cookieHelper.get('token')) {
+    dispatch(setDefault());
+    return Promise.resolve(true);
+  }
+
+  Promise.reject({ errors: { token:  'Enable delete Token' }});
+};
 
 const loginRequestSuccess = action => (state) => {
   const { token } = action.result;
