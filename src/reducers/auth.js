@@ -81,6 +81,10 @@ export const signupAction = payload => async (dispatch) => {
 };
 
 export const loadAuth = () => async (dispatch) => {
+  if (!cookieHelper.get('token')) {
+    throw ({ error: 'token not found' });
+  }
+
   try {
     const data = await api.auth.profile('auth/profile');
 
