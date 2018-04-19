@@ -143,7 +143,7 @@ export class SignupPage extends Component {
     };
 
     return (
-      <div className="container">
+      <div className="container landing">
         <h1>Signup</h1>
         <div className="loginPage">
           <Paper zDepth={4}>

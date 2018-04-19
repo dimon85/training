@@ -120,7 +120,7 @@ export class LoginPage extends Component {
     };
 
     return (
-      <div className="container">
+      <div className="container landing">
         <h1>Login</h1>
         <div className="loginPage">
           <Paper zDepth={4}>
