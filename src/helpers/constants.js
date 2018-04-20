@@ -1,0 +1,4 @@
+export default {
+  STATUS_NOT_FOUND: 404,
+  STATUS_SUCCESS_PAGE: 200,
+};

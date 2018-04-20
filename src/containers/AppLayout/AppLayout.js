@@ -129,7 +129,6 @@ export class AppLayout extends Component {
   render() {
     const { children, isGuest } = this.props;
     const { openPanel } = this.state;
-    console.log('**', isGuest);
 
     return (
       <div>

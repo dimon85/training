@@ -17,7 +17,7 @@ const initialState = {
     type: 'en',
     translations: {}
   },
-  langs: ['en', 'ru'],
+  langs: ['en', 'ru', 'ua'],
 };
 
 function saveLocale(locale) {

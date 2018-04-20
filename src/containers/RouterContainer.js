@@ -1,44 +1,82 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Redirect, Link, Route, Switch } from 'react-router-dom';
-import { loadAuth } from '../reducers/auth';
+// import { loadAuth } from '../reducers/auth';
+import { setStatusPage } from '../reducers/info';
+import { checkItemInArray } from '../helpers/utils';
+import globalConst from '../helpers/constants';
+import { getStatusPage } from '../selectors';
+import { getAvailableLangs } from '../selectors/translateSelectors';
 import App from './App';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
 import HomePage from '../components/HomePage';
 import TrainerPage from '../components/TrainerPage';
 import HelpPage from '../components/HelpPage';
+import NotFoundPage from '../components/NotFoundPage';
+
+
+const mapStateToProps = state => ({
+  langs: getAvailableLangs(state),
+  statusPage: getStatusPage(state),
+});
+
+const dispatchToProps = (dispatch) => ({
+  setStatusPage: (params) => dispatch(setStatusPage(params)),
+});
 
 class RouterContainer extends Component {
   static propTypes = {
-    store: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
+    statusPage: PropTypes.number.isRequired,
+    setStatusPage: PropTypes.func.isRequired,
   };
 
   state = {
     profile: {},
   };
 
-  async componentDidMount() {
-    console.log('[1]');
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { match: { params }, langs, statusPage } = nextProps;
 
-    await this.props.store.dispatch(loadAuth())
-      .then((data) => {
-        const { user } = data.result;
-        console.log('[2]', data);
-        this.setState({ profile: user });
-      })
-      .catch((err) => {
-        console.log('[2.err]', err.error);
-      });
- 
-    console.log('[3]');
+    if (checkItemInArray(langs, params.lang) && statusPage === globalConst.STATUS_NOT_FOUND) {
+      nextProps.setStatusPage({ status: globalConst.STATUS_SUCCESS_PAGE, text: 'Page load success' });
+    }
+
+    console.log('nextProps::', [nextProps, prevState]);
+    return null;
+  }
+
+  async componentDidMount() {
+    const { match: { params }, langs } = this.props;
+    console.log('*[1]*', this.props);
+
+    // [1] check, if route with existing lang
+    if (!checkItemInArray(langs, params.lang)) {
+      this.props.setStatusPage({ status: 404, msg: 'Not found'});
+      console.log('*[2]*');
+
+    }
+
+    // [2] load translations
+    console.log('*[3]*');
   }
 
   render() {
-    const { store } = this.props;
-    const { current } = store.getState().auth;
+    const { statusPage } = this.props;
+    console.log('props', this.props);
 
-    console.log('RouterContainer -> props', store.getState().auth.current);
+    if (statusPage === globalConst.STATUS_NOT_FOUND) {
+      return (
+        <App {...this.props}>
+          <NotFoundPage />
+        </App>
+      );
+    }
+    // const { current } = store.getState().auth;
+
+    // console.log('RouterContainer -> props', store.getState().auth.current);
 
     return (
       <App {...this.props}>
@@ -48,7 +86,7 @@ class RouterContainer extends Component {
           <Route path="/help" component={HelpPage} />
           <Route
             path="/login"
-            render={() => !current._id ?
+            render={() => true ?
               <LoginPage /> :
               <Redirect to="/" />}
           />
@@ -60,4 +98,4 @@ class RouterContainer extends Component {
   }
 }
 
-export default RouterContainer;
+export default connect(mapStateToProps, dispatchToProps)(RouterContainer);

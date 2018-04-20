@@ -14,6 +14,12 @@ export default class ApiClient {
     return data;
   }
 
+  async getExternal(url) {
+    const data = await this.externalRequest({ url, method: 'GET' });
+
+    return data;
+  }
+
   async post(url, payload) {
     const data = await this.request({ url, method: 'POST', data: payload });
 
@@ -48,6 +54,25 @@ export default class ApiClient {
         url: `${this.prefix}/${url}${query}`,
         method,
         data: method !== 'GET' ? qs.stringify(data, { encode: true, skipNulls: true }) : undefined,
+        headers,
+      };
+      const resp = await axios(options);
+
+      return resp.data;
+    } catch (error) {
+      throw error.response;
+    }
+  }
+
+  async externalRequest({ url, method }) {
+    try {
+      const headers = {
+        Accept: 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+      const options = {
+        url,
+        method,
         headers,
       };
       const resp = await axios(options);

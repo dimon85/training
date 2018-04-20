@@ -1,5 +1,6 @@
 import isFunction from 'lodash/isFunction';
 import api from '../api';
+import { getConfig } from '../../config';
 import { showError } from '../helpers/uiHelper';
 import cookieHelper from '../helpers/cookieHelper';
 
@@ -7,6 +8,10 @@ import cookieHelper from '../helpers/cookieHelper';
 export const LOAD_PROFILE_SUCCESS = 'redux-ducks/auth/LOAD_PROFILE_SUCCESS';
 export const LOGIN_SUCCESS = 'redux-ducks/auth/LOGIN_SUCCESS';
 export const SET_DEFAULT = 'redux-ducks/auth/SET_DEFAULT';
+
+export const LOAD_INFO = 'redux-ducks/auth/LOAD_INFO';
+export const LOAD_INFO_SUCCESS = 'redux-ducks/auth/LOAD_INFO_SUCCESS';
+export const LOAD_INFO_FAIL = 'redux-ducks/auth/LOAD_INFO_FAIL';
 // export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
 
 const initialState = {
@@ -15,6 +20,10 @@ const initialState = {
   error: null,
   current: {
     type: 'guest',
+  },
+  userInfo: {
+    loading: false,
+    loaded: false,
   },
   token: false,
 };
@@ -37,6 +46,25 @@ function getProfile(payload) {
   return {
     type: LOAD_PROFILE_SUCCESS,
     result: payload,
+  };
+}
+
+function loadInfoBegin() {
+  return {
+    type: LOAD_INFO,
+  };
+}
+
+function loadInfoResult(data) {
+  return {
+    type: LOAD_INFO_SUCCESS,
+    result: data,
+  };
+}
+
+function loadInfoError() {
+  return {
+    type: LOAD_INFO_FAIL,
   };
 }
 
@@ -82,7 +110,7 @@ export const signupAction = payload => async (dispatch) => {
 
 export const loadAuth = () => async (dispatch) => {
   if (!cookieHelper.get('token')) {
-    throw ({ error: 'token not found' });
+    return ({ error: 'token not found' });
   }
 
   try {
@@ -127,6 +155,23 @@ const loginRequestSuccess = action => (state) => {
   };
 }
 
+/**
+ * Load information about User from ipstack.com
+ */
+export const loadMemberInfoAction = () => (dispatch) => {
+  dispatch(loadInfoBegin());
+
+  return api.ApiClient.getExternal(`${getConfig().GET_IP_URL}?access_key=${getConfig().IP_STACK_KEY}&format=1`)
+    .then((resp) => {
+      dispatch(loadInfoResult(resp));
+      return resp;
+
+    }).catch(() => {
+      dispatch(loadInfoError());
+    });
+};
+
+
 const profileRequestSuccess = action => (state) => {
   const { user } = action.result;
   return {
@@ -137,6 +182,33 @@ const profileRequestSuccess = action => (state) => {
     }
   };
 }
+
+const loadInfoStart = () => state => ({
+  ...state,
+  userInfo: {
+    ...state.userInfo,
+    loading: true,
+  }
+});
+
+const loadInfoSuccess = action => state => ({
+  ...state,
+  userInfo: {
+    ...state.userInfo,
+    loaded: true,
+    loading: false,
+    ...action.result,
+  }
+});
+
+const loadInfoFail = () => state => ({
+  ...state,
+  userInfo: {
+    ...state.userInfo,
+    loaded: true,
+    loading: false,
+  }
+});
 
 const setDefaultSuccess = () => {
   cookieHelper.remove('token');
@@ -149,6 +221,9 @@ const setDefaultSuccess = () => {
 const actionsLookup = {
   [LOGIN_SUCCESS]: (state, action) => loginRequestSuccess(action)(state),
   [LOAD_PROFILE_SUCCESS]:  (state, action) => profileRequestSuccess(action)(state),
+  [LOAD_INFO]: state => loadInfoStart()(state),
+  [LOAD_INFO_SUCCESS]: (state, action) => loadInfoSuccess(action)(state),
+  [LOAD_INFO_FAIL]: state => loadInfoFail()(state),
   [SET_DEFAULT]: () => setDefaultSuccess(),
 };
 
