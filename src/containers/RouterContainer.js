@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Link, Route, Switch } from 'react-router-dom';
-import { loadAuth } from './reducers/auth';
-import App from './containers/App';
-import LoginPage from './containers/LoginPage';
-import SignupPage from './containers/SignupPage';
-import HomePage from './components/HomePage';
-import TrainerPage from './components/TrainerPage';
-import HelpPage from './components/HelpPage';
+import { loadAuth } from '../reducers/auth';
+import App from './App';
+import LoginPage from './LoginPage';
+import SignupPage from './SignupPage';
+import HomePage from '../components/HomePage';
+import TrainerPage from '../components/TrainerPage';
+import HelpPage from '../components/HelpPage';
 
 class RouterContainer extends Component {
   static propTypes = {

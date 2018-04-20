@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
-import { hot } from 'react-hot-loader'
-import RouterContainer from '../RouterContainer';
+import { hot } from 'react-hot-loader';
+import LanguageContainer from './LanguageContainer';
 
 const RootContainer = (props) => {
   const { store, history } = props;
@@ -11,7 +11,7 @@ const RootContainer = (props) => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <RouterContainer history={history} store={store} />
+        <LanguageContainer history={history} store={store} />
       </ConnectedRouter>
     </Provider>
   );
