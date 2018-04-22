@@ -33,10 +33,6 @@ class RouterContainer extends Component {
     setStatusPage: PropTypes.func.isRequired,
   };
 
-  state = {
-    profile: {},
-  };
-
   static getDerivedStateFromProps(nextProps, prevState) {
     const { match: { params }, langs, statusPage } = nextProps;
 
@@ -44,12 +40,33 @@ class RouterContainer extends Component {
       nextProps.setStatusPage({ status: globalConst.STATUS_SUCCESS_PAGE, text: 'Page load success' });
     }
 
+    if (!checkItemInArray(langs, params.lang)) {
+      nextProps.setStatusPage({ status: globalConst.STATUS_NOT_FOUND, text: 'Page not found' });
+    }
+
     console.log('nextProps::', [nextProps, prevState]);
     return null;
   }
 
+  static childContextTypes = {
+    currentLang: PropTypes.string.isRequired
+  };
+
+  state = {
+    currentLang: '',
+  };
+
+  getChildContext() {
+    return {
+      currentLang: this.state.currentLang
+    };
+  }
+
+
+
   async componentDidMount() {
     const { match: { params }, langs } = this.props;
+
     console.log('*[1]*', this.props);
 
     // [1] check, if route with existing lang
@@ -81,7 +98,7 @@ class RouterContainer extends Component {
     return (
       <App {...this.props}>
         <Switch>
-          <Route exact path="/" component={HomePage} />
+          <Route path="/" component={HomePage} />
           <Route path="/trainer" component={TrainerPage} />
           <Route path="/help" component={HelpPage} />
           <Route

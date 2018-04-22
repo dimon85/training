@@ -1,7 +1,7 @@
 import cookieHelper from './cookieHelper';
 
 
-export const getLangFromCountryCode = (code) => {
+export const getLangFromCountryCode = (code = 'UA') => {
   if (code === 'UA') {
     return 'ua';
   }
