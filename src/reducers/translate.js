@@ -3,6 +3,9 @@ import isFunction from 'lodash/isFunction';
 import flowRight from 'lodash/flowRight';
 import cookieHelper from '../helpers/cookieHelper';
 
+
+const SET_LOCALE ='redux-ducks/localization/SET_LOCALE';
+
 const LOAD = 'redux-ducks/localization/LOAD';
 const LOAD_SUCCESS = 'redux-ducks/localization/LOAD_SUCCESS';
 const LOAD_FAIL = 'redux-ducks/localization/LOAD_FAIL';
@@ -13,10 +16,8 @@ const SAVE_FAIL = 'redux-ducks/localization/SAVE_FAIL';
 
 const initialState = {
   loaded: false,
-  data: {
-    type: 'en',
-    translations: {}
-  },
+  data: {},
+  currentLang: 'en',
   langs: ['en', 'ru', 'ua'],
 };
 
@@ -58,9 +59,30 @@ export function updateLang(type) {
   };
 }
 
-export function editStop(id) {
+function editStop(id) {
   return { type: EDIT_STOP, id };
 }
+
+function setLocale(payload) {
+  return {
+    type: SET_LOCALE,
+    result: payload,
+  };
+}
+
+export const changeLocale = locale => (dispatch) => {
+  dispatch(setLocale(locale));
+  console.log('**', locale);
+}
+
+const setLocaleSuccess = action => state => {
+  console.log('object', action);
+  return {
+    ...state,
+    currentLang: 'en'
+  }
+}
+
 
 const updateRequestOnLoad = value => state => ({
   ...state,
@@ -139,6 +161,7 @@ const updateRequestOnSaveFail = action => (state) => {
 };
 
 const actionsLookup = {
+  [SET_LOCALE]: (state, action) => setLocaleSuccess(action)(state),
   [LOAD]: state => updateRequestOnLoad(true)(state),
   [LOAD_SUCCESS]: (state, action) => flowRight(
     updateRequestOnLoadSuccess(false),

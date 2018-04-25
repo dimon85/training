@@ -40,6 +40,10 @@ export class AppLayout extends Component {
     logout: PropTypes.func.isRequired,
   };
 
+  static contextTypes = {
+    langs: PropTypes.array.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -129,6 +133,7 @@ export class AppLayout extends Component {
   render() {
     const { children, isGuest } = this.props;
     const { openPanel } = this.state;
+    const { langs } = this.context;
 
     return (
       <div>
@@ -145,6 +150,19 @@ export class AppLayout extends Component {
           open={openPanel}
           onRequestChange={open => this.setState({ openPanel: open })}
         >
+          <div className="languageContainer">
+            {langs.map((item) => {
+              return (
+                <div key={item} className="languageContainer__item">
+                  <FlatButton
+                    label={item}
+                    primary={item === 'en'}
+                    fullWidth
+                  />
+                </div>
+              );
+            })}
+          </div>
           <Link to="/trainer">
             <MenuItem
               primaryText="Trainer"

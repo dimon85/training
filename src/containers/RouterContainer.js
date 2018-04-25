@@ -4,10 +4,11 @@ import { connect } from 'react-redux';
 import { Redirect, Link, Route, Switch } from 'react-router-dom';
 // import { loadAuth } from '../reducers/auth';
 import { setStatusPage } from '../reducers/info';
+import { changeLocale } from '../reducers/translate';
 import { checkItemInArray } from '../helpers/utils';
 import globalConst from '../helpers/constants';
 import { getStatusPage } from '../selectors';
-import { getAvailableLangs } from '../selectors/translateSelectors';
+import { getAvailableLangs, getCurrentLang } from '../selectors/translateSelectors';
 import App from './App';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -19,18 +20,23 @@ import NotFoundPage from '../components/NotFoundPage';
 
 const mapStateToProps = state => ({
   langs: getAvailableLangs(state),
+  currentLang: getCurrentLang(state),
   statusPage: getStatusPage(state),
 });
 
 const dispatchToProps = (dispatch) => ({
   setStatusPage: (params) => dispatch(setStatusPage(params)),
+  changeLocale: lang => dispatch(changeLocale(lang)),
 });
 
 class RouterContainer extends Component {
   static propTypes = {
     match: PropTypes.object.isRequired,
+    langs: PropTypes.array.isRequired,
+    currentLang: PropTypes.string.isRequired,
     statusPage: PropTypes.number.isRequired,
     setStatusPage: PropTypes.func.isRequired,
+    changeLocale: PropTypes.func.isRequired,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -49,7 +55,8 @@ class RouterContainer extends Component {
   }
 
   static childContextTypes = {
-    currentLang: PropTypes.string.isRequired
+    currentLang: PropTypes.string.isRequired,
+    langs: PropTypes.array.isRequired,
   };
 
   state = {
@@ -58,26 +65,30 @@ class RouterContainer extends Component {
 
   getChildContext() {
     return {
-      currentLang: this.state.currentLang
+      currentLang: this.state.currentLang,
+      langs: this.props.langs,
     };
   }
 
-
-
   async componentDidMount() {
-    const { match: { params }, langs } = this.props;
+    const {
+      match: { params },
+      langs,
+      currentLang,
+    } = this.props;
 
     console.log('*[1]*', this.props);
 
     // [1] check, if route with existing lang
     if (!checkItemInArray(langs, params.lang)) {
       this.props.setStatusPage({ status: 404, msg: 'Not found'});
-      console.log('*[2]*');
-
+      return;
     }
 
-    // [2] load translations
-    console.log('*[3]*');
+    // [2] set current lang
+    if (params.lang !== currentLang) {
+      this.props.changeLocale(params.lang);
+    }
   }
 
   render() {
