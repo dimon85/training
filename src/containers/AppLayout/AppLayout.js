@@ -14,7 +14,7 @@ import FlatButton from 'material-ui/FlatButton';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
 import { logoutAction } from '../../reducers/auth';
-
+import { changeLocale } from '../../reducers/translate';
 
 const styles = {
   appBar: {
@@ -29,6 +29,7 @@ const mapStateToProps = state => ({
 
 const dispatchToProps = (dispatch) => ({
   logout: () => dispatch(logoutAction()),
+  changeLocale: lang => dispatch(changeLocale(lang)),
 });
 
 export class AppLayout extends Component {
@@ -38,10 +39,12 @@ export class AppLayout extends Component {
     pathname: PropTypes.string.isRequired,
     isGuest: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
+    changeLocale: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
     langs: PropTypes.array.isRequired,
+    currentLang: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -83,6 +86,37 @@ export class AppLayout extends Component {
     this.setState({ open: false });
   }
 
+  /**
+   * Handle change locale
+   * @param {object} syntheticEvent
+   */
+  handleChangeLocale = (event) => {
+    const { lang } = event.currentTarget.dataset;
+    const { history: { location } } = this.props;
+    console.log(this.props);
+
+
+    this.props.changeLocale(lang).then(() => {
+      const { pathname, search } = location;
+      const newUrl = pathname.split('/').splice(2).join('/');
+  
+      this.redirectToLocale(lang, newUrl, search);
+    });
+  }
+
+  redirectToLocale = (locale, url, search = '') => {
+    let pathname = `/${locale}`;
+
+    if (url) {
+      pathname += `/${url}`;
+    }
+
+    this.props.history.push({ pathname, search });
+  }
+
+  /**
+   * Handle logout process
+   */
   handleLogout = () => {
     const { history } = this.props;
 
@@ -133,8 +167,9 @@ export class AppLayout extends Component {
   render() {
     const { children, isGuest } = this.props;
     const { openPanel } = this.state;
-    const { langs } = this.context;
+    const { langs, currentLang } = this.context;
 
+    console.log('fff', [currentLang]);
     return (
       <div>
         <AppBar
@@ -152,12 +187,15 @@ export class AppLayout extends Component {
         >
           <div className="languageContainer">
             {langs.map((item) => {
+
               return (
                 <div key={item} className="languageContainer__item">
                   <FlatButton
+                    data-lang={item}
                     label={item}
-                    primary={item === 'en'}
+                    primary={item === currentLang}
                     fullWidth
+                    onTouchTap={this.handleChangeLocale}
                   />
                 </div>
               );

@@ -71,15 +71,16 @@ function setLocale(payload) {
 }
 
 export const changeLocale = locale => (dispatch) => {
+  // TODO: load translates
+  //
   dispatch(setLocale(locale));
-  console.log('**', locale);
+  return Promise.resolve(locale);
 }
 
 const setLocaleSuccess = action => state => {
-  console.log('object', action);
   return {
     ...state,
-    currentLang: 'en'
+    currentLang: action.result
   }
 }
 

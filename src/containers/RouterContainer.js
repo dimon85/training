@@ -60,12 +60,12 @@ class RouterContainer extends Component {
   };
 
   state = {
-    currentLang: '',
+    loading: false
   };
 
   getChildContext() {
     return {
-      currentLang: this.state.currentLang,
+      currentLang: this.props.currentLang,
       langs: this.props.langs,
     };
   }
