@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Redirect, Link, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 // import { loadAuth } from '../reducers/auth';
 import { setStatusPage } from '../reducers/info';
 import { changeLocale } from '../reducers/translate';
@@ -16,7 +16,6 @@ import HomePage from '../components/HomePage';
 import TrainerPage from '../components/TrainerPage';
 import HelpPage from '../components/HelpPage';
 import NotFoundPage from '../components/NotFoundPage';
-
 
 const mapStateToProps = state => ({
   langs: getAvailableLangs(state),
@@ -39,7 +38,7 @@ class RouterContainer extends Component {
     changeLocale: PropTypes.func.isRequired,
   };
 
-  static getDerivedStateFromProps(nextProps, prevState) {
+  static getDerivedStateFromProps(nextProps) {
     const { match: { params }, langs, statusPage } = nextProps;
 
     if (checkItemInArray(langs, params.lang) && statusPage === globalConst.STATUS_NOT_FOUND) {
@@ -50,7 +49,6 @@ class RouterContainer extends Component {
       nextProps.setStatusPage({ status: globalConst.STATUS_NOT_FOUND, text: 'Page not found' });
     }
 
-    console.log('nextProps::', [nextProps, prevState]);
     return null;
   }
 
@@ -77,8 +75,6 @@ class RouterContainer extends Component {
       currentLang,
     } = this.props;
 
-    console.log('*[1]*', this.props);
-
     // [1] check, if route with existing lang
     if (!checkItemInArray(langs, params.lang)) {
       this.props.setStatusPage({ status: 404, msg: 'Not found'});
@@ -92,8 +88,7 @@ class RouterContainer extends Component {
   }
 
   render() {
-    const { statusPage } = this.props;
-    console.log('props', this.props);
+    const { match, statusPage } = this.props;
 
     if (statusPage === globalConst.STATUS_NOT_FOUND) {
       return (
@@ -102,25 +97,24 @@ class RouterContainer extends Component {
         </App>
       );
     }
-    // const { current } = store.getState().auth;
-
-    // console.log('RouterContainer -> props', store.getState().auth.current);
 
     return (
       <App {...this.props}>
-        <Switch>
-          <Route path="/" component={HomePage} />
-          <Route path="/trainer" component={TrainerPage} />
-          <Route path="/help" component={HelpPage} />
-          <Route
-            path="/login"
-            render={() => true ?
-              <LoginPage /> :
-              <Redirect to="/" />}
-          />
-          <Route path="/signup" component={SignupPage} />
-          <Route render={() => (<div>Miss go to<Link to="/">Home</Link> - <Link to="/trainer">trainer</Link></div>)} />
-        </Switch>
+        <div>
+          <Switch>
+            <Route exact path={`${match.path}`} component={HomePage} />
+            <Route path={`${match.path}/trainer`} component={TrainerPage} />
+            <Route path="/:lang/help" component={HelpPage} />
+            <Route
+              path="/:lang/login"
+              render={() => true ?
+                <LoginPage /> :
+                <Redirect to="/" />}
+            />
+            <Route path="/:lang/signup" component={SignupPage} />
+            <Route exact path="/:lang/*" component={NotFoundPage} />
+          </Switch>
+        </div>
       </App>
     )
   }

@@ -1,7 +1,12 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-export default class HomePage extends Component {
+export default class HomePage extends PureComponent {
+  static contextTypes = {
+    currentLang: PropTypes.string.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -10,13 +15,14 @@ export default class HomePage extends Component {
   }
 
   render() {
+    const { currentLang } = this.context;
     return (
       <div className="container landing">
         <div className="landing__container">
           <h1 className="landing__title">Тренируйся с удовольствием</h1>
           <div className="landing__desc">Развивай внимание и скорость набора с помощью онлайн-тренажеров</div>
         </div>
-        <Link to="/trainer" className="landing__control">
+        <Link to={`/${currentLang}/trainer`} className="landing__control">
           Начать тренировку
         </Link>
       </div>

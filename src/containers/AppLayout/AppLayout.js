@@ -10,6 +10,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
+import Help from 'material-ui/svg-icons/action/help';
 import FlatButton from 'material-ui/FlatButton';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
@@ -132,6 +133,7 @@ export class AppLayout extends Component {
   }
 
   renderIconRight(isGuest) {
+    const { currentLang } = this.context;
     if (!isGuest) {
       return (
         <FlatButton
@@ -150,16 +152,18 @@ export class AppLayout extends Component {
         anchorOrigin={targetOrigin}
         onRequestChange={this.handleRequestChange}
       >
-        <Link to="/login"><MenuItem primaryText="Login" /></Link>
-        <Link to="/signup"><MenuItem primaryText="Signup" /></Link>
+        <Link to={`/${currentLang}/login`}><MenuItem primaryText="Login" /></Link>
+        <Link to={`/${currentLang}/signup`}><MenuItem primaryText="Signup" /></Link>
       </IconMenu>
     );
   }
 
-  renderLogo() {
+  renderLogo = () => {
+    const { currentLang } = this.context;
+
     return (
       <div className="logo">
-        <Link to="/">KeyPress</Link>
+        <Link to={`/${currentLang}`}>KeyPress</Link>
       </div>
     );
   }
@@ -169,7 +173,6 @@ export class AppLayout extends Component {
     const { openPanel } = this.state;
     const { langs, currentLang } = this.context;
 
-    console.log('fff', [currentLang]);
     return (
       <div>
         <AppBar
@@ -187,7 +190,6 @@ export class AppLayout extends Component {
         >
           <div className="languageContainer">
             {langs.map((item) => {
-
               return (
                 <div key={item} className="languageContainer__item">
                   <FlatButton
@@ -201,14 +203,20 @@ export class AppLayout extends Component {
               );
             })}
           </div>
-          <Link to="/trainer">
+          <Link to={`/${currentLang}/trainer`}>
             <MenuItem
               primaryText="Trainer"
               leftIcon={<Keyboard />}
               onTouchTap={this.handleClose}
             />
           </Link>
-          <MenuItem onTouchTap={this.handleClose}>Menu Item 2</MenuItem>
+          <Link to={`/${currentLang}/help`}>
+            <MenuItem
+              primaryText="Help"
+              leftIcon={<Help />}
+              onTouchTap={this.handleClose}
+            />
+          </Link>
         </Drawer>
         {children}
         <ToastContainer />
