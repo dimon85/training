@@ -23,8 +23,8 @@ const mapStateToProps = state => ({
   statusPage: getStatusPage(state),
 });
 
-const dispatchToProps = (dispatch) => ({
-  setStatusPage: (params) => dispatch(setStatusPage(params)),
+const dispatchToProps = dispatch => ({
+  setStatusPage: params => dispatch(setStatusPage(params)),
   changeLocale: lang => dispatch(changeLocale(lang)),
 });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom'
+import { render } from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import createHistory from 'history/createBrowserHistory';
 import configureStore from './store/configureStore';
