@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const OfflinePlugin = require('offline-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
@@ -30,30 +30,19 @@ const prodConfig = {
     rules: [
       // sass
       {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true
-              }
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                plugins: [autoprefixer('last 2 version')],
-                sourceMap: true
-              }
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true
-              }
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: [autoprefixer('last 2 version')],
+              sourceMap: true
             }
-          ]
-        }),
+          },
+          'sass-loader',
+        ],
       },
     ],
   },
@@ -80,9 +69,11 @@ const prodConfig = {
     // clean dist folder
     new CleanWebpackPlugin(['dist'], { root: ROOT_DIR }),
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new ExtractTextPlugin({
-      filename: 'styles.[hash].css',
-      allChunks: false,
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[hash].css'
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
