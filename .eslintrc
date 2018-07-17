@@ -43,6 +43,7 @@
     "react/require-default-props": 0,
     "react/no-unused-prop-types": ["warn"],
     "react/prefer-stateless-function": ["warn"],
+    "react/destructuring-assignment": 0,
     "jsx-a11y/anchor-has-content": 0,
     "jsx-a11y/anchor-is-valid": 0,
     "jsx-a11y/href-no-hash": 0,

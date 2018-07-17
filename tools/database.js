@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/training'); // training is name of db
+mongoose.connect('mongodb://localhost:27017/training', { useNewUrlParser: true }); // training is name of db
 
 
 const db = mongoose.connection;

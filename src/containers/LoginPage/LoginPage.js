@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import autobind from 'autobind-decorator';
 import isEmpty from 'lodash/isEmpty';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
@@ -23,6 +22,10 @@ export class LoginPage extends Component {
     loadAuth: PropTypes.func.isRequired,
   };
 
+  static contextTypes = {
+    currentLang: PropTypes.string.isRequired,
+  };
+
   constructor(props) {
     super(props);
 
@@ -34,15 +37,13 @@ export class LoginPage extends Component {
     };
   }
 
-  @autobind
-  handleChangeField(event) {
+  handleChangeField = (event) => {
     const { name, value } = event.target;
     this.setState(() => ({ [name]: value }));
     this.handleCleanError(name);
   }
 
-  @autobind
-  handleCleanError(name) {
+  handleCleanError = (name) => {
     this.setState((prevState) => {
       if (prevState.errors[name]) {
         return ({
@@ -73,6 +74,9 @@ export class LoginPage extends Component {
    * Login with email and password
    */
   handleLogin = () => {
+    const {
+      currentLang
+    } = this.context;
     const { history } = this.props;
     const { email, password } = this.state;
     const params = {
@@ -86,11 +90,10 @@ export class LoginPage extends Component {
       return;
     }
 
-
     this.setState({ loading: true });
     this.props.login({ email, password })
       .then(this.props.loadAuth)
-      .then(() => history.push({ pathname: '/' }))
+      .then(() => history.push(`/${currentLang}`))
       .catch((error) => {
         this.setState({ loading: false });
         if (!error.data) {
@@ -121,12 +124,16 @@ export class LoginPage extends Component {
 
     return (
       <div className="container landing">
-        <h1>Login</h1>
+        <h1>
+          Login
+        </h1>
         <div className="loginPage">
           <Paper zDepth={4}>
             <div className="paper">
               <div className="paper__body">
-                <h3>Login with your email address</h3>
+                <h3>
+                  Login with your email address
+                </h3>
                 <TextField
                   name="email"
                   value={email}
@@ -150,14 +157,14 @@ export class LoginPage extends Component {
               </div>
 
               <div className="paper__controls">
-                {!loading &&
+                {!loading && (
                   <RaisedButton
                     label="Log in"
                     primary={Boolean(true)}
                     onTouchTap={this.handleLogin}
                   />
-                }
-                {loading && 
+                )}
+                {loading && (
                   <RefreshIndicator
                     size={50}
                     left={0}
@@ -166,8 +173,10 @@ export class LoginPage extends Component {
                     status="loading"
                     style={style.refresh}
                   />
-                }
-                <a href="#" className="btn">Forgot password</a>
+                )}
+                <a href="#" className="btn">
+                  Forgot password
+                </a>
               </div>
             </div>
           </Paper>

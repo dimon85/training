@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import isEmpty from 'lodash/isEmpty';
 // import { loadAuth } from '../reducers/auth';
 import { setStatusPage } from '../reducers/info';
 import { changeLocale } from '../reducers/translate';
@@ -38,27 +39,13 @@ class RouterContainer extends Component {
     changeLocale: PropTypes.func.isRequired,
   };
 
-  static getDerivedStateFromProps(nextProps) {
-    const { match: { params }, langs, statusPage } = nextProps;
-
-    if (checkItemInArray(langs, params.lang) && statusPage === globalConst.STATUS_NOT_FOUND) {
-      nextProps.setStatusPage({ status: globalConst.STATUS_SUCCESS_PAGE, text: 'Page load success' });
-    }
-
-    if (!checkItemInArray(langs, params.lang)) {
-      nextProps.setStatusPage({ status: globalConst.STATUS_NOT_FOUND, text: 'Page not found' });
-    }
-
-    return null;
-  }
-
   static childContextTypes = {
     currentLang: PropTypes.string.isRequired,
     langs: PropTypes.array.isRequired,
   };
 
   state = {
-    loading: false
+    loading: false,
   };
 
   getChildContext() {
@@ -87,6 +74,20 @@ class RouterContainer extends Component {
     }
   }
 
+  static getDerivedStateFromProps(nextProps) {
+    const { match: { params }, langs, statusPage } = nextProps;
+
+    if (checkItemInArray(langs, params.lang) && statusPage === globalConst.STATUS_NOT_FOUND) {
+      nextProps.setStatusPage({ status: globalConst.STATUS_SUCCESS_PAGE, text: 'Page load success' });
+    }
+
+    if (!checkItemInArray(langs, params.lang)) {
+      nextProps.setStatusPage({ status: globalConst.STATUS_NOT_FOUND, text: 'Page not found' });
+    }
+
+    return null;
+  }
+
   render() {
     const { match, statusPage } = this.props;
 
@@ -109,7 +110,7 @@ class RouterContainer extends Component {
               path="/:lang/login"
               render={() => true ?
                 <LoginPage /> :
-                <Redirect to="/" />}
+                <Redirect to={`${match.path}`} />}
             />
             <Route path="/:lang/signup" component={SignupPage} />
             <Route exact path="/:lang/*" component={NotFoundPage} />

@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import autobind from 'autobind-decorator';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
@@ -67,18 +66,15 @@ export class AppLayout extends Component {
     }
   }
 
-  @autobind
-  handleClose() {
+  handleClose = () => {
     this.setState({ openPanel: false });
   }
 
-  @autobind
-  handleTogglePanel() {
-    this.setState({ openPanel: !this.state.openPanel });
+  handleTogglePanel = () => {
+    this.setState((prevState) => ({ openPanel: !prevState.openPanel }));
   }
 
-  @autobind
-  handleRequestChange(open, reason) {
+  handleRequestChange = (open, reason) => {
     if (reason === 'iconTap') {
       this.setState({ open });
       return;
@@ -94,8 +90,6 @@ export class AppLayout extends Component {
   handleChangeLocale = (event) => {
     const { lang } = event.currentTarget.dataset;
     const { history: { location } } = this.props;
-    console.log(this.props);
-
 
     this.props.changeLocale(lang).then(() => {
       const { pathname, search } = location;
@@ -119,17 +113,21 @@ export class AppLayout extends Component {
    * Handle logout process
    */
   handleLogout = () => {
-    const { history } = this.props;
+    const { currentLang } = this.context;
 
     this.props.logout()
-      .then(() => history.push({ pathname: '/' }))
+      .then(() => this.redirectToLocale(currentLang))
       .catch((error) => {
         console.log('handleLogout -> error', error);
       });
   }
 
   renderIconMenu() {
-    return (<IconButton><MoreVertIcon /></IconButton>);
+    return (
+      <IconButton>
+        <MoreVertIcon />
+      </IconButton>
+    );
   }
 
   renderIconRight(isGuest) {
@@ -152,8 +150,12 @@ export class AppLayout extends Component {
         anchorOrigin={targetOrigin}
         onRequestChange={this.handleRequestChange}
       >
-        <Link to={`/${currentLang}/login`}><MenuItem primaryText="Login" /></Link>
-        <Link to={`/${currentLang}/signup`}><MenuItem primaryText="Signup" /></Link>
+        <Link to={`/${currentLang}/login`}>
+          <MenuItem primaryText="Login" />
+        </Link>
+        <Link to={`/${currentLang}/signup`}>
+          <MenuItem primaryText="Signup" />
+        </Link>
       </IconMenu>
     );
   }
@@ -163,7 +165,9 @@ export class AppLayout extends Component {
 
     return (
       <div className="logo">
-        <Link to={`/${currentLang}`}>KeyPress</Link>
+        <Link to={`/${currentLang}`}>
+          KeyPress
+        </Link>
       </div>
     );
   }
@@ -197,7 +201,7 @@ export class AppLayout extends Component {
                     label={item}
                     primary={item === currentLang}
                     fullWidth
-                    onTouchTap={this.handleChangeLocale}
+                    onClick={this.handleChangeLocale}
                   />
                 </div>
               );
