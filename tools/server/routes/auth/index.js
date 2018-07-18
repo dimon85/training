@@ -6,6 +6,7 @@ import User from '../../models/UserModel';
 // const User = require('../models/UserModel');
 // const secret = require('../secrets');
 
+const EXPIRE_TIME = '1h'; // //expire in 1h (example 1m, 1h or 60*60)
 
 const router = express.Router(); // eslint-disable-line
 
@@ -32,7 +33,7 @@ router.post('/register', function(req, res, next) {
         const token = jwt.sign(
           copyUser, //payload
           'secret_string', //super secret string
-          { expiresIn: '1m' } //expire in 1m
+          { expiresIn: EXPIRE_TIME }
         );
 
         res.status(201).json({ message: 'Registered successfully', token })
@@ -74,7 +75,7 @@ router.post('/login', (req, res) => {
         const token = jwt.sign(
           copyUser, //payload
           'secret_string', //super secret string
-          { expiresIn: '1m' }  //expire in 1m
+          { expiresIn: EXPIRE_TIME }
         );
 
         res.status(200).json({ message: 'Authenticated', token });

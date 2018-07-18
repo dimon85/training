@@ -12,6 +12,10 @@ export const loginForm = (values) => {
     errors.email = 'Email is required';
   }
 
+  if (values.password.length < 6) {
+    errors.password = 'Minimum of 6 characters is required';
+  }
+
   if (isEmpty(values.password)) {
     errors.password = 'Password is required';
   }

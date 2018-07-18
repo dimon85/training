@@ -97,7 +97,7 @@ export default class TrainerPage extends Component {
       <div className="container">
         <h1>Training your ability</h1>
         <Paper zDepth={4} className="paper">
-          {!start &&
+          {!start && (
             <div className="paper__area">
               <div className="paper__header">
                 <h3>Press button to start</h3>
@@ -107,12 +107,12 @@ export default class TrainerPage extends Component {
                   label="Start"
                   primary={Boolean(true)}
                   fullWidth={Boolean(true)}
-                  onTouchTap={this.handleClickStart}
+                  onClick={this.handleClickStart}
                 />
               </div>
             </div>
-          }
-          {start &&
+          )}
+          {start && (
             <TrainerType
               text={text}
               onUpdateTime={this.handleUpdateTime}
@@ -120,16 +120,16 @@ export default class TrainerPage extends Component {
               onAddError={this.handleAddError}
               onOpenModal={this.handleOpenModal}
             />
-          }
+          )}
         </Paper>
-        {start &&
+        {start && (
           <TrainerInfo
             currentTime={currentTime}
             textLength={textLength}
             typedCount={typedCount}
             errorsCount={errorsCount}
           />
-        }
+        )}
         <TrainerModal
           open={openModal}
           textLength={textLength}

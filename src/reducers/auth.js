@@ -75,7 +75,7 @@ export const loginAction = payload => async (dispatch) => {
     return dispatch(login(data));
   } catch (error) {
     const { status, statusText } = error;
-
+    showError('Something went wrong. Try later');
     if (!status) {
       showError('Something went wrong. Try later');
     }

@@ -2,17 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import isEmpty from 'lodash/isEmpty';
-// import { loadAuth } from '../reducers/auth';
 import { setStatusPage } from '../reducers/info';
 import { changeLocale } from '../reducers/translate';
 import { checkItemInArray } from '../helpers/utils';
 import globalConst from '../helpers/constants';
-import { getStatusPage } from '../selectors';
+import { getStatusPage, getProfile } from '../selectors';
 import { getAvailableLangs, getCurrentLang } from '../selectors/translateSelectors';
 import App from './App';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
+import ProfilePage from './ProfilePage';
 import HomePage from '../components/HomePage';
 import TrainerPage from '../components/TrainerPage';
 import HelpPage from '../components/HelpPage';
@@ -22,6 +21,7 @@ const mapStateToProps = state => ({
   langs: getAvailableLangs(state),
   currentLang: getCurrentLang(state),
   statusPage: getStatusPage(state),
+  profile: getProfile(state),
 });
 
 const dispatchToProps = dispatch => ({
@@ -33,6 +33,7 @@ class RouterContainer extends Component {
   static propTypes = {
     match: PropTypes.object.isRequired,
     langs: PropTypes.array.isRequired,
+    profile: PropTypes.object.isRequired,
     currentLang: PropTypes.string.isRequired,
     statusPage: PropTypes.number.isRequired,
     setStatusPage: PropTypes.func.isRequired,
@@ -42,6 +43,7 @@ class RouterContainer extends Component {
   static childContextTypes = {
     currentLang: PropTypes.string.isRequired,
     langs: PropTypes.array.isRequired,
+    profile: PropTypes.object.isRequired,
   };
 
   state = {
@@ -52,6 +54,7 @@ class RouterContainer extends Component {
     return {
       currentLang: this.props.currentLang,
       langs: this.props.langs,
+      profile: this.props.profile,
     };
   }
 
@@ -89,7 +92,12 @@ class RouterContainer extends Component {
   }
 
   render() {
-    const { match, statusPage } = this.props;
+    const {
+      currentLang,
+      match,
+      statusPage,
+      profile,
+    } = this.props;
 
     if (statusPage === globalConst.STATUS_NOT_FOUND) {
       return (
@@ -98,6 +106,8 @@ class RouterContainer extends Component {
         </App>
       );
     }
+
+    // if (!authLoaded)
 
     return (
       <App {...this.props}>
@@ -108,11 +118,26 @@ class RouterContainer extends Component {
             <Route path="/:lang/help" component={HelpPage} />
             <Route
               path="/:lang/login"
-              render={() => true ?
+              render={() => !profile.email ?
                 <LoginPage /> :
-                <Redirect to={`${match.path}`} />}
+                <Redirect to={`/${currentLang}`} />
+              }
             />
-            <Route path="/:lang/signup" component={SignupPage} />
+            <Route
+              path="/:lang/signup"
+              render={() => !profile.email ?
+                <SignupPage /> :
+                <Redirect to={`/${currentLang}`} />
+              }
+            />
+            <Route
+              path="/:lang/profile"
+              render={() => profile.email ?
+                <ProfilePage />
+                :
+                <Redirect to={`/${currentLang}/login`} />
+              }
+            />
             <Route exact path="/:lang/*" component={NotFoundPage} />
           </Switch>
         </div>

@@ -37,7 +37,7 @@ export default function Timer(props) {
           <IconButton
             style={styles.medium}
             iconStyle={styles.mediumIcon}
-            onTouchTap={onPlay}
+            onClick={onPlay}
           >
             <PauseIcon />
           </IconButton>

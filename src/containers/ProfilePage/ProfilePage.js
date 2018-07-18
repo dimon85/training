@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
 import isEmpty from 'lodash/isEmpty';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
@@ -15,15 +14,15 @@ const dispatchToProps = dispatch => ({
   loadAuth: () => dispatch(loadAuth()),
 });
 
-export class LoginPage extends Component {
+export class ProfilePage extends Component {
   static propTypes = {
-    history: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
     loadAuth: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
     currentLang: PropTypes.string.isRequired,
+    profile: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -74,39 +73,42 @@ export class LoginPage extends Component {
    * Login with email and password
    */
   handleLogin = () => {
-    const { currentLang } = this.context;
-    const { history } = this.props;
-    const { email, password } = this.state;
-    const params = {
-      email,
-      password,
-    };
-    const errors = loginForm(params);
+    // const { currentLang } = this.context;
+    // const { history } = this.props;
+    // const { email, password } = this.state;
+    // const params = {
+    //   email,
+    //   password,
+    // };
+    // const errors = loginForm(params);
 
-    if (!isEmpty(errors)) {
-      this.setState({ errors });
-      return;
-    }
+    // if (!isEmpty(errors)) {
+    //   this.setState({ errors });
+    //   return;
+    // }
 
-    this.setState({ loading: true });
-    this.props.login(params)
-      .then(this.props.loadAuth)
-      .then(() => history.push(`/${currentLang}`))
-      .catch((error) => {
-        this.setState({ loading: false });
-        if (!error.data) {
-          return;
-        }
+    // this.setState({ loading: true });
+    // this.props.login(params)
+    //   .then(this.props.loadAuth)
+    //   .then(() => history.push(`/${currentLang}`))
+    //   .catch((error) => {
+    //     this.setState({ loading: false });
+    //     if (!error.data) {
+    //       return;
+    //     }
 
-        console.log('Error', error);
-        this.setState({
-          loading: false,
-          errors: error.data.errors,
-        });
-      });
+    //     console.log('Error', error);
+    //     this.setState({
+    //       loading: false,
+    //       errors: error.data.errors,
+    //     });
+    //   });
   }
 
   render() {
+    const {
+      profile
+    } = this.context;
     const {
       email,
       password,
@@ -120,17 +122,18 @@ export class LoginPage extends Component {
       },
     };
 
+    console.log('profile', profile);
     return (
       <div className="container landing">
         <h1>
-          Login
+          Profile page
         </h1>
         <div className="loginPage">
           <Paper zDepth={4}>
             <div className="paper">
               <div className="paper__body">
                 <h3>
-                  Login with your email address
+                  Profile page
                 </h3>
                 <TextField
                   name="email"
@@ -184,4 +187,4 @@ export class LoginPage extends Component {
   }
 }
 
-export default withRouter(connect(state => state, dispatchToProps)(LoginPage));
+export default connect(state => state, dispatchToProps)(ProfilePage);
