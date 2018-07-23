@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import CircularProgress from 'material-ui/CircularProgress';
 import { setStatusPage } from '../reducers/info';
 import { changeLocale } from '../reducers/translate';
 import { checkItemInArray } from '../helpers/utils';
 import globalConst from '../helpers/constants';
-import { getStatusPage, getProfile } from '../selectors';
+import { getStatusPage, getProfile, getAuthLoaded } from '../selectors';
 import { getAvailableLangs, getCurrentLang } from '../selectors/translateSelectors';
 import App from './App';
 import LoginPage from './LoginPage';
@@ -22,6 +23,7 @@ const mapStateToProps = state => ({
   currentLang: getCurrentLang(state),
   statusPage: getStatusPage(state),
   profile: getProfile(state),
+  isAuthLoaded: getAuthLoaded(state),
 });
 
 const dispatchToProps = dispatch => ({
@@ -36,6 +38,7 @@ class RouterContainer extends Component {
     profile: PropTypes.object.isRequired,
     currentLang: PropTypes.string.isRequired,
     statusPage: PropTypes.number.isRequired,
+    isAuthLoaded: PropTypes.bool.isRequired,
     setStatusPage: PropTypes.func.isRequired,
     changeLocale: PropTypes.func.isRequired,
   };
@@ -97,6 +100,7 @@ class RouterContainer extends Component {
       match,
       statusPage,
       profile,
+      isAuthLoaded
     } = this.props;
 
     if (statusPage === globalConst.STATUS_NOT_FOUND) {
@@ -107,7 +111,19 @@ class RouterContainer extends Component {
       );
     }
 
-    // if (!authLoaded)
+    if (!isAuthLoaded) {
+      return (
+        <App {...this.props}>
+          <div className="container landing">
+            <CircularProgress
+              size={80}
+              thickness={5}
+              color="#00BCD4"
+            />
+          </div>
+        </App>
+      );
+    }
 
     return (
       <App {...this.props}>

@@ -14,6 +14,8 @@ export const LOAD_INFO_SUCCESS = 'redux-ducks/auth/LOAD_INFO_SUCCESS';
 export const LOAD_INFO_FAIL = 'redux-ducks/auth/LOAD_INFO_FAIL';
 // export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
 
+export const AUTH_LOADED = 'redux-ducks/auth/AUTH_LOADED';
+
 const initialState = {
   loading: false,
   loaded: false,
@@ -49,6 +51,12 @@ function getProfile(payload) {
   };
 }
 
+function setAuthLoaded() {
+  return {
+    type: AUTH_LOADED,
+  };
+}
+
 function loadInfoBegin() {
   return {
     type: LOAD_INFO,
@@ -75,7 +83,7 @@ export const loginAction = payload => async (dispatch) => {
     return dispatch(login(data));
   } catch (error) {
     const { status, statusText } = error;
-    showError('Something went wrong. Try later');
+
     if (!status) {
       showError('Something went wrong. Try later');
     }
@@ -110,6 +118,7 @@ export const signupAction = payload => async (dispatch) => {
 
 export const loadAuth = () => async (dispatch) => {
   if (!cookieHelper.get('token')) {
+    dispatch(setAuthLoaded());
     return ({ error: 'token not found' });
   }
 
@@ -176,6 +185,8 @@ const profileRequestSuccess = action => (state) => {
   const { user } = action.result;
   return {
     ...state,
+    loading: false,
+    loaded: true,
     current: {
       type: 'member',
       ...user,
@@ -210,6 +221,11 @@ const loadInfoFail = () => state => ({
   }
 });
 
+const setAuthLoadedSuccess = () => state => ({
+  ...state,
+  loaded: true,
+})
+
 const setDefaultSuccess = () => {
   cookieHelper.remove('token');
   return {
@@ -224,6 +240,7 @@ const actionsLookup = {
   [LOAD_INFO]: state => loadInfoStart()(state),
   [LOAD_INFO_SUCCESS]: (state, action) => loadInfoSuccess(action)(state),
   [LOAD_INFO_FAIL]: state => loadInfoFail()(state),
+  [AUTH_LOADED]: state => setAuthLoadedSuccess()(state),
   [SET_DEFAULT]: () => setDefaultSuccess(),
 };
 
