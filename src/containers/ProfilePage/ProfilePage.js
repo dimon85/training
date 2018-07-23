@@ -8,17 +8,15 @@ import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import { showError } from '../../helpers/uiHelper';
 import { profileForm } from '../../helpers/validation';
-import { loginAction, loadAuth } from '../../reducers/auth';
+import { updateProfile } from '../../reducers/auth';
 
 const dispatchToProps = dispatch => ({
-  login: (params) => dispatch(loginAction(params)),
-  loadAuth: () => dispatch(loadAuth()),
+  updateProfile: (params) => dispatch(updateProfile(params)),
 });
 
 export class ProfilePage extends Component {
   static propTypes = {
-    login: PropTypes.func.isRequired,
-    loadAuth: PropTypes.func.isRequired,
+    updateProfile: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -103,23 +101,33 @@ export class ProfilePage extends Component {
       return;
     }
     
-    console.log('params', params);
-    // this.setState({ loading: true });
-    // this.props.login(params)
-    //   .then(this.props.loadAuth)
-    //   .then(() => history.push(`/${currentLang}`))
-    //   .catch((error) => {
-    //     this.setState({ loading: false });
-    //     if (!error.data) {
-    //       return;
-    //     }
+    const payload = {};
+    console.log('params', params)
+    Object.keys(params).forEach((field) => {
+      console.log('field', field)
+      if (field === 'firstName') {
+        payload.first_name = params[field];
+      }
 
-    //     console.log('Error', error);
-    //     this.setState({
-    //       loading: false,
-    //       errors: error.data.errors,
-    //     });
-    //   });
+      if (field === 'lastName') {
+        payload.last_name = params[field];
+      }
+    });
+
+    console.log('payload', payload);
+    this.setState({ loading: true });
+    this.props.updateProfile(payload)
+      .then(() => {
+        this.setState({ loading: false });
+      })
+      .catch((error) => {
+        this.setState({ loading: false });
+        
+        if (!error.data) {
+          return;
+        }
+        console.log('Error', error.data);
+      });
   }
 
   render() {

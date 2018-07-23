@@ -69,8 +69,8 @@ export const profileForm = (values) => {
   const errors = {};
 
   Object.keys(values).forEach((field) => {
-    if (values[field].length < 4) {
-      errors[field] = 'Minimum of 4 characters is required';
+    if (values[field].length < 2) {
+      errors[field] = 'Minimum of 2 characters is required';
     }
 
     if (!values[field]) {
