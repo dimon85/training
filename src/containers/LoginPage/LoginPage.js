@@ -7,7 +7,7 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { loginForm } from '../../helpers/validators';
+import { loginForm } from '../../helpers/validation';
 import { loginAction, loadAuth } from '../../reducers/auth';
 
 const dispatchToProps = dispatch => ({

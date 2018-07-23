@@ -6,7 +6,8 @@ import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
-import { loginForm } from '../../helpers/validators';
+import { showError } from '../../helpers/uiHelper';
+import { profileForm } from '../../helpers/validation';
 import { loginAction, loadAuth } from '../../reducers/auth';
 
 const dispatchToProps = dispatch => ({
@@ -25,12 +26,13 @@ export class ProfilePage extends Component {
     profile: PropTypes.object.isRequired,
   };
 
-  constructor(props) {
+  constructor(props, context) {
     super(props);
+    const { profile } = context;
 
     this.state = {
-      email: '',
-      password: '',
+      firstName: profile.first_name,
+      lastName: profile.last_name,
       loading: false,
       errors: {},
     };
@@ -72,21 +74,36 @@ export class ProfilePage extends Component {
   /**
    * Login with email and password
    */
-  handleLogin = () => {
-    // const { currentLang } = this.context;
-    // const { history } = this.props;
-    // const { email, password } = this.state;
-    // const params = {
-    //   email,
-    //   password,
-    // };
-    // const errors = loginForm(params);
+  handleUpdate = () => {
+    const { profile } = this.context;
+    const {
+      firstName,
+      lastName,
+    } = this.state;
+    const params = {};
 
-    // if (!isEmpty(errors)) {
-    //   this.setState({ errors });
-    //   return;
-    // }
+    if (profile.first_name !== firstName) {
+      params.firstName = firstName;
+    }
 
+    if (profile.last_name !== lastName) {
+      params.lastName = lastName;
+    }
+
+    if (isEmpty(params)) {
+      showError('Nothing to update');
+      return;
+    }
+
+    const errors = profileForm(params);
+    console.log('errors', errors);
+    
+    if (!isEmpty(errors)) {
+      this.setState({ errors });
+      return;
+    }
+    
+    console.log('params', params);
     // this.setState({ loading: true });
     // this.props.login(params)
     //   .then(this.props.loadAuth)
@@ -110,8 +127,8 @@ export class ProfilePage extends Component {
       profile
     } = this.context;
     const {
-      email,
-      password,
+      firstName,
+      lastName,
       loading,
       errors,
     } = this.state;
@@ -122,12 +139,10 @@ export class ProfilePage extends Component {
       },
     };
 
-    console.log('profile', profile);
+    // console.log('profile', profile);
     return (
       <div className="container landing">
-        <h1>
-          Profile page
-        </h1>
+        <h1>Profile page</h1>
         <div className="loginPage">
           <Paper zDepth={4}>
             <div className="paper">
@@ -137,21 +152,28 @@ export class ProfilePage extends Component {
                 </h3>
                 <TextField
                   name="email"
-                  value={email}
-                  hintText="Enter your email"
+                  disabled
+                  value={profile.email}
                   floatingLabelText="Email"
                   fullWidth
-                  errorText={errors.email}
-                  onChange={this.handleChangeField}
                 />
                 <TextField
-                  type="password"
-                  name="password"
-                  value={password}
-                  hintText="Enter your password"
-                  floatingLabelText="Password"
+                  name="firstName"
+                  value={firstName}
+                  hintText="Enter your first name"
+                  floatingLabelText="First name"
                   fullWidth
-                  errorText={errors.password}
+                  errorText={errors.firstName}
+                  onChange={this.handleChangeField}
+                  onKeyPress={this.handleKeyPress}
+                />
+                <TextField
+                  name="lastName"
+                  value={lastName}
+                  hintText="Enter your last name"
+                  floatingLabelText="Last name"
+                  fullWidth
+                  errorText={errors.lastName}
                   onChange={this.handleChangeField}
                   onKeyPress={this.handleKeyPress}
                 />
@@ -160,9 +182,9 @@ export class ProfilePage extends Component {
               <div className="paper__controls">
                 {!loading && (
                   <RaisedButton
-                    label="Log in"
+                    label="Update"
                     primary={Boolean(true)}
-                    onClick={this.handleLogin}
+                    onClick={this.handleUpdate}
                   />
                 )}
                 {loading && (

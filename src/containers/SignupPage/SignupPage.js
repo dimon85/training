@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Checkbox from 'material-ui/Checkbox';
-import { signupForm } from '../../helpers/validators';
+import { signupForm } from '../../helpers/validation';
 import { signupAction } from '../../reducers/auth';
 
 // Styles for checkbox

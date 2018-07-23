@@ -64,3 +64,19 @@ export const signupForm = (values) => {
 
   return errors;
 };
+
+export const profileForm = (values) => {
+  const errors = {};
+
+  Object.keys(values).forEach((field) => {
+    if (values[field].length < 4) {
+      errors[field] = 'Minimum of 4 characters is required';
+    }
+
+    if (!values[field]) {
+      errors[field] = 'Field is required';
+    }
+  });
+
+  return errors;
+}
