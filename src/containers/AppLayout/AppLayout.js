@@ -94,8 +94,6 @@ export class AppLayout extends Component {
   handleChangeLocale = (event) => {
     const { lang } = event.currentTarget.dataset;
     const { history: { location } } = this.props;
-    console.log(this.props);
-
 
     this.props.changeLocale(lang).then(() => {
       const { pathname, search } = location;

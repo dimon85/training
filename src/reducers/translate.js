@@ -1,6 +1,6 @@
-
 import isFunction from 'lodash/isFunction';
 import flowRight from 'lodash/flowRight';
+import api from '../api';
 import cookieHelper from '../helpers/cookieHelper';
 
 
@@ -31,36 +31,11 @@ export function getLocale() {
   return locale || 'en';
 }
 
-export function isLoaded(globalState) {
-  return globalState.localization && globalState.localization.loaded;
-}
-
-export function load(locale) {
+export function load(payload) {
   return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: client => client.get(`/fapi/localization?lang=${locale}`)
+    type: LOAD_SUCCESS,
+    result: payload,
   };
-}
-
-export function save(widget) {
-  return {
-    types: [SAVE, SAVE_SUCCESS, SAVE_FAIL],
-    id: widget.id,
-    promise: client => client.post('/fapi/localization/update', {
-      data: widget
-    })
-  };
-}
-
-export function updateLang(type) {
-  return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: client => client.get(`/fapi/localization?lang=${type}`)
-  };
-}
-
-function editStop(id) {
-  return { type: EDIT_STOP, id };
 }
 
 function setLocale(payload) {
@@ -70,10 +45,30 @@ function setLocale(payload) {
   };
 }
 
-export const changeLocale = locale => (dispatch) => {
-  // TODO: load translates
-  //
-  dispatch(setLocale(locale));
+export const loadTranslates = () => async (dispatch, getState) => {
+  try {
+    const { currentLang } = getState().translate;
+    const params = {
+      lang: currentLang,
+    }
+    const data = await api.ApiClient.get('translation', params);
+
+    return dispatch(load(data));
+  } catch (error) {
+    throw error;
+  }
+
+}
+
+/**
+ * Set new lang, and load translates
+ * @param {string} locale
+ */
+export const changeLocale = locale => async (dispatch) => {
+  // [1] set new locale
+  await dispatch(setLocale(locale));
+  // [2] load translates
+  await dispatch(loadTranslates())
   return Promise.resolve(locale);
 }
 
@@ -98,14 +93,14 @@ const updateRequestOnLoadSuccess = value => state => ({
 });
 
 const updateLocalization = action => (state) => {
-  saveLocale(action.result.type);
-
-  const langs = action.result.type !== 'ru' ? ['en', 'nl'] : ['ru'];
+  // saveLocale(action.result.type);
+  console.log('action', action.result.translations);
 
   return {
     ...state,
-    data: action.result,
-    langs
+    data: {
+      ...action.result.translations,
+    }
   };
 };
 

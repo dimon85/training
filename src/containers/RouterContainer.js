@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 // import { loadAuth } from '../reducers/auth';
 import { setStatusPage } from '../reducers/info';
-import { changeLocale } from '../reducers/translate';
+import { loadTranslates, changeLocale } from '../reducers/translate';
 import { checkItemInArray } from '../helpers/utils';
 import globalConst from '../helpers/constants';
 import { getStatusPage } from '../selectors';
@@ -26,6 +26,7 @@ const mapStateToProps = state => ({
 const dispatchToProps = (dispatch) => ({
   setStatusPage: (params) => dispatch(setStatusPage(params)),
   changeLocale: lang => dispatch(changeLocale(lang)),
+  loadTranslates: () => dispatch(loadTranslates()),
 });
 
 class RouterContainer extends Component {
@@ -34,6 +35,7 @@ class RouterContainer extends Component {
     langs: PropTypes.array.isRequired,
     currentLang: PropTypes.string.isRequired,
     statusPage: PropTypes.number.isRequired,
+    loadTranslates: PropTypes.func.isRequired,
     setStatusPage: PropTypes.func.isRequired,
     changeLocale: PropTypes.func.isRequired,
   };
@@ -81,10 +83,12 @@ class RouterContainer extends Component {
       return;
     }
 
-    // [2] set current lang
+    // [2] set current lang, and load translates
     if (params.lang !== currentLang) {
-      this.props.changeLocale(params.lang);
+      return this.props.changeLocale(params.lang);
     }
+
+    this.props.loadTranslates();
   }
 
   render() {
