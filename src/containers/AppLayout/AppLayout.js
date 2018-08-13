@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import autobind from 'autobind-decorator';
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import IconButton from 'material-ui/IconButton';
@@ -11,6 +10,7 @@ import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
 import Help from 'material-ui/svg-icons/action/help';
+import Person from 'material-ui/svg-icons/social/person';
 import FlatButton from 'material-ui/FlatButton';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
@@ -46,6 +46,7 @@ export class AppLayout extends Component {
   static contextTypes = {
     langs: PropTypes.array.isRequired,
     currentLang: PropTypes.string.isRequired,
+    profile: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -67,18 +68,15 @@ export class AppLayout extends Component {
     }
   }
 
-  @autobind
-  handleClose() {
+  handleClose = () => {
     this.setState({ openPanel: false });
   }
 
-  @autobind
-  handleTogglePanel() {
-    this.setState({ openPanel: !this.state.openPanel });
+  handleTogglePanel = () => {
+    this.setState((prevState) => ({ openPanel: !prevState.openPanel }));
   }
 
-  @autobind
-  handleRequestChange(open, reason) {
+  handleRequestChange = (open, reason) => {
     if (reason === 'iconTap') {
       this.setState({ open });
       return;
@@ -117,17 +115,23 @@ export class AppLayout extends Component {
    * Handle logout process
    */
   handleLogout = () => {
-    const { history } = this.props;
+    const { currentLang } = this.context;
 
     this.props.logout()
-      .then(() => history.push({ pathname: '/' }))
+      .then(() => this.redirectToLocale(currentLang))
       .catch((error) => {
         console.log('handleLogout -> error', error);
       });
   }
 
+  handleOpenPane = (open) => this.setState({ openPanel: open })
+
   renderIconMenu() {
-    return (<IconButton><MoreVertIcon /></IconButton>);
+    return (
+      <IconButton>
+        <MoreVertIcon />
+      </IconButton>
+    );
   }
 
   renderIconRight(isGuest) {
@@ -150,8 +154,12 @@ export class AppLayout extends Component {
         anchorOrigin={targetOrigin}
         onRequestChange={this.handleRequestChange}
       >
-        <Link to={`/${currentLang}/login`}><MenuItem primaryText="Login" /></Link>
-        <Link to={`/${currentLang}/signup`}><MenuItem primaryText="Signup" /></Link>
+        <Link to={`/${currentLang}/login`}>
+          <MenuItem primaryText="Login" />
+        </Link>
+        <Link to={`/${currentLang}/signup`}>
+          <MenuItem primaryText="Signup" />
+        </Link>
       </IconMenu>
     );
   }
@@ -161,15 +169,20 @@ export class AppLayout extends Component {
 
     return (
       <div className="logo">
-        <Link to={`/${currentLang}`}>KeyPress</Link>
+        <Link to={`/${currentLang}`}>
+          KeyPress
+        </Link>
       </div>
     );
   }
 
   render() {
-    const { children, isGuest } = this.props;
+    const {
+      children,
+      isGuest,
+    } = this.props;
     const { openPanel } = this.state;
-    const { langs, currentLang } = this.context;
+    const { langs, currentLang, profile } = this.context;
 
     return (
       <div>
@@ -184,7 +197,7 @@ export class AppLayout extends Component {
           docked={false}
           width={200}
           open={openPanel}
-          onRequestChange={open => this.setState({ openPanel: open })}
+          onRequestChange={this.handleOpenPane}
         >
           <div className="languageContainer">
             {langs.map((item) => {
@@ -195,24 +208,33 @@ export class AppLayout extends Component {
                     label={item}
                     primary={item === currentLang}
                     fullWidth
-                    onTouchTap={this.handleChangeLocale}
+                    onClick={this.handleChangeLocale}
                   />
                 </div>
               );
             })}
           </div>
+          {profile.email && (
+            <Link to={`/${currentLang}/profile`}>
+              <MenuItem
+                primaryText="Profile"
+                leftIcon={<Person />}
+                onClick={this.handleClose}
+              />
+            </Link>
+          )}
           <Link to={`/${currentLang}/trainer`}>
             <MenuItem
               primaryText="Trainer"
               leftIcon={<Keyboard />}
-              onTouchTap={this.handleClose}
+              onClick={this.handleClose}
             />
           </Link>
           <Link to={`/${currentLang}/help`}>
             <MenuItem
               primaryText="Help"
               leftIcon={<Help />}
-              onTouchTap={this.handleClose}
+              onClick={this.handleClose}
             />
           </Link>
         </Drawer>

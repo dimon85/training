@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route } from 'react-router-dom';
 import { loadAuth, loadMemberInfoAction } from '../reducers/auth';
-import { getLangToRedirect } from '../helpers/utils'; 
+import { getLangToRedirect } from '../helpers/utils';
 import RouterContainer from './RouterContainer';
 
 class LanguageContainer extends Component {
@@ -21,7 +21,7 @@ class LanguageContainer extends Component {
     await store.dispatch(loadAuth());
 
     // [3] check, if route without lang, redirect to
-    if (history.location.pathname == '/') {
+    if (history.location.pathname === '/') {
       const lang = getLangToRedirect(info);
 
       history.push(`/${lang}`);
@@ -31,7 +31,7 @@ class LanguageContainer extends Component {
   render() {
     return (
       <Route path="/:lang" component={RouterContainer} />
-    )
+    );
   }
 }
 

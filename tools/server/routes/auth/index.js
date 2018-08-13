@@ -6,6 +6,7 @@ import User from '../../models/UserModel';
 // const User = require('../models/UserModel');
 // const secret = require('../secrets');
 
+const EXPIRE_TIME = '1h'; // //expire in 1h (example 1m, 1h or 60*60)
 
 const router = express.Router(); // eslint-disable-line
 
@@ -32,7 +33,7 @@ router.post('/register', function(req, res, next) {
         const token = jwt.sign(
           copyUser, //payload
           'secret_string', //super secret string
-          { expiresIn: '1m' } //expire in 1m
+          { expiresIn: EXPIRE_TIME }
         );
 
         res.status(201).json({ message: 'Registered successfully', token })
@@ -74,7 +75,7 @@ router.post('/login', (req, res) => {
         const token = jwt.sign(
           copyUser, //payload
           'secret_string', //super secret string
-          { expiresIn: '1m' }  //expire in 1m
+          { expiresIn: EXPIRE_TIME }
         );
 
         res.status(200).json({ message: 'Authenticated', token });
@@ -100,8 +101,24 @@ router.post('/login', (req, res) => {
  */
 router.get('/profile', (req, res, next) => {
   if (req.user) {
-    return User.findOne({_id: req.user._id})
+    return User.findOne({ _id: req.user._id })
       .then((user) => {
+        user = user.publicFormat();
+        res.json({ user })})
+      .catch((err)=> next(err))
+  }
+
+  res.status(403).send({ errors: { token:'Couldn\'t retrieve user id from token' }, type: 'internal' }); 
+});
+
+router.post('/update', (req, res, next) => {
+  console.log('************', req.body);
+
+  if (req.user) {
+    return User.findByIdAndUpdate(req.user._id, req.body)
+      .then(() => User.findOne({ _id: req.user._id }))
+      .then((user) => {
+        console.log('user', user);
         user = user.publicFormat();
         res.json({ user })})
       .catch((err)=> next(err))

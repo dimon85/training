@@ -51,7 +51,7 @@ export default class ApiClient {
       }
 
       const options = {
-        url: `${this.prefix}/${url}${query}`,
+        url: `/${this.prefix}/${url}${query}`,
         method,
         data: method !== 'GET' ? qs.stringify(data, { encode: true, skipNulls: true }) : undefined,
         headers,

@@ -19,14 +19,14 @@ export default function TrainerModal(props) {
       key="button_1"
       label="Cancel"
       primary
-      onTouchTap={onCloseModal}
+      onClick={onCloseModal}
     />,
     <FlatButton
       key="button_2"
       label="Submit"
       primary
       keyboardFocused
-      onTouchTap={onCloseModal}
+      onClick={onCloseModal}
     />,
   ];
 
@@ -42,14 +42,14 @@ export default function TrainerModal(props) {
         modal
         open={open}
       >
-        {open &&
+        {open && (
           <ul>
             <li>Typed symbols: {typedCount}/{textLength} symb</li>
             <li>Typed errors: {errorsCount} symb</li>
             <li>Errors: {errorsPercent} %</li>
             <li>Speed: {speed} symb/min</li>
           </ul>
-        }
+        )}
       </Dialog>
     </div>
   );

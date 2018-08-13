@@ -7,7 +7,7 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Checkbox from 'material-ui/Checkbox';
-import { signupForm } from '../../helpers/validators';
+import { signupForm } from '../../helpers/validation';
 import { signupAction } from '../../reducers/auth';
 
 // Styles for checkbox
@@ -197,18 +197,22 @@ export class SignupPage extends Component {
                   style={styles.checkbox}
                   labelStyle={styles.label}
                 />
-                {errors.checkedAgree && <div className="error">{errors.checkedAgree}</div>}
+                {errors.checkedAgree && (
+                  <div className="error">
+                    {errors.checkedAgree}
+                  </div>
+                )}
               </div>
 
               <div className="paper__controls">
-                {!loading &&
+                {!loading && (
                   <RaisedButton
                     label="Create account"
                     primary={Boolean(true)}
-                    onTouchTap={this.handleSignup}
+                    onClick={this.handleSignup}
                   />
-                }
-                {loading && 
+                )}
+                {loading && (
                   <RefreshIndicator
                     size={50}
                     left={0}
@@ -217,7 +221,7 @@ export class SignupPage extends Component {
                     status="loading"
                     style={style.refresh}
                   />
-                }
+                )}
               </div>
             </div>
           </Paper>

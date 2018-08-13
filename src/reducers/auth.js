@@ -14,6 +14,9 @@ export const LOAD_INFO_SUCCESS = 'redux-ducks/auth/LOAD_INFO_SUCCESS';
 export const LOAD_INFO_FAIL = 'redux-ducks/auth/LOAD_INFO_FAIL';
 // export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
 
+export const AUTH_LOADED = 'redux-ducks/auth/AUTH_LOADED';
+export const UPDATE_PROFILE_SUCCESS = 'redux-ducks/auth/UPDATE_PROFILE_SUCCESS';
+
 const initialState = {
   loading: false,
   loaded: false,
@@ -46,6 +49,19 @@ function getProfile(payload) {
   return {
     type: LOAD_PROFILE_SUCCESS,
     result: payload,
+  };
+}
+
+function update(payload) {
+  return {
+    type: UPDATE_PROFILE_SUCCESS,
+    result: payload,
+  };
+}
+
+function setAuthLoaded() {
+  return {
+    type: AUTH_LOADED,
   };
 }
 
@@ -110,6 +126,7 @@ export const signupAction = payload => async (dispatch) => {
 
 export const loadAuth = () => async (dispatch) => {
   if (!cookieHelper.get('token')) {
+    dispatch(setAuthLoaded());
     return ({ error: 'token not found' });
   }
 
@@ -141,7 +158,22 @@ export const logoutAction = () => (dispatch) => {
     return Promise.resolve(true);
   }
 
-  Promise.reject({ errors: { token:  'Enable delete Token' }});
+  Promise.reject({ errors: { token:  'Enable delete token' }});
+};
+
+export const updateProfile = (payload) => async (dispatch) => {
+  try {
+    const data = await api.auth.update('auth/update', payload);
+    return dispatch(update(data));
+  } catch (error) {
+    const { status, statusText } = error;
+
+    if (status === 404) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
 };
 
 const loginRequestSuccess = action => (state) => {
@@ -176,10 +208,19 @@ const profileRequestSuccess = action => (state) => {
   const { user } = action.result;
   return {
     ...state,
+    loading: false,
+    loaded: true,
     current: {
       type: 'member',
       ...user,
     }
+  };
+}
+
+const updateProfileSuccess = action => (state) => {
+  console.log('PROFILE_SUCCESS', action);
+  return {
+    ...state,
   };
 }
 
@@ -210,6 +251,11 @@ const loadInfoFail = () => state => ({
   }
 });
 
+const setAuthLoadedSuccess = () => state => ({
+  ...state,
+  loaded: true,
+})
+
 const setDefaultSuccess = () => {
   cookieHelper.remove('token');
   return {
@@ -224,6 +270,8 @@ const actionsLookup = {
   [LOAD_INFO]: state => loadInfoStart()(state),
   [LOAD_INFO_SUCCESS]: (state, action) => loadInfoSuccess(action)(state),
   [LOAD_INFO_FAIL]: state => loadInfoFail()(state),
+  [AUTH_LOADED]: state => setAuthLoadedSuccess()(state),
+  [UPDATE_PROFILE_SUCCESS]: (state, action) => updateProfileSuccess(action)(state),
   [SET_DEFAULT]: () => setDefaultSuccess(),
 };
 

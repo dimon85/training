@@ -2,16 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-// import { loadAuth } from '../reducers/auth';
+import CircularProgress from 'material-ui/CircularProgress';
 import { setStatusPage } from '../reducers/info';
 import { loadTranslates, changeLocale } from '../reducers/translate';
 import { checkItemInArray } from '../helpers/utils';
 import globalConst from '../helpers/constants';
-import { getStatusPage } from '../selectors';
+import { getStatusPage, getProfile, getAuthLoaded } from '../selectors';
 import { getAvailableLangs, getCurrentLang } from '../selectors/translateSelectors';
 import App from './App';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
+import ProfilePage from './ProfilePage';
 import HomePage from '../components/HomePage';
 import TrainerPage from '../components/TrainerPage';
 import HelpPage from '../components/HelpPage';
@@ -21,10 +22,12 @@ const mapStateToProps = state => ({
   langs: getAvailableLangs(state),
   currentLang: getCurrentLang(state),
   statusPage: getStatusPage(state),
+  profile: getProfile(state),
+  isAuthLoaded: getAuthLoaded(state),
 });
 
-const dispatchToProps = (dispatch) => ({
-  setStatusPage: (params) => dispatch(setStatusPage(params)),
+const dispatchToProps = dispatch => ({
+  setStatusPage: params => dispatch(setStatusPage(params)),
   changeLocale: lang => dispatch(changeLocale(lang)),
   loadTranslates: () => dispatch(loadTranslates()),
 });
@@ -33,40 +36,30 @@ class RouterContainer extends Component {
   static propTypes = {
     match: PropTypes.object.isRequired,
     langs: PropTypes.array.isRequired,
+    profile: PropTypes.object.isRequired,
     currentLang: PropTypes.string.isRequired,
     statusPage: PropTypes.number.isRequired,
+    isAuthLoaded: PropTypes.bool.isRequired,
     loadTranslates: PropTypes.func.isRequired,
     setStatusPage: PropTypes.func.isRequired,
     changeLocale: PropTypes.func.isRequired,
   };
 
-  static getDerivedStateFromProps(nextProps) {
-    const { match: { params }, langs, statusPage } = nextProps;
-
-    if (checkItemInArray(langs, params.lang) && statusPage === globalConst.STATUS_NOT_FOUND) {
-      nextProps.setStatusPage({ status: globalConst.STATUS_SUCCESS_PAGE, text: 'Page load success' });
-    }
-
-    if (!checkItemInArray(langs, params.lang)) {
-      nextProps.setStatusPage({ status: globalConst.STATUS_NOT_FOUND, text: 'Page not found' });
-    }
-
-    return null;
-  }
-
   static childContextTypes = {
     currentLang: PropTypes.string.isRequired,
     langs: PropTypes.array.isRequired,
+    profile: PropTypes.object.isRequired,
   };
 
   state = {
-    loading: false
+    loading: false,
   };
 
   getChildContext() {
     return {
       currentLang: this.props.currentLang,
       langs: this.props.langs,
+      profile: this.props.profile,
     };
   }
 
@@ -91,13 +84,47 @@ class RouterContainer extends Component {
     this.props.loadTranslates();
   }
 
+  static getDerivedStateFromProps(nextProps) {
+    const { match: { params }, langs, statusPage } = nextProps;
+
+    if (checkItemInArray(langs, params.lang) && statusPage === globalConst.STATUS_NOT_FOUND) {
+      nextProps.setStatusPage({ status: globalConst.STATUS_SUCCESS_PAGE, text: 'Page load success' });
+    }
+
+    if (!checkItemInArray(langs, params.lang)) {
+      nextProps.setStatusPage({ status: globalConst.STATUS_NOT_FOUND, text: 'Page not found' });
+    }
+
+    return null;
+  }
+
   render() {
-    const { match, statusPage } = this.props;
+    const {
+      currentLang,
+      match,
+      statusPage,
+      profile,
+      isAuthLoaded
+    } = this.props;
 
     if (statusPage === globalConst.STATUS_NOT_FOUND) {
       return (
         <App {...this.props}>
           <NotFoundPage />
+        </App>
+      );
+    }
+
+    if (!isAuthLoaded) {
+      return (
+        <App {...this.props}>
+          <div className="container landing">
+            <CircularProgress
+              size={80}
+              thickness={5}
+              color="#00BCD4"
+            />
+          </div>
         </App>
       );
     }
@@ -111,11 +138,26 @@ class RouterContainer extends Component {
             <Route path="/:lang/help" component={HelpPage} />
             <Route
               path="/:lang/login"
-              render={() => true ?
+              render={() => !profile.email ?
                 <LoginPage /> :
-                <Redirect to="/" />}
+                <Redirect to={`/${currentLang}`} />
+              }
             />
-            <Route path="/:lang/signup" component={SignupPage} />
+            <Route
+              path="/:lang/signup"
+              render={() => !profile.email ?
+                <SignupPage /> :
+                <Redirect to={`/${currentLang}`} />
+              }
+            />
+            <Route
+              path="/:lang/profile"
+              render={() => profile.email ?
+                <ProfilePage />
+                :
+                <Redirect to={`/${currentLang}/login`} />
+              }
+            />
             <Route exact path="/:lang/*" component={NotFoundPage} />
           </Switch>
         </div>

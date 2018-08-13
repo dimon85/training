@@ -1,4 +1,5 @@
-@import '~normalize.css/normalize';
+@import url('~normalize.css/normalize');
+@import url('~react-toastify/dist/ReactToastify.css');
 
 //core
 @import "core/_colors",

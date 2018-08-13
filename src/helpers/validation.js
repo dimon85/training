@@ -12,6 +12,10 @@ export const loginForm = (values) => {
     errors.email = 'Email is required';
   }
 
+  if (values.password.length < 6) {
+    errors.password = 'Minimum of 6 characters is required';
+  }
+
   if (isEmpty(values.password)) {
     errors.password = 'Password is required';
   }
@@ -60,3 +64,19 @@ export const signupForm = (values) => {
 
   return errors;
 };
+
+export const profileForm = (values) => {
+  const errors = {};
+
+  Object.keys(values).forEach((field) => {
+    if (values[field].length < 2) {
+      errors[field] = 'Minimum of 2 characters is required';
+    }
+
+    if (!values[field]) {
+      errors[field] = 'Field is required';
+    }
+  });
+
+  return errors;
+}
