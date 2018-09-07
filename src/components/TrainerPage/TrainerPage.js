@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import autobind from 'autobind-decorator';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 import TrainerType from './TrainerType';
@@ -34,18 +33,22 @@ export default class TrainerPage extends Component {
     this.state = this.initState;
   }
 
-  @autobind
-  handleClickStart() {
-    this.setState({ start: true });
-  }
+  /**
+   * Handle click start
+   */
+  handleClickStart = () => this.setState({ start: true });
 
-  @autobind
-  handleUpdateTime(time) {
-    this.setState({ currentTime: time });
-  }
+  /**
+   * Handle update time
+   * @param {object} time
+   */
+  handleUpdateTime = time => this.setState({ currentTime: time });
 
-  @autobind
-  handleAddChar(item) {
+  /**
+   * Handle add char
+   * @param {object} item
+   */
+  handleAddChar = (item) => {
     const { typedCount, typedData } = this.state;
     this.setState({
       typedData: [
@@ -56,30 +59,30 @@ export default class TrainerPage extends Component {
     });
   }
 
-  @autobind
-  handleAddError(error) {
-    const { errorsData, errorsCount } = this.state;
-    this.setState({
-      errorsData: [
-        ...errorsData,
-        error
-      ],
-      errorsCount: errorsCount + 1,
-    });
-  }
+  /**
+   * Handle add error
+   * @param {object} error
+   */
+  handleAddError = (error) => this.setState(prevState => ({
+    errorsData: [
+      ...prevState.errorsData,
+      error
+    ],
+    errorsCount: prevState.errorsCount + 1,
+  }));
 
-  @autobind
-  handleOpenModal() {
-    this.setState({
-      openModal: true,
-      start: false,
-    });
-  }
+  /**
+   * Handle open modal
+   */
+  handleOpenModal = () => this.setState({
+    openModal: true,
+    start: false,
+  });
 
-  @autobind
-  handleCloseModal() {
-    this.setState(this.initState);
-  }
+  /**
+   * Handle close modal
+   */
+  handleCloseModal = () => this.setState(this.initState);
 
   render() {
     const {

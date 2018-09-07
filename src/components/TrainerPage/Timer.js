@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CircularProgress from 'material-ui/CircularProgress';
-import IconButton from 'material-ui/IconButton';
-import PauseIcon from 'material-ui/svg-icons/av/pause';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import PauseIcon from '@material-ui/icons/av/pause';
 import { getDateFormattedUtc } from '../../selectors/dateSelectors';
 
 const styles = {

@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import AppBar from 'material-ui/AppBar';
-import Drawer from 'material-ui/Drawer';
-import IconButton from 'material-ui/IconButton';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import Keyboard from 'material-ui/svg-icons/hardware/keyboard';
-import Help from 'material-ui/svg-icons/action/help';
-import Person from 'material-ui/svg-icons/social/person';
-import FlatButton from 'material-ui/FlatButton';
+import AppBar from '@material-ui/core/AppBar';
+import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/navigation/more-vert';
+import Keyboard from '@material-ui/icons/hardware/keyboard';
+import Help from '@material-ui/icons/action/help';
+import Person from '@material-ui/icons/social/person';
+import Button from '@material-ui/core/Button';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
 import { logoutAction } from '../../reducers/auth';
@@ -138,16 +138,17 @@ export class AppLayout extends Component {
     const { currentLang } = this.context;
     if (!isGuest) {
       return (
-        <FlatButton
-          label="Logout"
+        <Button
           onClick={this.handleLogout}
-        />
+        >
+          Logout
+        </Button>
       );
     }
 
     const { targetOrigin, open } = this.state;
     return (
-      <IconMenu
+      <Menu
         open={open}
         iconButtonElement={this.renderIconMenu()}
         targetOrigin={targetOrigin}
@@ -160,7 +161,7 @@ export class AppLayout extends Component {
         <Link to={`/${currentLang}/signup`}>
           <MenuItem primaryText="Signup" />
         </Link>
-      </IconMenu>
+      </Menu>
     );
   }
 
@@ -203,13 +204,15 @@ export class AppLayout extends Component {
             {langs.map((item) => {
               return (
                 <div key={item} className="languageContainer__item">
-                  <FlatButton
+                  <Button
+                    variant="outlined"
                     data-lang={item}
-                    label={item}
-                    primary={item === currentLang}
+                    color={item === currentLang ? 'primary' : null}
                     fullWidth
                     onClick={this.handleChangeLocale}
-                  />
+                  >
+                    {item}
+                  </Button>
                 </div>
               );
             })}

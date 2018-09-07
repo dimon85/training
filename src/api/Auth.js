@@ -14,7 +14,6 @@ export default class Auth extends Base {
   }
 
   async update(url, payload) {
-    console.log('******', payload);
     const data = await this.apiClient.post(url, payload);
 
     return data;

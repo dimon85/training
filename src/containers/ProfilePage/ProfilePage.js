@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
+import moment from 'moment';
 import Paper from 'material-ui/Paper';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -65,7 +66,7 @@ export class ProfilePage extends Component {
     const { loading } = this.state;
 
     if (!loading && event.key === 'Enter') {
-      this.handleLogin();
+      this.handleUpdate();
     }
   }
 
@@ -94,17 +95,14 @@ export class ProfilePage extends Component {
     }
 
     const errors = profileForm(params);
-    console.log('errors', errors);
-    
+
     if (!isEmpty(errors)) {
       this.setState({ errors });
       return;
     }
-    
+
     const payload = {};
-    console.log('params', params)
     Object.keys(params).forEach((field) => {
-      console.log('field', field)
       if (field === 'firstName') {
         payload.first_name = params[field];
       }
@@ -114,15 +112,12 @@ export class ProfilePage extends Component {
       }
     });
 
-    console.log('payload', payload);
     this.setState({ loading: true });
     this.props.updateProfile(payload)
-      .then(() => {
-        this.setState({ loading: false });
-      })
+      .then(() => this.setState({ loading: false }))
       .catch((error) => {
         this.setState({ loading: false });
-        
+
         if (!error.data) {
           return;
         }
@@ -147,7 +142,6 @@ export class ProfilePage extends Component {
       },
     };
 
-    // console.log('profile', profile);
     return (
       <div className="container landing">
         <h1>Profile page</h1>
@@ -185,6 +179,9 @@ export class ProfilePage extends Component {
                   onChange={this.handleChangeField}
                   onKeyPress={this.handleKeyPress}
                 />
+                <div>
+                  Updated: {moment(profile.updatedAt).format('HH:mm, DD MMM YYYY')}
+                </div>
               </div>
 
               <div className="paper__controls">

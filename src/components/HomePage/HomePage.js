@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 export default class HomePage extends PureComponent {
   static contextTypes = {
     currentLang: PropTypes.string.isRequired,
+    translates: PropTypes.object.isRequired,
   };
 
   constructor(props) {
@@ -15,7 +16,11 @@ export default class HomePage extends PureComponent {
   }
 
   render() {
-    const { currentLang } = this.context;
+    const {
+      currentLang,
+      translates,
+    } = this.context;
+
     return (
       <div className="container landing">
         <div className="landing__container">
@@ -23,7 +28,7 @@ export default class HomePage extends PureComponent {
           <div className="landing__desc">Развивай внимание и скорость набора с помощью онлайн-тренажеров</div>
         </div>
         <Link to={`/${currentLang}/trainer`} className="landing__control">
-          Начать тренировку
+          {translates.letsStart}
         </Link>
       </div>
     );

@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import CircularProgress from 'material-ui/CircularProgress';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { setStatusPage } from '../reducers/info';
 import { loadTranslates, changeLocale } from '../reducers/translate';
 import { checkItemInArray } from '../helpers/utils';
 import globalConst from '../helpers/constants';
 import { getStatusPage, getProfile, getAuthLoaded } from '../selectors';
-import { getAvailableLangs, getCurrentLang } from '../selectors/translateSelectors';
+import {
+  getTranslates,
+  getAvailableLangs,
+  getCurrentLang,
+} from '../selectors/translateSelectors';
 import App from './App';
 import LoginPage from './LoginPage';
 import SignupPage from './SignupPage';
@@ -24,6 +28,7 @@ const mapStateToProps = state => ({
   statusPage: getStatusPage(state),
   profile: getProfile(state),
   isAuthLoaded: getAuthLoaded(state),
+  translates: getTranslates(state),
 });
 
 const dispatchToProps = dispatch => ({
@@ -38,6 +43,7 @@ class RouterContainer extends Component {
     langs: PropTypes.array.isRequired,
     profile: PropTypes.object.isRequired,
     currentLang: PropTypes.string.isRequired,
+    translates: PropTypes.object.isRequired,
     statusPage: PropTypes.number.isRequired,
     isAuthLoaded: PropTypes.bool.isRequired,
     loadTranslates: PropTypes.func.isRequired,
@@ -47,6 +53,7 @@ class RouterContainer extends Component {
 
   static childContextTypes = {
     currentLang: PropTypes.string.isRequired,
+    translates: PropTypes.object.isRequired,
     langs: PropTypes.array.isRequired,
     profile: PropTypes.object.isRequired,
   };
@@ -58,6 +65,7 @@ class RouterContainer extends Component {
   getChildContext() {
     return {
       currentLang: this.props.currentLang,
+      translates: this.props.translates,
       langs: this.props.langs,
       profile: this.props.profile,
     };

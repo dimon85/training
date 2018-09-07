@@ -12,7 +12,6 @@ export const SET_DEFAULT = 'redux-ducks/auth/SET_DEFAULT';
 export const LOAD_INFO = 'redux-ducks/auth/LOAD_INFO';
 export const LOAD_INFO_SUCCESS = 'redux-ducks/auth/LOAD_INFO_SUCCESS';
 export const LOAD_INFO_FAIL = 'redux-ducks/auth/LOAD_INFO_FAIL';
-// export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
 
 export const AUTH_LOADED = 'redux-ducks/auth/AUTH_LOADED';
 export const UPDATE_PROFILE_SUCCESS = 'redux-ducks/auth/UPDATE_PROFILE_SUCCESS';
@@ -32,57 +31,41 @@ const initialState = {
 };
 
 // ACTIONS
-export function setDefault() {
-  return {
-    type: SET_DEFAULT
-  };
-}
+export const setDefault = () => ({
+  type: SET_DEFAULT
+});
 
-function login(payload) {
-  return {
-    type: LOGIN_SUCCESS,
-    result: payload,
-  }
-}
+const login = payload => ({
+  type: LOGIN_SUCCESS,
+  result: payload,
+});
 
-function getProfile(payload) {
-  return {
-    type: LOAD_PROFILE_SUCCESS,
-    result: payload,
-  };
-}
+const getProfile = payload => ({
+  type: LOAD_PROFILE_SUCCESS,
+  result: payload,
+});
 
-function update(payload) {
-  return {
-    type: UPDATE_PROFILE_SUCCESS,
-    result: payload,
-  };
-}
+const update = payload => ({
+  type: UPDATE_PROFILE_SUCCESS,
+  result: payload,
+});
 
-function setAuthLoaded() {
-  return {
-    type: AUTH_LOADED,
-  };
-}
+const setAuthLoaded = () => ({
+  type: AUTH_LOADED,
+});
 
-function loadInfoBegin() {
-  return {
-    type: LOAD_INFO,
-  };
-}
+const loadInfoBegin = () => ({
+  type: LOAD_INFO,
+});
 
-function loadInfoResult(data) {
-  return {
-    type: LOAD_INFO_SUCCESS,
-    result: data,
-  };
-}
+const loadInfoResult = data => ({
+  type: LOAD_INFO_SUCCESS,
+  result: data,
+});
 
-function loadInfoError() {
-  return {
-    type: LOAD_INFO_FAIL,
-  };
-}
+const loadInfoError = () => ({
+  type: LOAD_INFO_FAIL,
+});
 
 export const loginAction = payload => async (dispatch) => {
   try {
@@ -176,6 +159,7 @@ export const updateProfile = (payload) => async (dispatch) => {
   }
 };
 
+// MUTATIONS
 const loginRequestSuccess = action => (state) => {
   const { token } = action.result;
   api.auth.setAuthToken(token);
@@ -217,12 +201,13 @@ const profileRequestSuccess = action => (state) => {
   };
 }
 
-const updateProfileSuccess = action => (state) => {
-  console.log('PROFILE_SUCCESS', action);
-  return {
-    ...state,
-  };
-}
+const updateProfileSuccess = action => state => ({
+  ...state,
+  current: {
+    ...state.current,
+    ...action.result.user,
+  },
+});
 
 const loadInfoStart = () => state => ({
   ...state,
