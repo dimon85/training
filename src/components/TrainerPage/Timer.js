@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
-import PauseIcon from '@material-ui/icons/av/pause';
+import PauseIcon from '@material-ui/icons/Pause';
 import { getDateFormattedUtc } from '../../selectors/dateSelectors';
 
 const styles = {

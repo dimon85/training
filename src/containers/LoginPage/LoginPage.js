@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import isEmpty from 'lodash/isEmpty';
-import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { loginForm } from '../../helpers/validation';
 import { loginAction, loadAuth } from '../../reducers/auth';
 
@@ -156,14 +156,14 @@ export class LoginPage extends Component {
 
               <div className="paper__controls">
                 {!loading && (
-                  <RaisedButton
-                    label="Log in"
-                    primary={Boolean(true)}
+                  <Button
                     onClick={this.handleLogin}
-                  />
+                  >
+                    Log in
+                  </Button>
                 )}
                 {loading && (
-                  <RefreshIndicator
+                  <CircularProgress
                     size={50}
                     left={0}
                     top={0}

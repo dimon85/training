@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import isEmpty from 'lodash/isEmpty';
 import moment from 'moment';
-import Paper from 'material-ui/Paper';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import RefreshIndicator from 'material-ui/RefreshIndicator';
+import Paper from '@material-ui/core/Paper';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { showError } from '../../helpers/uiHelper';
 import { profileForm } from '../../helpers/validation';
 import { updateProfile } from '../../reducers/auth';
@@ -186,14 +186,14 @@ export class ProfilePage extends Component {
 
               <div className="paper__controls">
                 {!loading && (
-                  <RaisedButton
-                    label="Update"
-                    primary={Boolean(true)}
+                  <Button
                     onClick={this.handleUpdate}
-                  />
+                  >
+                  Update
+                  </Button>
                 )}
                 {loading && (
-                  <RefreshIndicator
+                  <CircularProgress
                     size={50}
                     left={0}
                     top={0}

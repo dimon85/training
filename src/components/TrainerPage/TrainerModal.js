@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
+import Dialog from '@material-ui/core/Dialog';
+import Button from '@material-ui/core/Button';
 
 export default function TrainerModal(props) {
   const {
@@ -15,19 +15,18 @@ export default function TrainerModal(props) {
   } = props;
 
   const actions = [
-    <FlatButton
+    <Button
       key="button_1"
-      label="Cancel"
-      primary
       onClick={onCloseModal}
-    />,
-    <FlatButton
+    >
+      Cancel
+    </Button>,
+    <Button
       key="button_2"
-      label="Submit"
-      primary
-      keyboardFocused
       onClick={onCloseModal}
-    />,
+    >
+      Submit
+    </Button>,
   ];
 
   const speed = Math.round(60 * (typedCount / ((currentTime) / 1000)));

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Paper from 'material-ui/Paper';
-import RaisedButton from 'material-ui/RaisedButton';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
 import TrainerType from './TrainerType';
 import TrainerModal from './TrainerModal';
 import TrainerInfo from './TrainerInfo';
@@ -106,12 +106,11 @@ export default class TrainerPage extends Component {
                 <h3>Press button to start</h3>
               </div>
               <div className="paper__body">
-                <RaisedButton
-                  label="Start"
-                  primary={Boolean(true)}
-                  fullWidth={Boolean(true)}
+                <Button
                   onClick={this.handleClickStart}
-                />
+                >
+                  Start
+                </Button>
               </div>
             </div>
           )}

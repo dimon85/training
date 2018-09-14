@@ -3,14 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/navigation/more-vert';
-import Keyboard from '@material-ui/icons/hardware/keyboard';
-import Help from '@material-ui/icons/action/help';
-import Person from '@material-ui/icons/social/person';
+import MenuIcon from '@material-ui/icons/Menu';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Keyboard from '@material-ui/icons/Keyboard';
+import Help from '@material-ui/icons/Help';
+import Person from '@material-ui/icons/Person';
+import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
@@ -182,18 +186,80 @@ export class AppLayout extends Component {
       children,
       isGuest,
     } = this.props;
-    const { openPanel } = this.state;
+    const { openPanel, targetOrigin } = this.state;
     const { langs, currentLang, profile } = this.context;
 
     return (
       <div>
-        <AppBar
-          title={this.renderLogo()}
-          className="navbar"
-          iconElementRight={this.renderIconRight(isGuest)}
-          onLeftIconButtonClick={this.handleTogglePanel}
-          style={styles.appBar}
-        />
+        <AppBar>
+          <Toolbar>
+            <IconButton color="inherit" aria-label="Menu">
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="title" color="inherit">
+              <div className="logo">
+                <Link to={`/${currentLang}`}>
+                  KeyPress
+                </Link>
+              </div>
+            </Typography>
+            {isGuest && (
+              <div>
+                <IconButton
+                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  open={open}
+                  targetOrigin={targetOrigin}
+                  anchorOrigin={targetOrigin}
+                  onRequestChange={this.handleClose}
+                >
+                  <Link to={`/${currentLang}/login`}>
+                    <MenuItem primaryText="Login" />
+                  </Link>
+                  <Link to={`/${currentLang}/signup`}>
+                    <MenuItem primaryText="Signup" />
+                  </Link>
+                </Menu>
+              </div>
+            )}
+
+            {!isGuest && (
+              <div>
+                <IconButton
+                  aria-owns={open ? 'menu-appbar' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleMenu}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={open}
+                  onClose={this.handleClose}
+                >
+                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                </Menu>
+              </div>
+            )}
+          </Toolbar>
+        </AppBar>
         <Drawer
           docked={false}
           width={200}
