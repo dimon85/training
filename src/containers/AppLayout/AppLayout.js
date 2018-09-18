@@ -21,13 +21,6 @@ import { isGuest } from '../../selectors';
 import { logoutAction } from '../../reducers/auth';
 import { changeLocale } from '../../reducers/translate';
 
-const styles = {
-  appBar: {
-    position: "fixed",
-    top: 0,
-  },
-};
-
 const mapStateToProps = state => ({
   isGuest: isGuest(state),
 });
@@ -57,9 +50,10 @@ export class AppLayout extends Component {
     super(props);
 
     this.state = {
+      anchorEl: null,
       open: false,
       openPanel: false,
-      targetOrigin: {
+      anchorOrigin: {
         horizontal: 'right',
         vertical: 'top'
       }
@@ -130,54 +124,20 @@ export class AppLayout extends Component {
 
   handleOpenPane = (open) => this.setState({ openPanel: open })
 
-  renderIconMenu() {
-    return (
-      <IconButton>
-        <MoreVertIcon />
-      </IconButton>
-    );
-  }
-
-  renderIconRight(isGuest) {
-    const { currentLang } = this.context;
-    if (!isGuest) {
-      return (
-        <Button
-          onClick={this.handleLogout}
-        >
-          Logout
-        </Button>
-      );
-    }
-
-    const { targetOrigin, open } = this.state;
-    return (
-      <Menu
-        open={open}
-        iconButtonElement={this.renderIconMenu()}
-        targetOrigin={targetOrigin}
-        anchorOrigin={targetOrigin}
-        onRequestChange={this.handleRequestChange}
-      >
-        <Link to={`/${currentLang}/login`}>
-          <MenuItem primaryText="Login" />
-        </Link>
-        <Link to={`/${currentLang}/signup`}>
-          <MenuItem primaryText="Signup" />
-        </Link>
-      </Menu>
-    );
-  }
+  handleOpenMenu = (event) => this.setState({ anchorEl: event.currentTarget });
+  handleCloseMenu = () => this.setState({ anchorEl: null });
 
   renderLogo = () => {
     const { currentLang } = this.context;
 
     return (
-      <div className="logo">
-        <Link to={`/${currentLang}`}>
-          KeyPress
-        </Link>
-      </div>
+      <Typography variant="title">
+        <div className="logo">
+          <Link to={`/${currentLang}`}>
+            KeyPress
+          </Link>
+        </div>
+      </Typography>
     );
   }
 
@@ -186,7 +146,12 @@ export class AppLayout extends Component {
       children,
       isGuest,
     } = this.props;
-    const { openPanel, targetOrigin } = this.state;
+    const {
+      anchorEl,
+      anchorOrigin,
+      open,
+      openPanel,
+    } = this.state;
     const { langs, currentLang, profile } = this.context;
 
     return (
@@ -196,28 +161,27 @@ export class AppLayout extends Component {
             <IconButton color="inherit" aria-label="Menu">
               <MenuIcon />
             </IconButton>
-            <Typography variant="title" color="inherit">
-              <div className="logo">
-                <Link to={`/${currentLang}`}>
-                  KeyPress
-                </Link>
-              </div>
-            </Typography>
+            {this.renderLogo()}
             {isGuest && (
               <div>
                 <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
                   color="inherit"
+                  aria-owns={anchorEl ? 'simple-menu' : null}
+                  aria-haspopup="true"
+                  onClick={this.handleClick}
                 >
-                  <AccountCircle />
+                  <MoreVertIcon />
                 </IconButton>
                 <Menu
-                  open={open}
-                  targetOrigin={targetOrigin}
-                  anchorOrigin={targetOrigin}
-                  onRequestChange={this.handleClose}
+                  id="simple-menu"
+                  open={true}
+                  anchorEl={anchorEl}
+                  anchorOrigin={anchorOrigin}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  onClose={this.handleCloseMenu}
                 >
                   <Link to={`/${currentLang}/login`}>
                     <MenuItem primaryText="Login" />

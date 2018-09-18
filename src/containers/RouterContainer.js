@@ -130,7 +130,7 @@ class RouterContainer extends Component {
             <CircularProgress
               size={80}
               thickness={5}
-              color="#00BCD4"
+              color="secondary"
             />
           </div>
         </App>

@@ -1,14 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import AppLayout from './AppLayout';
 
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#00bcd4',
+      contrastText: '#ffffff'
+    },
+    secondary: {
+      main: '#00acc1'
+    },
+    
+  }
+});
 const mapStateToProps = state => state;
 
 function App({ children, router, history }) {
   return (
-    <MuiThemeProvider>
+    <MuiThemeProvider
+      theme={theme}
+    >
       <AppLayout
         pathname={router.location.pathname}
         history={history}
