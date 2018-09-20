@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -51,18 +52,13 @@ export class AppLayout extends Component {
 
     this.state = {
       anchorEl: null,
-      open: false,
       openPanel: false,
-      anchorOrigin: {
-        horizontal: 'right',
-        vertical: 'top'
-      }
     };
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.pathname !== nextProps.pathname) {
-      this.setState({ open: false });
+      this.setState({ anchorEl: null });
     }
   }
 
@@ -72,15 +68,6 @@ export class AppLayout extends Component {
 
   handleTogglePanel = () => {
     this.setState((prevState) => ({ openPanel: !prevState.openPanel }));
-  }
-
-  handleRequestChange = (open, reason) => {
-    if (reason === 'iconTap') {
-      this.setState({ open });
-      return;
-    }
-
-    this.setState({ open: false });
   }
 
   /**
@@ -122,9 +109,12 @@ export class AppLayout extends Component {
       });
   }
 
-  handleOpenPane = (open) => this.setState({ openPanel: open })
+  handleOpenPanel = () => this.setState({ openPanel: true });
 
-  handleOpenMenu = (event) => this.setState({ anchorEl: event.currentTarget });
+  handleOpenMenu = event => this.setState({
+    anchorEl: event.currentTarget,
+  });
+
   handleCloseMenu = () => this.setState({ anchorEl: null });
 
   renderLogo = () => {
@@ -141,135 +131,131 @@ export class AppLayout extends Component {
     );
   }
 
+  renderMenu() {
+    const { currentLang } = this.context;
+    const { isGuest } = this.props;
+    const { anchorEl } = this.state;
+
+    if (!isGuest) {
+      return (
+        <div>
+          <IconButton
+            color="inherit"
+            aria-owns={anchorEl ? 'header-menu' : null}
+            aria-haspopup="true"
+            onClick={this.handleOpenMenu}
+          >
+            <AccountCircle />
+          </IconButton>
+          <Menu
+            id="header-appbar"
+            open={Boolean(anchorEl)}
+            anchorEl={anchorEl}
+            onClose={this.handleCloseMenu}
+          >
+            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
+            <MenuItem onClick={this.handleClose}>My account</MenuItem>
+          </Menu>
+        </div>
+      );
+    }
+
+    return (
+      <div>
+        <IconButton
+          color="inherit"
+          aria-owns={anchorEl ? 'header-menu' : null}
+          aria-haspopup="true"
+          onClick={this.handleOpenMenu}
+        >
+          <MoreVertIcon />
+        </IconButton>
+        <Menu
+          id="header-menu"
+          open={Boolean(anchorEl)}
+          anchorEl={anchorEl}
+          onClose={this.handleCloseMenu}
+        >
+          <Link to={`/${currentLang}/login`}>
+            <MenuItem>Login</MenuItem>
+          </Link>
+          <Link to={`/${currentLang}/signup`}>
+            <MenuItem>Signup</MenuItem>
+          </Link>
+        </Menu>
+      </div>
+    );
+  }
+
   render() {
+    const { langs, currentLang, profile } = this.context;
     const {
       children,
-      isGuest,
     } = this.props;
-    const {
-      anchorEl,
-      anchorOrigin,
-      open,
-      openPanel,
-    } = this.state;
-    const { langs, currentLang, profile } = this.context;
+    const { openPanel } = this.state;
+
+    console.log('object', openPanel);
 
     return (
       <div>
         <AppBar>
           <Toolbar>
-            <IconButton color="inherit" aria-label="Menu">
+            <IconButton
+              color="inherit"
+              aria-label="Menu"
+              onClick={this.handleOpenPanel}
+            >
               <MenuIcon />
             </IconButton>
             {this.renderLogo()}
-            {isGuest && (
-              <div>
-                <IconButton
-                  color="inherit"
-                  aria-owns={anchorEl ? 'simple-menu' : null}
-                  aria-haspopup="true"
-                  onClick={this.handleClick}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="simple-menu"
-                  open={true}
-                  anchorEl={anchorEl}
-                  anchorOrigin={anchorOrigin}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  onClose={this.handleCloseMenu}
-                >
-                  <Link to={`/${currentLang}/login`}>
-                    <MenuItem primaryText="Login" />
-                  </Link>
-                  <Link to={`/${currentLang}/signup`}>
-                    <MenuItem primaryText="Signup" />
-                  </Link>
-                </Menu>
-              </div>
-            )}
-
-            {!isGuest && (
-              <div>
-                <IconButton
-                  aria-owns={open ? 'menu-appbar' : null}
-                  aria-haspopup="true"
-                  onClick={this.handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={this.handleClose}
-                >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                </Menu>
-              </div>
-            )}
+            <div className="grow" />
+            {this.renderMenu()}
           </Toolbar>
         </AppBar>
         <Drawer
-          docked={false}
           width={200}
           open={openPanel}
-          onRequestChange={this.handleOpenPane}
         >
-          <div className="languageContainer">
-            {langs.map((item) => {
-              return (
-                <div key={item} className="languageContainer__item">
-                  <Button
-                    variant="outlined"
-                    data-lang={item}
-                    color={item === currentLang ? 'primary' : null}
-                    fullWidth
-                    onClick={this.handleChangeLocale}
-                  >
-                    {item}
-                  </Button>
-                </div>
-              );
-            })}
+          <div
+            tabIndex={0}
+            role="button"
+          >
+            <div className="languageContainer">
+              {langs.map((item) => {
+                return (
+                  <div key={item} className="languageContainer__item">
+                    <Button
+                      variant="outlined"
+                      data-lang={item}
+                      color={item === currentLang ? 'primary' : null}
+                      fullWidth
+                      onClick={this.handleChangeLocale}
+                    >
+                      {item}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+            {profile.email && (
+              <List>
+                <Link to={`/${currentLang}/profile`}>
+                  Profile
+                </Link>
+              </List>
+            )}
+            <List>
+              <Link to={`/${currentLang}/trainer`}>
+                Trainer
+              </Link>
+            </List>
+
+            <List>
+              <Link to={`/${currentLang}/help`}>
+                Help
+              </Link>
+            </List>
           </div>
-          {profile.email && (
-            <Link to={`/${currentLang}/profile`}>
-              <MenuItem
-                primaryText="Profile"
-                leftIcon={<Person />}
-                onClick={this.handleClose}
-              />
-            </Link>
-          )}
-          <Link to={`/${currentLang}/trainer`}>
-            <MenuItem
-              primaryText="Trainer"
-              leftIcon={<Keyboard />}
-              onClick={this.handleClose}
-            />
-          </Link>
-          <Link to={`/${currentLang}/help`}>
-            <MenuItem
-              primaryText="Help"
-              leftIcon={<Help />}
-              onClick={this.handleClose}
-            />
-          </Link>
         </Drawer>
         {children}
         <ToastContainer />
