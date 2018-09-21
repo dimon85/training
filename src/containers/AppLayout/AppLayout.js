@@ -8,8 +8,12 @@ import Typography from '@material-ui/core/Typography';
 import Drawer from '@material-ui/core/Drawer';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Keyboard from '@material-ui/icons/Keyboard';
@@ -110,6 +114,7 @@ export class AppLayout extends Component {
   }
 
   handleOpenPanel = () => this.setState({ openPanel: true });
+  handleClosePanel = () => this.setState({ openPanel: false });
 
   handleOpenMenu = event => this.setState({
     anchorEl: event.currentTarget,
@@ -194,8 +199,6 @@ export class AppLayout extends Component {
     } = this.props;
     const { openPanel } = this.state;
 
-    console.log('object', openPanel);
-
     return (
       <div>
         <AppBar>
@@ -215,10 +218,13 @@ export class AppLayout extends Component {
         <Drawer
           width={200}
           open={openPanel}
+          onClose={this.handleClosePanel}
         >
           <div
             tabIndex={0}
             role="button"
+            onClick={this.handleTogglePanel}
+            onKeyDown={this.handleTogglePanel}
           >
             <div className="languageContainer">
               {langs.map((item) => {
@@ -237,20 +243,22 @@ export class AppLayout extends Component {
                 );
               })}
             </div>
-            {profile.email && (
-              <List>
+            <Divider />
+            <List>
+              {profile.email && (
                 <Link to={`/${currentLang}/profile`}>
                   Profile
                 </Link>
-              </List>
-            )}
-            <List>
-              <Link to={`/${currentLang}/trainer`}>
-                Trainer
-              </Link>
-            </List>
+              )}
+              <ListItem button>
+                <ListItemIcon>
+                  <Keyboard />
+                </ListItemIcon>
+                <Link to={`/${currentLang}/trainer`}>
+                  <ListItemText primary="Trainer" />
+                </Link>
+              </ListItem>
 
-            <List>
               <Link to={`/${currentLang}/help`}>
                 Help
               </Link>
