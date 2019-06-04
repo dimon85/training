@@ -10,4 +10,4 @@ const app = express();
 
 app.use('/translation', translateRoutes);
 
-module.exports  = app;
+export default app;

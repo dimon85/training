@@ -49,11 +49,13 @@ const prodConfig = {
   optimization: {
     runtimeChunk: false,
     splitChunks: {
+      maxSize: 2500000,
       cacheGroups: {
         vendor: {
-          chunks: 'all',
+          chunks: 'initial',
           test: MODULES_DIR,
-          name: 'vendor'
+          name: 'vendor',
+          enforce: true
         },
       },
     },
@@ -67,7 +69,7 @@ const prodConfig = {
   },
   plugins: [
     // clean dist folder
-    new CleanWebpackPlugin(['dist'], { root: ROOT_DIR }),
+    new CleanWebpackPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new MiniCssExtractPlugin({
       // Options similar to the same options in webpackOptions.output
@@ -83,7 +85,7 @@ const prodConfig = {
       chunksSortMode: 'dependency'
     }),
     new CompressionWebpackPlugin({
-      asset: '[path].gz[query]',
+      filename: '[path].gz[query]',
       algorithm: 'gzip',
       test: new RegExp('\\.(js|css)$'),
       threshold: 10240,
@@ -91,6 +93,8 @@ const prodConfig = {
     }),
     new OfflinePlugin({
       caches: 'all',
+      responseStrategy: 'network-first',
+      autoUpdate: true,
       AppCache: false,
       ServiceWorker: {
         minify: false,

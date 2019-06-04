@@ -23,7 +23,8 @@ router.get('/', function(req, res) {
 
     reject({ error: 'not found'});
   })
-    .then((data) => res.json(data)).catch(() => {
+    .then(data => res.json(data))
+    .catch(() => {
       res.status(404).send({ errors: { msg:'Not found' }, type: 'internal' });
     });
 });
@@ -42,4 +43,4 @@ function getLocal(req) {
   return en;
 }
 
-module.exports = router;
+export default router;

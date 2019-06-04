@@ -16,7 +16,6 @@ const TOOLS_DIR = path.resolve(ROOT_DIR, 'tools');
 module.exports = {
   mode: 'production',
   entry: [
-    '@babel-polyfill',
     path.join(TOOLS_DIR, 'prodServer'),
   ],
   target: 'node',
@@ -34,10 +33,6 @@ module.exports = {
         test: /\.(js|jsx)$/,
         use: 'babel-loader',
         exclude: /node_modules/
-      },
-      {
-        test: /\.json$/,
-        use: 'json-loader'
       },
     ]
   },
