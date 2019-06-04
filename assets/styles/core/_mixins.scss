@@ -1,0 +1,58 @@
+
+// flex
+@mixin flex-container($direction: row, $spacing: flex-start, $alignment: center) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $spacing;
+  align-items: $alignment;
+}
+
+// clearfix
+@mixin clearfix() {
+  &:before,
+  &:after {
+    content: " "; // 1
+    display: table; // 2
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+// Media mixins
+@mixin xs () {
+  @media (max-width:420px) {
+   @content;
+  }
+}
+@mixin sm () {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin md () {
+  @media (max-width: 1140px) {
+    @content;
+  }
+}
+
+@mixin lg () {
+  @media (max-width: 1440px) {
+    @content;
+  }
+}
+
+//custom footer breakpoint
+@mixin pre-sm () {
+  @media (max-width: 639px) and (min-width: 421px) {
+    @content;
+  }
+}
+
+//custom menu languages breakpoint
+@mixin mobile580 () {
+  @media  (max-width: 580px) {
+    @content;
+  }
+}

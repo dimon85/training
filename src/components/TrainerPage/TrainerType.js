@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import autobind from 'autobind-decorator';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 import Timer from './Timer';
 
 export default class TrainerType extends Component {
@@ -34,8 +33,10 @@ export default class TrainerType extends Component {
     window.removeEventListener('keyup', this.handleKeyUp);
   }
 
-  @autobind
-  startTimer() {
+  /**
+   * Start timer
+   */
+  startTimer = () => {
     this.setState({ isTimerPlay: true });
     console.log('Start timer');
     this.timer = setInterval(() => {
@@ -43,8 +44,10 @@ export default class TrainerType extends Component {
     }, 1000);
   }
 
-  @autobind
-  cbTimer() {
+  /**
+   * Callback timer
+   */
+  cbTimer = () => {
     const { currentTime, startTime } = this.state;
     if (currentTime >= startTime) {
       clearInterval(this.timer);
@@ -57,8 +60,11 @@ export default class TrainerType extends Component {
     this.setState({ currentTime: updatedTime });
   }
 
-  @autobind
-  handleKeyUp(event) {
+  /**
+   * Handle key events
+   * @param {object} event
+   */
+  handleKeyUp = (event) => {
     const {
       isTimerPlay,
       initialText,
@@ -171,7 +177,7 @@ export default class TrainerType extends Component {
           />
         </div>
         <div className="paper__body">
-          <Paper zDepth={2}>
+          <Paper>
             <div className="paper__type">
               <div className="paper__left">
                 <div className="paper_left_inner">

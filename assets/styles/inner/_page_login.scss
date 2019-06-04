@@ -1,0 +1,23 @@
+.loginPage {
+  @include flex-container(row, center, center);
+
+  .paper {
+    @include flex-container(column, flex-start, flex-start);
+    padding: 30px 50px;
+
+    @include xs {
+      padding: 20px;
+    }
+
+    &__body {
+      @include flex-container(column, center, stretch);
+      margin-bottom: 10px;
+    }
+
+    &__controls {
+      @include flex-container(row, center, center);
+      position: relative;
+      margin: 20px 0;
+    }
+  }
+}

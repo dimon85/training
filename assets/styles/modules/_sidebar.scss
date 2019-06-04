@@ -1,0 +1,8 @@
+.languageContainer {
+  @include flex-container(row, center, center);
+  margin: 10px 0;
+
+  &__item {
+    min-width: 60px;
+  }
+}

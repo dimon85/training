@@ -1,10 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-import createHistory from 'history/createBrowserHistory';
-import { AppContainer } from 'react-hot-loader';
+import { render } from 'react-dom';
+import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
-import RootContainer from './conteiners/RootContainer';
+import RootContainer from './containers/RootContainer';
 import '../assets/styles/styles.scss';
 import '../assets/images/favicon.ico';
 
@@ -14,30 +12,9 @@ import '../assets/images/favicon.ico';
 if (process.env.NODE_ENV === 'production') {
   require('offline-plugin/runtime').install(); // eslint-disable-line global-require
 }
-injectTapEventPlugin();
 
 const rootEl = document.getElementById('root');
-const history = createHistory();
+const history = createBrowserHistory({ basename: '/' });
 const store = configureStore(history);
 
-const render = (Component) => {
-  ReactDOM.render(
-    <AppContainer errorReporter={({ error }) => { throw error; }}>
-      <Component
-        store={store}
-        history={history}
-      />
-    </AppContainer>,
-    rootEl
-  );
-};
-
-render(RootContainer);
-
-// Webpack Hot Module Replacement API
-if (module.hot) {
-  module.hot.accept('./conteiners/RootContainer', () => {
-    const Root = require('./conteiners/RootContainer').default;
-    render(Root);
-  });
-}
+render(<RootContainer store={store} history={history} />, rootEl);

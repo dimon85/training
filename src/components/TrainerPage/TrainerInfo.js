@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
+import Paper from '@material-ui/core/Paper';
 
 function TrainerInfo(props) {
   const {
@@ -14,8 +14,8 @@ function TrainerInfo(props) {
   const errorsPercent = ((errorsCount * 100) / textLength).toFixed(2);
 
   return (
-    <Paper zDepth={4} className="info">
-      <div >
+    <Paper className="info">
+      <div>
         <h4 className="info__header">Info</h4>
         <ul className="info__list">
           <li>Typed: {typedCount}/{textLength} symb</li>

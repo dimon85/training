@@ -1,25 +1,21 @@
 import thunk from 'redux-thunk';
 import { applyMiddleware, compose, createStore } from 'redux';
-import { routerMiddleware } from 'react-router-redux';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 import rootReducer from '../reducers';
 
 export default function configureStore(history, data = {}) {
   // Sync dispatched route actions to the history
-  const reduxRouterMiddleware = routerMiddleware(history);
 
   function listMiddleware() {
     if (process.env.NODE_ENV === 'dev') {
       return [
         thunk,
-        reduxRouterMiddleware,
         reduxImmutableStateInvariant()
       ];
     }
 
     return [
       thunk,
-      reduxRouterMiddleware,
     ];
   }
 
@@ -28,10 +24,9 @@ export default function configureStore(history, data = {}) {
   let finalCreateStore;
 
   if (process.env.NODE_ENV === 'dev') {
-    finalCreateStore = compose(
-      applyMiddleware(...middleware),
-      window.devToolsExtension ? window.devToolsExtension() : f => f
-    )(createStore);
+    // eslint-disable-next-line
+    const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+    finalCreateStore = composeEnhancers(applyMiddleware(...middleware))(createStore);
   } else {
     finalCreateStore = compose(applyMiddleware(...middleware))(createStore);
   }

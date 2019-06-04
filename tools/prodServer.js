@@ -1,6 +1,9 @@
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import routes from './server/routes';
 
 const customPort = 3113;
 const app = express();
@@ -17,13 +20,28 @@ const allowCrossDomain = (req, res, next) => {
 // Register Node.js middleware
 // -----------------------------------------------------------------------------
 app.use(compression());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(express.static(path.join(__dirname, '../dist')));
 app.use(allowCrossDomain);
+app.use(morgan('combined'));
 
-// Register Node.js middleware
-// -----------------------------------------------------------------------------
 
-app.get('/*', (req, res) => {
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).send('invalid token...');
+  }
+});
+
+//routers
+app.use('/api/v1', [routes]);
+
+// Don't expose any software information to potential hackers.
+app.disable('x-powered-by');
+
+app.get('*', (req, res) => {
   res.sendFile('index.html', { root: path.join(__dirname, '../dist') });
 });
 

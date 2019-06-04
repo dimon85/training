@@ -5,3 +5,5 @@ dist
 .eslintcache
 yarn.lock
 package-lock.json
+
+config/index.js

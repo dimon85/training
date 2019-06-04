@@ -1,0 +1,17 @@
+.logo {
+  a {
+    color: $white;
+
+    &:visited {
+      color: $white;
+    }
+
+    &:hover {
+      color: lighten($blue-light, 15%);
+    }
+  }
+}
+
+.grow {
+  flex-grow: 1;
+}

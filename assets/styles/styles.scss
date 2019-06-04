@@ -1,16 +1,24 @@
+@import url('~normalize.css/normalize');
+@import url('~react-toastify/dist/ReactToastify.css');
+
 //core
-@import "core/mixins";
-@import "core/variables";
-@import "core/fonts";
+@import "core/_colors",
+        "core/_variables",
+        "core/_mixins",
+        "core/_helpers",
+        "core/_icons",
+        "core/_fonts",
+        "core/_main";
 
+// elements
+@import 'atoms/_controls';
+@import 'atoms/_forms';
 
-//globally used components
-@import "components/general";
+// modules
+@import "modules/_header";
+@import "modules/_sidebar";
 
-
-//site modules
-@import "modules/homepage";
-
-
-//tricks
-@import "custom";
+// pages
+@import "inner/_page_home";
+@import "inner/_page_training";
+@import "inner/_page_login"

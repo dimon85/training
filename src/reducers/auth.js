@@ -1,11 +1,20 @@
 import isFunction from 'lodash/isFunction';
-import flowRight from 'lodash/flowRight';
+import api from '../api';
+import { getConfig } from '../../config';
+import { showError } from '../helpers/uiHelper';
+import cookieHelper from '../helpers/cookieHelper';
 
-export const LOAD = 'redux-ducks/auth/LOAD';
-export const LOAD_SUCCESS = 'redux-ducks/auth/LOAD_SUCCESS';
-export const LOAD_FAIL = 'redux-ducks/auth/LOAD_FAIL';
-export const SET_STATUS_PAGE = 'redux-ducks/auth/SET_STATUS_PAGE';
+// TYPE
+export const LOAD_PROFILE_SUCCESS = 'redux-ducks/auth/LOAD_PROFILE_SUCCESS';
+export const LOGIN_SUCCESS = 'redux-ducks/auth/LOGIN_SUCCESS';
 export const SET_DEFAULT = 'redux-ducks/auth/SET_DEFAULT';
+
+export const LOAD_INFO = 'redux-ducks/auth/LOAD_INFO';
+export const LOAD_INFO_SUCCESS = 'redux-ducks/auth/LOAD_INFO_SUCCESS';
+export const LOAD_INFO_FAIL = 'redux-ducks/auth/LOAD_INFO_FAIL';
+
+export const AUTH_LOADED = 'redux-ducks/auth/AUTH_LOADED';
+export const UPDATE_PROFILE_SUCCESS = 'redux-ducks/auth/UPDATE_PROFILE_SUCCESS';
 
 const initialState = {
   loading: false,
@@ -14,61 +23,240 @@ const initialState = {
   current: {
     type: 'guest',
   },
+  userInfo: {
+    loading: false,
+    loaded: false,
+  },
+  token: false,
 };
 
-export function isLoaded(globalState) {
-  return globalState.info && globalState.info.loaded;
-}
+// ACTIONS
+export const setDefault = () => ({
+  type: SET_DEFAULT
+});
 
-export function load() {
+const login = payload => ({
+  type: LOGIN_SUCCESS,
+  result: payload,
+});
+
+const getProfile = payload => ({
+  type: LOAD_PROFILE_SUCCESS,
+  result: payload,
+});
+
+const update = payload => ({
+  type: UPDATE_PROFILE_SUCCESS,
+  result: payload,
+});
+
+const setAuthLoaded = () => ({
+  type: AUTH_LOADED,
+});
+
+const loadInfoBegin = () => ({
+  type: LOAD_INFO,
+});
+
+const loadInfoResult = data => ({
+  type: LOAD_INFO_SUCCESS,
+  result: data,
+});
+
+const loadInfoError = () => ({
+  type: LOAD_INFO_FAIL,
+});
+
+export const loginAction = payload => async (dispatch) => {
+  try {
+    const data = await api.auth.login('auth/login', payload);
+    
+    return dispatch(login(data));
+  } catch (error) {
+    const { status, statusText } = error;
+
+    if (!status) {
+      showError('Something went wrong. Try later');
+    }
+
+    if (status === 500) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
+};
+
+export const signupAction = payload => async (dispatch) => {
+  try {
+    const data = await api.auth.signup('auth/register', payload);
+
+    return dispatch(login(data));
+  } catch (error) {
+    const { data, status, statusText } = error;
+
+    if (!data || !data.errors) {
+      showError('Something went wrong. Try later');
+    }
+
+    if (status === 500) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
+};
+
+export const loadAuth = () => async (dispatch) => {
+  if (!cookieHelper.get('token')) {
+    dispatch(setAuthLoaded());
+    return ({ error: 'token not found' });
+  }
+
+  try {
+    const data = await api.auth.profile('auth/profile');
+
+    return dispatch(getProfile(data));
+  } catch (error) {
+    dispatch(setDefault());
+    const { data, status, statusText } = error;
+
+    if (!data || !data.errors) {
+      showError('Something went wrong. Try later');
+    }
+
+    if (status === 500) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
+};
+
+export const logoutAction = () => (dispatch) => {
+  cookieHelper.remove('token');
+
+  if (!cookieHelper.get('token')) {
+    dispatch(setDefault());
+    return Promise.resolve(true);
+  }
+
+  Promise.reject({ errors: { token:  'Enable delete token' }});
+};
+
+export const updateProfile = (payload) => async (dispatch) => {
+  try {
+    const data = await api.auth.update('auth/update', payload);
+    return dispatch(update(data));
+  } catch (error) {
+    const { status, statusText } = error;
+
+    if (status === 404) {
+      showError(statusText);
+    }
+
+    throw error;
+  }
+};
+
+// MUTATIONS
+const loginRequestSuccess = action => (state) => {
+  const { token } = action.result;
+  api.auth.setAuthToken(token);
+  cookieHelper.set('token', token);
+
   return {
-    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: client => client.get('/loadInfo')
+    ...state,
+    token: true,
   };
 }
 
-export function setDefault() {
+/**
+ * Load information about User from ipstack.com
+ */
+export const loadMemberInfoAction = () => (dispatch) => {
+  dispatch(loadInfoBegin());
+
+  return api.ApiClient.getExternal(`${getConfig().GET_IP_URL}?access_key=${getConfig().IP_STACK_KEY}&format=1`)
+    .then((resp) => {
+      dispatch(loadInfoResult(resp));
+      return resp;
+
+    }).catch(() => {
+      dispatch(loadInfoError());
+    });
+};
+
+
+const profileRequestSuccess = action => (state) => {
+  const { user } = action.result;
   return {
-    type: SET_DEFAULT
+    ...state,
+    loading: false,
+    loaded: true,
+    current: {
+      type: 'member',
+      ...user,
+    }
   };
 }
 
-const updateRequestOnLoad = value => state => ({
+const updateProfileSuccess = action => state => ({
   ...state,
-  loading: value
-});
-
-const updateRequestOnLoadSuccess = value => state => ({
-  ...state,
-  loading: value,
-  loaded: true,
-  error: null
-});
-
-const update = action => state => ({
-  ...state,
-  current: action.result,
-});
-
-const updateRequestOnLoadFail = (action, value) => state => ({
-  ...state,
-  loading: value,
-  loaded: value,
   current: {
-    type: 'guest',
+    ...state.current,
+    ...action.result.user,
   },
-  error: action.error
 });
 
-const setDefaultSuccess = () => initialState;
+const loadInfoStart = () => state => ({
+  ...state,
+  userInfo: {
+    ...state.userInfo,
+    loading: true,
+  }
+});
+
+const loadInfoSuccess = action => state => ({
+  ...state,
+  userInfo: {
+    ...state.userInfo,
+    loaded: true,
+    loading: false,
+    ...action.result,
+  }
+});
+
+const loadInfoFail = () => state => ({
+  ...state,
+  userInfo: {
+    ...state.userInfo,
+    loaded: true,
+    loading: false,
+  }
+});
+
+const setAuthLoadedSuccess = () => state => ({
+  ...state,
+  loaded: true,
+})
+
+const setDefaultSuccess = () => {
+  cookieHelper.remove('token');
+  return {
+    ...initialState,
+    loaded: true,
+  };
+};
 
 const actionsLookup = {
-  [LOAD]: state => updateRequestOnLoad(true)(state),
-  [LOAD_SUCCESS]: (state, action) => flowRight(
-    updateRequestOnLoadSuccess(false),
-    update(action),
-  )(state),
-  [LOAD_FAIL]: (state, action) => updateRequestOnLoadFail(action, false)(state),
+  [LOGIN_SUCCESS]: (state, action) => loginRequestSuccess(action)(state),
+  [LOAD_PROFILE_SUCCESS]:  (state, action) => profileRequestSuccess(action)(state),
+  [LOAD_INFO]: state => loadInfoStart()(state),
+  [LOAD_INFO_SUCCESS]: (state, action) => loadInfoSuccess(action)(state),
+  [LOAD_INFO_FAIL]: state => loadInfoFail()(state),
+  [AUTH_LOADED]: state => setAuthLoadedSuccess()(state),
+  [UPDATE_PROFILE_SUCCESS]: (state, action) => updateProfileSuccess(action)(state),
   [SET_DEFAULT]: () => setDefaultSuccess(),
 };
 
