@@ -9,7 +9,7 @@ const SRC_DIR = path.resolve(ROOT_DIR, 'src');
 
 module.exports = {
   entry: [
-    'babel-polyfill',
+    '@babel/polyfill',
     path.join(SRC_DIR, 'index'),
   ],
   resolve: {

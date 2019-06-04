@@ -1,19 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'react-router-redux';
 import { hot } from 'react-hot-loader';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LanguageContainer from './LanguageContainer';
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#00bcd4',
+      contrastText: '#ffffff'
+    },
+    secondary: {
+      main: '#00acc1'
+    },
+    
+  }
+});
 
 const RootContainer = (props) => {
   const { store, history } = props;
 
   return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
+    <MuiThemeProvider
+      theme={theme}
+    >
+      <Provider store={store}>
         <LanguageContainer history={history} store={store} />
-      </ConnectedRouter>
-    </Provider>
+      </Provider>
+    </MuiThemeProvider>
   );
 };
 

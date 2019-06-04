@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { loadAuth, loadMemberInfoAction } from '../reducers/auth';
 import { getLangToRedirect } from '../helpers/utils';
 import RouterContainer from './RouterContainer';
@@ -30,7 +30,9 @@ class LanguageContainer extends Component {
 
   render() {
     return (
-      <Route path="/:lang" component={RouterContainer} />
+      <BrowserRouter>
+        <Route path="/:lang" component={RouterContainer} />
+      </BrowserRouter>
     );
   }
 }

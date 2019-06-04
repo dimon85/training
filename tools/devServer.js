@@ -14,7 +14,7 @@ import config from '../config/webpack.config.dev';
 import routes from './server/routes';
 
 
-require('./database'); // need this line otherwise app won't know about the database module
+// require('./database'); // need this line otherwise app won't know about the database module
 
 const customPort = 3333;
 const app = express();

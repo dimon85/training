@@ -16,7 +16,7 @@ const TOOLS_DIR = path.resolve(ROOT_DIR, 'tools');
 module.exports = {
   mode: 'production',
   entry: [
-    'babel-polyfill',
+    '@babel-polyfill',
     path.join(TOOLS_DIR, 'prodServer'),
   ],
   target: 'node',

@@ -17,8 +17,6 @@ import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Keyboard from '@material-ui/icons/Keyboard';
-import Help from '@material-ui/icons/Help';
-import Person from '@material-ui/icons/Person';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { ToastContainer } from 'react-toastify';
@@ -39,7 +37,6 @@ export class AppLayout extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
     children: PropTypes.object.isRequired,
-    pathname: PropTypes.string.isRequired,
     isGuest: PropTypes.bool.isRequired,
     logout: PropTypes.func.isRequired,
     changeLocale: PropTypes.func.isRequired,
@@ -61,7 +58,7 @@ export class AppLayout extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.pathname !== nextProps.pathname) {
+    if (this.props.history.location.pathname !== nextProps.history.location.pathname) {
       this.setState({ anchorEl: null });
     }
   }
@@ -126,7 +123,7 @@ export class AppLayout extends Component {
     const { currentLang } = this.context;
 
     return (
-      <Typography variant="title">
+      <Typography variant="h6">
         <div className="logo">
           <Link to={`/${currentLang}`}>
             KeyPress

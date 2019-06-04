@@ -66,7 +66,6 @@ Install compiler
 $ npm i -D babel-core babel-loader babel-plugin-transform-class-properties babel-plugin-transform-object-rest-spread
 $ npm i -D babel-plugin-transform-regenerator babel-preset-env babel-preset-stage-2
 $ npm i -D babel-preset-react-app babel-plugin-transform-runtime babel-plugin-transform-decorators-legacy
-$ npm i -S babel-runtime
 ```
 Create сonfig for bab.babelrc, 
 
@@ -87,5 +86,5 @@ $ npm i -S redux react-redux redux-thunk redux-immutable-state-invariant
 
 Install react-router
 ```
-$ npm i -S react-router-dom react-router-redux
+$ npm i -S react-router-dom
 ```

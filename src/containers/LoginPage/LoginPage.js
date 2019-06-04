@@ -126,7 +126,7 @@ export class LoginPage extends Component {
           Login
         </h1>
         <div className="loginPage">
-          <Paper zDepth={4}>
+          <Paper>
             <div className="paper">
               <div className="paper__body">
                 <h3>

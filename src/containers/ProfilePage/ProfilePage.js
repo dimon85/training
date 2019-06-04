@@ -146,7 +146,7 @@ export class ProfilePage extends Component {
       <div className="container landing">
         <h1>Profile page</h1>
         <div className="loginPage">
-          <Paper zDepth={4}>
+          <Paper>
             <div className="paper">
               <div className="paper__body">
                 <h3>

@@ -177,7 +177,7 @@ export default class TrainerType extends Component {
           />
         </div>
         <div className="paper__body">
-          <Paper zDepth={2}>
+          <Paper>
             <div className="paper__type">
               <div className="paper__left">
                 <div className="paper_left_inner">
