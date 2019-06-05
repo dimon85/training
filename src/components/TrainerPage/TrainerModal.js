@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 
 export default function TrainerModal(props) {
@@ -14,21 +17,6 @@ export default function TrainerModal(props) {
     onCloseModal,
   } = props;
 
-  const actions = [
-    <Button
-      key="button_1"
-      onClick={onCloseModal}
-    >
-      Cancel
-    </Button>,
-    <Button
-      key="button_2"
-      onClick={onCloseModal}
-    >
-      Submit
-    </Button>,
-  ];
-
   const speed = Math.round(60 * (typedCount / ((currentTime) / 1000)));
   const errorsPercent = Math.round((errorsCount * 100) / textLength);
 
@@ -37,18 +25,29 @@ export default function TrainerModal(props) {
     <div>
       <Dialog
         title="Dialog With Actions"
-        actions={actions}
-        modal
         open={open}
+        onClose={onCloseModal}
       >
-        {open && (
-          <ul>
-            <li>Typed symbols: {typedCount}/{textLength} symb</li>
-            <li>Typed errors: {errorsCount} symb</li>
-            <li>Errors: {errorsPercent} %</li>
-            <li>Speed: {speed} symb/min</li>
-          </ul>
-        )}
+        <DialogTitle id="alert-dialog-title">Results</DialogTitle>
+        <DialogContent>
+          {open && (
+            <ul>
+              <li>Typed symbols: {typedCount}/{textLength} symb</li>
+              <li>Typed errors: {errorsCount} symb</li>
+              <li>Errors: {errorsPercent} %</li>
+              <li>Speed: {speed} symb/min</li>
+            </ul>
+          )}
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={onCloseModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={onCloseModal} color="primary" autoFocus>
+            Submit
+          </Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

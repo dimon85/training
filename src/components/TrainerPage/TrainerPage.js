@@ -107,6 +107,7 @@ export default class TrainerPage extends Component {
               </div>
               <div className="paper__body">
                 <Button
+                  color="primary"
                   onClick={this.handleClickStart}
                 >
                   Start

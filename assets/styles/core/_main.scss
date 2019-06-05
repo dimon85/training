@@ -37,10 +37,8 @@ a {
   &:active, &:hover, &.active {
     color: $blue;
   }
-  &:visited {
-    color: $white;
-  }
 }
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
   font-family: $font-family-header;
   font-weight: 700;

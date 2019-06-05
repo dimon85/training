@@ -17,6 +17,7 @@ import Divider from '@material-ui/core/Divider';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Keyboard from '@material-ui/icons/Keyboard';
+import ContactSupport from '@material-ui/icons/ContactSupport';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import { ToastContainer } from 'react-toastify';
@@ -255,10 +256,15 @@ export class AppLayout extends Component {
                   <ListItemText primary="Trainer" />
                 </Link>
               </ListItem>
-
-              <Link to={`/${currentLang}/help`}>
-                Help
-              </Link>
+            
+              <ListItem button>
+                <ListItemIcon>
+                  <ContactSupport />
+                </ListItemIcon>
+                <Link to={`/${currentLang}/help`}>
+                  <ListItemText primary="Help" />
+                </Link>
+              </ListItem>
             </List>
           </div>
         </Drawer>
