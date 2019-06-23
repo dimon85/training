@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
-import { hot } from 'react-hot-loader';
+import { hot } from 'react-hot-loader/root';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import LanguageContainer from './LanguageContainer';
 
@@ -37,4 +37,4 @@ RootContainer.propTypes = {
   history: PropTypes.object.isRequired,
 };
 
-export default hot(module)(RootContainer);
+export default hot(RootContainer);

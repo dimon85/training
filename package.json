@@ -6,8 +6,8 @@
   "scripts": {
     "prestart": "node tools/startMessage.js",
     "start": "npm run open:src",
-    "open:src": "NODE_ENV=dev node tools/loader.js",
-    "build": "NODE_ENV=production webpack --config config/webpack.config.prod.js",
+    "open:src": "node tools/loader.js",
+    "build": "webpack --config config/webpack.config.prod.js",
     "server:build": "babel-node tools/serverBuild.js",
     "server:run": "node dist/server/server.js",
     "clean-dist": "npm run remove-dist && mkdir dist",
@@ -32,6 +32,7 @@
   "homepage": "https://github.com/dimon85/boilerplate-react#readme",
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "@hot-loader/react-dom": "^16.8.6",
     "@material-ui/core": "^4.0.2",
     "@material-ui/icons": "^4.0.1",
     "axios": "^0.18.0",

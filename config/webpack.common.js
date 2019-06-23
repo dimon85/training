@@ -18,6 +18,9 @@ module.exports = {
       'node_modules',
      ],
     extensions: ['.js', '.css', '.scss'],
+    alias: {
+      'react-dom': '@hot-loader/react-dom'
+    }
   },
   module: {
     rules: [
@@ -37,12 +40,5 @@ module.exports = {
       // fonts
       { test: /\.(woff|woff2|eot|ttf|otf)$/, use: ['url-loader'] }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
-      }
-    }),
-  ]
+  }
 };

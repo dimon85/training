@@ -100,6 +100,11 @@ const prodConfig = {
         minify: false,
       },
     }),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('production'),
+      }
+    }),
     // load `moment/locale/nl.js` and `moment/locale/ru.js`
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /nl|ru/),
   ],

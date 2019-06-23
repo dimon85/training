@@ -10,7 +10,7 @@ const DIST_DIR = path.resolve(ROOT_DIR, 'dist');
 
 module.exports = merge(common, {
   mode: 'development',
-  devtool: 'eval',
+  devtool: 'source-map',
   entry: [
     'react-hot-loader/patch',
     'webpack-hot-middleware/client',
@@ -70,5 +70,10 @@ module.exports = merge(common, {
     }),
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: JSON.stringify('dev'),
+      }
+    }),
   ]
 });
