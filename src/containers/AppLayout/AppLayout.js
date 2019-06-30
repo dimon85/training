@@ -1,21 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuIcon from '@material-ui/icons/Menu';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import { ToastContainer } from 'react-toastify';
 import { isGuest } from '../../selectors';
 import { logoutAction } from '../../reducers/auth';
 import { changeLocale } from '../../reducers/translate';
 import Sidebar from './Sidebar';
+import MainTopBar from './MainTopBar';
 
 const mapStateToProps = state => ({
   isGuest: isGuest(state),
@@ -45,15 +36,8 @@ export class AppLayout extends Component {
     super(props);
 
     this.state = {
-      anchorEl: null,
       leftPanel: false,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.props.history.location.pathname !== nextProps.history.location.pathname) {
-      this.setState({ anchorEl: null });
-    }
   }
 
   /**
@@ -63,10 +47,6 @@ export class AppLayout extends Component {
   handleUpdateState = ({ name, value = false }) => {
     this.setState({ [name]: value });
   }
-
-  handleClose = () => this.setState({ leftPanel: false });
-  handleOpenPanel = () => this.setState({ leftPanel: true });
-  handleClosePanel = () => this.setState({ leftPanel: false });
 
   /**
    * Handle change locale
@@ -106,104 +86,19 @@ export class AppLayout extends Component {
       });
   }
 
-  handleOpenMenu = event => this.setState({
-    anchorEl: event.currentTarget,
-  });
-
-  handleCloseMenu = () => this.setState({ anchorEl: null });
-
-  renderLogo = () => {
-    const { currentLang } = this.context;
-
-    return (
-      <Typography variant="h6">
-        <div className="logo">
-          <Link to={`/${currentLang}`}>
-            KeyPress
-          </Link>
-        </div>
-      </Typography>
-    );
-  }
-
-  renderMenu() {
-    const { currentLang } = this.context;
-    const { isGuest } = this.props;
-    const { anchorEl } = this.state;
-
-    if (!isGuest) {
-      return (
-        <div>
-          <IconButton
-            color="inherit"
-            aria-owns={anchorEl ? 'header-menu' : null}
-            aria-haspopup="true"
-            onClick={this.handleOpenMenu}
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="header-appbar"
-            open={Boolean(anchorEl)}
-            anchorEl={anchorEl}
-            onClose={this.handleCloseMenu}
-          >
-            <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-            <MenuItem onClick={this.handleClose}>My account</MenuItem>
-          </Menu>
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        <IconButton
-          color="inherit"
-          aria-owns={anchorEl ? 'header-menu' : null}
-          aria-haspopup="true"
-          onClick={this.handleOpenMenu}
-        >
-          <MoreVertIcon />
-        </IconButton>
-        <Menu
-          id="header-menu"
-          open={Boolean(anchorEl)}
-          anchorEl={anchorEl}
-          onClose={this.handleCloseMenu}
-        >
-          <Link to={`/${currentLang}/login`}>
-            <MenuItem>Login</MenuItem>
-          </Link>
-          <Link to={`/${currentLang}/signup`}>
-            <MenuItem>Signup</MenuItem>
-          </Link>
-        </Menu>
-      </div>
-    );
-  }
-
   render() {
     const {
       children,
+      isGuest,
     } = this.props;
     const { leftPanel } = this.state;
 
     return (
       <div>
-        <AppBar>
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="Menu"
-              onClick={this.handleOpenPanel}
-            >
-              <MenuIcon />
-            </IconButton>
-            {this.renderLogo()}
-            <div className="grow" />
-            {this.renderMenu()}
-          </Toolbar>
-        </AppBar>
+        <MainTopBar
+          isGuest={isGuest}
+          onToggle={this.handleUpdateState}
+        />
         <Sidebar
           name="leftPanel"
           open={leftPanel}

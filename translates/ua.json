@@ -1,8 +1,10 @@
 {
   "lang": "ua",
   "translations": {
-    "letsStart": "Начати тренування",
+    "letsStart": "Почати тренування",
     "help": "Допомога",
-    "training": "Тренування"
+    "training": "Тренування",
+    "login": "Увійти",
+    "signup": "Зареєструватися"
   }
 }

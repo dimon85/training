@@ -3,6 +3,8 @@
   "translations": {
     "letsStart": "Lets start",
     "help": "Help",
-    "training": "Training"
+    "training": "Training",
+    "login": "Login",
+    "signup": "Signup"
   }
 }
