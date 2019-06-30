@@ -1,16 +1,19 @@
 .paper {
   &__area {
     text-align: center;
-    padding: 10px;
   }
 
   &__header {
-    padding-top: 20px;
+    padding-top: 10px;
   }
 
-  // &__body {
-    // padding: 30px 50px;
-  // }
+  &__body {
+    padding: 30px 50px;
+  }
+
+  &__control {
+    border: 1px solid red;
+  }
 
   &__type {
     overflow: hidden;
@@ -55,32 +58,5 @@
     text-align: left;
     font-size: $font-size-bigger;
     line-height: $line_height_h3;
-  }
-}
-
-.info {
-  position: absolute;
-  bottom: -40px;
-  right: 15px;
-  &__header {
-    text-align: center;
-    margin-bottom: 5px;
-  }
-  &__list {
-    padding: 10px 20px;
-    margin: 5px 10px;
-  }
-}
-
-.timer {
-  font-size: 1.5em;
-  &__hours {
-    top: 40px;
-    text-align: center;
-    position: relative;
-  }
-  &__circular {
-    margin-top: -37px;
-    text-align: center;
   }
 }

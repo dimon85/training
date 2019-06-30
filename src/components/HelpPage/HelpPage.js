@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { blue } from '@material-ui/core/colors';
 
 const useStyles = makeStyles({
   box: {
@@ -14,15 +13,11 @@ const useStyles = makeStyles({
   title: {
     marginBottom: '20px',
   },
-  button: {
-    // color: blue,
-  }
 });
 
 const HelpPage = (props, context) => {
   const classes = useStyles();
   const { currentLang, translates } = context;
-
 
   return (
     <div className="container">
@@ -72,7 +67,6 @@ const HelpPage = (props, context) => {
           <Button
             variant="outlined"
             color="primary"
-            className={classes.button}
           >
             {translates.homeBack}
           </Button>

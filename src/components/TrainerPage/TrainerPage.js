@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import TrainerType from './TrainerType';
 import TrainerModal from './TrainerModal';
 import TrainerInfo from './TrainerInfo';
@@ -98,18 +99,24 @@ export default class TrainerPage extends Component {
 
     return (
       <div className="container">
-        <h1>Training your ability</h1>
+        <Typography
+          variant="h3"
+        >
+          {'Warm-up exercises'}
+        </Typography>
         <Paper className="paper">
           {!start && (
             <div className="paper__area">
               <div className="paper__header">
-                <h3>Press button to start</h3>
+                <h3>Text exercises</h3>
               </div>
               <div className="paper__body">
                 <Button
+                  variant="outlined"
+                  color="primary"
                   onClick={this.handleClickStart}
                 >
-                  Start
+                 Start
                 </Button>
               </div>
             </div>
@@ -124,6 +131,7 @@ export default class TrainerPage extends Component {
             />
           )}
         </Paper>
+
         {start && (
           <TrainerInfo
             currentTime={currentTime}
@@ -132,6 +140,7 @@ export default class TrainerPage extends Component {
             errorsCount={errorsCount}
           />
         )}
+
         <TrainerModal
           open={openModal}
           textLength={textLength}

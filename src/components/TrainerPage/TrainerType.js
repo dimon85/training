@@ -168,7 +168,6 @@ export default class TrainerType extends Component {
     return (
       <div className="paper__area">
         <div className="paper__header">
-          <h3>Type text level - {'"easy"'}</h3>
           <Timer
             startTime={startTime}
             currentTime={currentTime}

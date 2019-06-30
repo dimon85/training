@@ -1,5 +1,5 @@
 .landing {
-  @include flex-container(column, center, center);
+  @include flex-container(column, flex-start, center);
   height: 100vh;
   color: $white;
   background-image: linear-gradient(115deg, #bfeef2, #00bcd4);
