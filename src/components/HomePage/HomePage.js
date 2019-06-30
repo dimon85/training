@@ -1,36 +1,73 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 
-export default class HomePage extends PureComponent {
-  static contextTypes = {
-    currentLang: PropTypes.string.isRequired,
-    translates: PropTypes.object.isRequired,
-  };
+const useStyles = makeStyles({
+  mainBox: {
+    margin: '70px 10px 0 10px',
+    padding: '10px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  card: {
+    padding: '40px',
+    overflow: 'hidden',
+    maxWidth: '600px',
+  },
+  box: {
+    fontSize: '18px',
+  },
+  title: {
+    marginBottom: '20px',
+  },
+});
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-    };
-  }
+const HomePage = (props, context) => {
+  const classes = useStyles();
+  const { currentLang, translates } = context;
 
-  render() {
-    const {
-      currentLang,
-      translates,
-    } = this.context;
+  return (
+    <Box
+      className={classes.mainBox}
+    >
+      <Paper className={classes.card}>
+        <Typography
+          variant="h3"
+          className={classes.title}
+        >
+          {translates.homeTitle}
+        </Typography>
+        <Box
+          className={classes.box}
+          m={2}
+        >
+          {translates.homeDescription}
+        </Box>
 
-    return (
-      <div className="container landing">
-        <div className="landing__container">
-          <h1 className="landing__title">Тренируйся с удовольствием</h1>
-          <div className="landing__desc">Развивай внимание и скорость набора с помощью онлайн-тренажеров</div>
-        </div>
-        <Link to={`/${currentLang}/trainer`} className="landing__control">
-          {translates.letsStart}
+
+        <Link to={`/${currentLang}/trainer`}>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.button}
+          >
+            {translates.letsStart}
+          </Button>
         </Link>
-      </div>
-    );
-  }
-}
+      </Paper>
+    </Box>
+  );
+};
+
+HomePage.contextTypes = {
+  currentLang: PropTypes.string.isRequired,
+  translates: PropTypes.object.isRequired,
+};
+
+export default HomePage;

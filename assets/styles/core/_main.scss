@@ -35,37 +35,6 @@ a {
   }
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-  font-family: $font-family-header;
-  font-weight: 700;
-  text-transform: uppercase;
-  transition: font-size .3s
-}
-h1 {
-  font-size: $font_size_h1;
-  margin: 0 0 0.5em 0;
-  @include xs {
-    font-size: 1.8em;
-  }
-}
-h2 {
-  font-size: $font_size_h2;
-  line-height: $line_height_h2;
-  margin: 0 0 .5em 0;
-}
-h3 {
-  font-size: $font_size_h3;
-  margin: 0 0 .5em 0;
-}
-h4 {
-  font-size: $font_size_h4;
-  margin: 0 0 1em 0;
-}
-p {
-  margin: 0 0 1em 0;
-}
-
-
 .min-height-full-space {
   min-height: calc( 100vh - 428px);
 

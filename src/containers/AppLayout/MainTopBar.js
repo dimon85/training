@@ -23,7 +23,6 @@ const MainTopBar = (props, context) => {
   const {
     currentLang,
     translates,
-    profile,
   } = context;
   const {
     isGuest,
@@ -57,7 +56,7 @@ const MainTopBar = (props, context) => {
   }
 
   const renderMenu = () => {
-    if (isGuest) {
+    if (!isGuest) {
       return (
         <div>
           <IconButton
@@ -133,7 +132,6 @@ MainTopBar.defaultProps = {
 MainTopBar.contextTypes = {
   currentLang: PropTypes.string.isRequired,
   translates: PropTypes.object.isRequired,
-  profile: PropTypes.object.isRequired,
 }
 
 MainTopBar.propTypes = {

@@ -5,6 +5,10 @@
     "help": "Help",
     "training": "Training",
     "login": "Login",
-    "signup": "Signup"
+    "signup": "Signup",
+    "homeBack": "Back to home",
+    "homeTitle": "Train with pleasure",
+    "homeDescription": "Develop attention and typing speed with online simulators",
+    "helpTitle": "Help center"
   }
 }

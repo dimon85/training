@@ -108,22 +108,22 @@ const Sidebar = (props, context) => {
             Profile
           </Link>
         )}
-        <ListItem button>
-          <ListItemIcon>
-            <Keyboard />
-          </ListItemIcon>
-          <Link to={`/${currentLang}/trainer`}>
+        <Link to={`/${currentLang}/trainer`}>
+          <ListItem button>
+            <ListItemIcon>
+              <Keyboard />
+            </ListItemIcon>
             <ListItemText primary={translates.training} />
-          </Link>
-        </ListItem>
-        <ListItem button>
-          <ListItemIcon>
-            <Help />
-          </ListItemIcon>
-          <Link to={`/${currentLang}/help`}>
-            {translates.help}
-          </Link>
-        </ListItem>
+          </ListItem>
+        </Link>
+        <Link to={`/${currentLang}/help`}>
+          <ListItem button>
+            <ListItemIcon>
+              <Help />
+            </ListItemIcon>
+            <ListItemText primary={translates.help} />
+          </ListItem>
+        </Link>
       </List>
     </div>
   );
