@@ -93,9 +93,6 @@ const updateRequestOnLoadSuccess = value => state => ({
 });
 
 const updateLocalization = action => (state) => {
-  // saveLocale(action.result.type);
-  console.log('action', action.result.translations);
-
   return {
     ...state,
     data: {

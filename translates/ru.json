@@ -1,6 +1,8 @@
 {
   "lang": "ru",
   "translations": {
-    "letsStart": "Начать тренировку"
+    "letsStart": "Начать тренировку",
+    "help": "Помощь",
+    "training": "Тренироваться"
   }
 }

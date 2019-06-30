@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Redirect } from 'react-router-dom';
 import { loadAuth, loadMemberInfoAction } from '../reducers/auth';
 import { getLangToRedirect } from '../helpers/utils';
 import RouterContainer from './RouterContainer';
@@ -10,6 +10,14 @@ class LanguageContainer extends Component {
     store: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      locale: ''
+    }
+  }
 
   async componentDidMount() {
     const { history, store } = this.props;
@@ -23,14 +31,21 @@ class LanguageContainer extends Component {
     // [3] check, if route without lang, redirect to
     if (history.location.pathname === '/') {
       const lang = getLangToRedirect(info);
-
-      history.push(`/${lang}`);
+      this.setState({ locale: lang })
     }
   }
 
   render() {
+    const { history } = this.props;
+    const { locale } = this.state;
+
+    if (!locale && history.location.pathname === '/') {
+      return 'Loading';
+    }
+
     return (
       <BrowserRouter>
+        {locale && <Redirect from="/" to={`/${locale}`} />}
         <Route path="/:lang" component={RouterContainer} />
       </BrowserRouter>
     );

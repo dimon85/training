@@ -1,6 +1,8 @@
 {
   "lang": "en",
   "translations": {
-    "letsStart": "Lets start"
+    "letsStart": "Lets start",
+    "help": "Help",
+    "training": "Training"
   }
 }
