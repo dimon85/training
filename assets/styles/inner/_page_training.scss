@@ -19,26 +19,57 @@
     overflow: hidden;
     font-size: 40px;
     font-family: Lucida Console, monospace;
+    display: flex;
+    height: 60px;
  
     .paper__left {
-      height: 26px;
-      text-align: right;
-      float: left;
+      @include flex-container(row, flex-end, center);
+      position: relative;
       width: 50%;
       background: #ccc;
-      padding: 15px 0;
       white-space: pre;
       overflow-x: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0 ;
+        width: 40px;
+        height: 50px;
+        background: linear-gradient(
+          to left,
+          rgba(255, 255, 255, 0.001),
+          #ccc
+        );
+        pointer-events: none;
+      }
+
+      
       .paper_left_inner {
         float: right;
       }
     }
 
     .paper__right {
-      text-align: left;
+      @include flex-container(row, flex-start, center);
+      position: relative;
       overflow: hidden;
-      white-space: nowrap;
-      padding: 15px 0;
+      width: 50%;
+      white-space: pre;
+
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        width: 40px;
+        height: 50px;
+        background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.001),
+          white
+        );
+        pointer-events: none;
+      }
  
       .paper__symbol {
         border: 2px solid #8BC34A;

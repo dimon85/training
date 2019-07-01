@@ -184,7 +184,9 @@ export default class TrainerType extends Component {
                 </div>
               </div>
               <div className="paper__right">
-                <span className={isError ? 'paper__symbol__error' : 'paper__symbol'}>
+                <span
+                  className={isError ? 'paper__symbol__error' : 'paper__symbol'}
+                >
                   {currentChar}
                 </span>
                 <span>

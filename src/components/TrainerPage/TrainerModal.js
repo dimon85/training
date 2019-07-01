@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
 import Button from '@material-ui/core/Button';
-
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import ErrorIcon from '@material-ui/icons/Error';
+import KeyboardIcon from '@material-ui/icons/Keyboard';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 const TrainerModal = (props) => {
   const {
@@ -36,19 +36,50 @@ const TrainerModal = (props) => {
       >
         <DialogTitle>{'Info'}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {open && (
-              <ul>
-                <li>Typed symbols: {typedCount}/{textLength} symb</li>
-                <li>Typed errors: {errorsCount} symb</li>
-                <li>Errors: {errorsPercent} %</li>
-                <li>Speed: {speed} symb/min</li>
-              </ul>
-            )}
-          </DialogContentText>
+          {open && (
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <KeyboardIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  Typed symbols: {typedCount}/{textLength} symb
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <ErrorIcon />
+                </ListItemIcon>
+                <ListItemText>
+                Typed errors: {errorsCount} symb
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <ErrorIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  Errors: {errorsPercent} %
+                </ListItemText>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <ScheduleIcon />
+                </ListItemIcon>
+                <ListItemText>
+                  Speed: {speed} symb/min
+                </ListItemText>
+              </ListItem>
+            </List>
+          )}
+
         </DialogContent>
         <DialogActions>
-          <Button onClick={onCloseModal} color="primary" autoFocus>
+          <Button
+            variant="outlined"
+            autoFocus
+            onClick={onCloseModal}
+          >
             Close
           </Button>
         </DialogActions>
