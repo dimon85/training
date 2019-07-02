@@ -38,8 +38,6 @@ export class LoginPage extends Component {
     };
   }
 
-
-
   handleChangeField = (event) => {
     const { name, value } = event.target;
     this.setState(() => ({ [name]: value }));
@@ -143,8 +141,9 @@ export class LoginPage extends Component {
 
               <TextField
                 fullWidth
-                label="email"
+                type="email"
                 name="email"
+                label="email"
                 margin="normal"
                 value={email}
                 error={errors.email}
@@ -154,13 +153,13 @@ export class LoginPage extends Component {
 
               <TextField
                 fullWidth
-                label="Password"
-                name="password"
                 type="password"
+                name="password"
+                label="Password"
                 autoComplete="current-password"
                 margin="normal"
                 value={password}
-                error={errors.email}
+                error={errors.password}
                 helperText={errors.password}
                 onChange={this.handleChangeField}
                 onKeyPress={this.handleKeyPress}

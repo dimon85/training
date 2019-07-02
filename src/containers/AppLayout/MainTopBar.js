@@ -96,10 +96,16 @@ const MainTopBar = (props, context) => {
           anchorEl={anchorEl}
           onClose={handleCloseMenu}
         >
-          <Link to={`/${currentLang}/login`}>
+          <Link
+            to={`/${currentLang}/login`}
+            onClick={() => setAnchorEl(null)}
+          >
             <MenuItem>{translates.login}</MenuItem>
           </Link>
-          <Link to={`/${currentLang}/signup`}>
+          <Link
+            to={`/${currentLang}/signup`}
+            onClick={() => setAnchorEl(null)}
+          >
             <MenuItem>{translates.signup}</MenuItem>
           </Link>
         </Menu>

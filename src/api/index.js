@@ -3,7 +3,7 @@ import AuthApi from './Auth';
 
 
 // const apiPrefix = process.env.API_ROOT;
-const apiPrefix = 'api/v1'; // eslint-disable-line
+const apiPrefix = 'http://finger.back.beyrol.com/api/v1'; // eslint-disable-line
 
 function apiFactory(prefix) {
   if (!prefix) {

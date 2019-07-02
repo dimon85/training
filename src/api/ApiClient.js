@@ -14,8 +14,9 @@ export default class ApiClient {
     return data;
   }
 
-  async getExternal(url) {
-    const data = await this.externalRequest({ url, method: 'GET' });
+  async getExternal(url, params) {
+    const query = params ? `?${qs.stringify(params, { encode: false, skipNulls: true })}` : '';
+    const data = await this.externalRequest({ url, method: 'GET', query });
 
     return data;
   }
@@ -51,7 +52,7 @@ export default class ApiClient {
       }
 
       const options = {
-        url: `/${this.prefix}/${url}${query}`,
+        url: `${this.prefix}/${url}${query}`,
         method,
         data: method !== 'GET' ? qs.stringify(data, { encode: true, skipNulls: true }) : undefined,
         headers,
@@ -64,14 +65,14 @@ export default class ApiClient {
     }
   }
 
-  async externalRequest({ url, method }) {
+  async externalRequest({ url, method, query = '' }) {
     try {
       const headers = {
         Accept: 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
       };
       const options = {
-        url,
+        url: `${url}${query}`,
         method,
         headers,
       };

@@ -21,10 +21,6 @@ const initialState = {
   langs: ['en', 'ru', 'ua'],
 };
 
-function saveLocale(locale) {
-  cookieHelper.save('locale', locale);
-}
-
 export function getLocale() {
   const locale = cookieHelper.get('locale');
 
@@ -51,7 +47,7 @@ export const loadTranslates = () => async (dispatch, getState) => {
     const params = {
       lang: currentLang,
     }
-    const data = await api.ApiClient.get('translation', params);
+    const data = await api.ApiClient.getExternal('/api/v1/translation', params);
 
     return dispatch(load(data));
   } catch (error) {

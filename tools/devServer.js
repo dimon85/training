@@ -48,23 +48,23 @@ app.use((req,res,next) => {
   next();
 });
 
-app.use('/api/v1', expressJWT({
-  secret: 'secret_string',
-  getToken: function fromHeaderOrQuerystring(req) {
-    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-      return req.headers.authorization.split(' ')[1];
-    } else if (req.query && req.query.token) {
-      return req.query.token;
-    }
-    return null;
-  }
-}).unless({
-  path: [
-    '/api/v1/auth/login',
-    '/api/v1/auth/register',
-    '/api/v1/translation',
-  ]
-}));
+// app.use('/api/v1', expressJWT({
+//   secret: 'secret_string',
+//   getToken: function fromHeaderOrQuerystring(req) {
+//     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+//       return req.headers.authorization.split(' ')[1];
+//     } else if (req.query && req.query.token) {
+//       return req.query.token;
+//     }
+//     return null;
+//   }
+// }).unless({
+//   path: [
+//     '/api/v1/auth/login',
+//     '/api/v1/auth/register',
+//     '/api/v1/translation',
+//   ]
+// }));
 
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {

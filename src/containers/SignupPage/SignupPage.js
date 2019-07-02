@@ -6,17 +6,20 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { signupForm } from '../../helpers/validation';
 import { signupAction } from '../../reducers/auth';
 
 // Styles for checkbox
 const styles = {
-  checkbox: {
-    marginTop: 20,
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
   },
-  label: {
-    fontSize: 14,
+  btn: {
+    marginRight: '10px',
   }
 };
 
@@ -135,12 +138,6 @@ export class SignupPage extends Component {
       loading,
       errors,
     } = this.state;
-    const style = {
-      refresh: {
-        display: 'inline-block',
-        position: 'relative',
-      },
-    };
 
     return (
       <div className="container landing">
@@ -148,81 +145,92 @@ export class SignupPage extends Component {
         <div className="loginPage">
           <Paper>
             <div className="paper">
-              <div className="paper__body">
-                <h3>Signup with your email address</h3>
-                <TextField
-                  name="name"
-                  value={name}
-                  hintText="Enter your name"
-                  floatingLabelText="Name"
-                  fullWidth
-                  errorText={errors.name}
-                  onChange={this.handleChangeField}
-                />
-                <TextField
-                  type="email"
-                  name="email"
-                  value={email}
-                  hintText="Enter your email"
-                  floatingLabelText="Email"
-                  fullWidth
-                  errorText={errors.email}
-                  onChange={this.handleChangeField}
-                />
-                <TextField
-                  type="password"
-                  name="password"
-                  vaule={password}
-                  hintText="Enter your password"
-                  floatingLabelText="Password"
-                  fullWidth
-                  errorText={errors.password}
-                  onChange={this.handleChangeField}
-                />
-                <TextField
-                  type="password"
-                  name="confirmPassword"
-                  vaule={confirmPassword}
-                  hintText="Confirm your password"
-                  floatingLabelText="Password confirm"
-                  fullWidth
-                  errorText={errors.confirmPassword}
-                  onChange={this.handleChangeField}
-                />
-                <Checkbox
-                  name="checkedAgree"
-                  label="I agree with Terms and Conditions and Privacy"
-                  checked={checkedAgree}
-                  onCheck={this.updateCheckField}
-                  style={styles.checkbox}
-                  labelStyle={styles.label}
-                />
-                {errors.checkedAgree && (
-                  <div className="error">
-                    {errors.checkedAgree}
-                  </div>
-                )}
-              </div>
 
-              <div className="paper__controls">
-                {!loading && (
-                  <Button
-                    onClick={this.handleSignup}
-                  >
-                    Create account
-                  </Button>
-                )}
-                {loading && (
-                  <CircularProgress
-                    size={50}
-                    left={0}
-                    top={0}
-                    loadingColor="#FF9800"
-                    status="loading"
-                    style={style.refresh}
+              <Typography
+                variant="h5"
+              >
+                Signup with your email address
+              </Typography>
+
+              <TextField
+                fullWidth
+                label="name"
+                name="name"
+                margin="normal"
+                value={name}
+                error={errors.name}
+                helperText={errors.name}
+                onChange={this.handleChangeField}
+              />
+              <TextField
+                fullWidth
+                label="email"
+                type="email"
+                name="email"
+                margin="normal"
+                value={email}
+                error={errors.email}
+                helperText={errors.email}
+                onChange={this.handleChangeField}
+              />
+              <TextField
+                fullWidth
+                type="password"
+                name="password"
+                label="Password"
+                margin="normal"
+                value={password}
+                error={errors.password}
+                helperText={errors.password}
+                onChange={this.handleChangeField}
+              />
+              <TextField
+                fullWidth
+                type="password"
+                name="confirmPassword"
+                label="Confirm your password"
+                margin="normal"
+                value={confirmPassword}
+                error={errors.confirmPassword}
+                helperText={errors.confirmPassword}
+                onChange={this.handleChangeField}
+              />
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    name="checkedAgree"
+                    checked={checkedAgree}
+                    onChange={this.updateCheckField}
                   />
                 )}
-              </div>
+                label="I agree with Terms and Conditions and Privacy"
+              />
+              {errors.checkedAgree && (
+                <div className="error">
+                  {errors.checkedAgree}
+                </div>
+              )}
+
+            </div>
+
+            <div className="paper__controls">
+              {!loading && (
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  onClick={this.handleSignup}
+                >
+                  Create account
+                </Button>
+              )}
+              {loading && (
+                <CircularProgress
+                  size={50}
+                  left={0}
+                  top={0}
+                  style={styles.refresh}
+                />
+              )}
             </div>
           </Paper>
         </div>
