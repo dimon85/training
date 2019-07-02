@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
 import { loginForm } from '../../helpers/validation';
 import { loginAction, loadAuth } from '../../reducers/auth';
 
@@ -36,6 +37,8 @@ export class LoginPage extends Component {
       errors: {},
     };
   }
+
+
 
   handleChangeField = (event) => {
     const { name, value } = event.target;
@@ -118,6 +121,9 @@ export class LoginPage extends Component {
         display: 'inline-block',
         position: 'relative',
       },
+      btn: {
+        marginRight: '10px',
+      }
     };
 
     return (
@@ -128,55 +134,67 @@ export class LoginPage extends Component {
         <div className="loginPage">
           <Paper>
             <div className="paper">
-              <div className="paper__body">
-                <h3>
-                  Login with your email address
-                </h3>
-                <TextField
-                  name="email"
-                  value={email}
-                  hintText="Enter your email"
-                  floatingLabelText="Email"
-                  fullWidth
-                  errorText={errors.email}
-                  onChange={this.handleChangeField}
-                />
-                <TextField
-                  type="password"
-                  name="password"
-                  value={password}
-                  hintText="Enter your password"
-                  floatingLabelText="Password"
-                  fullWidth
-                  errorText={errors.password}
-                  onChange={this.handleChangeField}
-                  onKeyPress={this.handleKeyPress}
-                />
-              </div>
 
-              <div className="paper__controls">
-                {!loading && (
-                  <Button
-                    onClick={this.handleLogin}
-                  >
-                    Log in
-                  </Button>
-                )}
-                {loading && (
-                  <CircularProgress
-                    size={50}
-                    left={0}
-                    top={0}
-                    loadingColor="#FF9800"
-                    status="loading"
-                    style={style.refresh}
-                  />
-                )}
-                <a href="#" className="btn">
-                  Forgot password
-                </a>
-              </div>
+              <Typography
+                variant="h5"
+              >
+                Login with your email address
+              </Typography>
+
+              <TextField
+                fullWidth
+                label="email"
+                name="email"
+                margin="normal"
+                value={email}
+                error={errors.email}
+                helperText={errors.email}
+                onChange={this.handleChangeField}
+              />
+
+              <TextField
+                fullWidth
+                label="Password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                margin="normal"
+                value={password}
+                error={errors.email}
+                helperText={errors.password}
+                onChange={this.handleChangeField}
+                onKeyPress={this.handleKeyPress}
+              />
             </div>
+
+            <div className="paper__controls">
+              {!loading && (
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  style={style.btn}
+                  onClick={this.handleLogin}
+                >
+                  Log in
+                </Button>
+              )}
+              {loading && (
+                <CircularProgress
+                  size={50}
+                  left={0}
+                  top={0}
+                  style={style.refresh}
+                />
+              )}
+              <Button
+                variant="text"
+                
+                onClick={this.handleLogin}
+              >
+                Forgot password
+              </Button>
+            </div>
+
           </Paper>
         </div>
       </div>
